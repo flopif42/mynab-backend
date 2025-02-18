@@ -1,0 +1,140 @@
+from datetime import datetime
+from app.db import DbPool, execute_query
+from app.controller import payee, account, category, transfer
+
+def fetch_all(id_user, request_params):
+    # 1. Make sure the id_account belongs to the right user.
+    if (not request_params is None) and ('id_account' in request_params) and (not account.validate_owner(id_user, request_params['id_account'])):
+        print(f"Error : Account with id {request_params['id_account']} does not belong to user with id {id_user}.")
+        raise
+    try:
+        query = (
+            "select acc.ACCOUNT_NAME as account, "
+            "txn.ID_TRANSACTION as id, "
+            "case "
+            "when (txn.IS_TRANSFER=1 and txn.TRANSACTION_FLOW = -1) then concat('Transfer to: ', acc_trs_out.ACCOUNT_NAME) "
+            "when (txn.IS_TRANSFER=1 and txn.TRANSACTION_FLOW = 1) then concat('Transfer from: ', acc_trs_in.ACCOUNT_NAME) "
+            "else PAYEE_NAME end as payee, "
+            "CATEGORY_NAME as category, "
+            "if(txn.TRANSACTION_FLOW=-1, 'Outflow', 'Inflow') as flow, "
+            "truncate(txn.TRANSACTION_AMOUNT / 100, 2) as amount, "
+            "date_format(txn.TRANSACTION_DATE, \"%d/%m/%Y\") as date, "
+            "txn.TRANSACTION_MEMO as memo "
+            "from TRANSACTION txn "
+            "inner join ACCOUNT acc on acc.ID_ACCOUNT = txn.ID_ACCOUNT "
+            "left join PAYEE pay on pay.ID_PAYEE = txn.ID_PAYEE "
+            "left join CATEGORY cat on txn.ID_CATEGORY = cat.ID_CATEGORY "
+            "left join TRANSFER trs_out on trs_out.ID_TRANSACTION_OUTFLOW = txn.ID_TRANSACTION and txn.TRANSACTION_FLOW = -1 "
+            "left join TRANSFER trs_in on trs_in.ID_TRANSACTION_INFLOW = txn.ID_TRANSACTION and txn.TRANSACTION_FLOW = 1 "
+            "left join TRANSACTION txn_trs_out on txn_trs_out.ID_TRANSACTION = trs_out.ID_TRANSACTION_INFLOW "
+            "left join TRANSACTION txn_trs_in on txn_trs_in.ID_TRANSACTION = trs_in.ID_TRANSACTION_OUTFLOW "
+            "left join ACCOUNT acc_trs_out on acc_trs_out.ID_ACCOUNT = txn_trs_out.ID_ACCOUNT "
+            "left join ACCOUNT acc_trs_in on acc_trs_in.ID_ACCOUNT = txn_trs_in.ID_ACCOUNT "
+            "where txn.ID_USER = (%s) "
+        )
+        if (not request_params is None) and ('id_account' in request_params) and (not request_params['id_account'] is None):
+            query = query + "and txn.ID_ACCOUNT = (%s) "
+            values = (str(id_user), request_params['id_account'])
+        else:
+            values = (str(id_user), )
+        result = execute_query(query, values, fetch=True, dictionary=True)
+        return result
+    except Exception as err:
+        print(f"Could not fetch transactions : {err}")
+        raise
+
+def create(id_user, request_params):
+    # request_params contains the following :
+    # id_account, id_payee, flow, amount, date, memo
+
+    # 1. Make sure the id_account belongs to the right user.
+    id_account = request_params['id_account']
+    if not account.validate_owner(id_user, id_account):
+        print(f"Error : Account with id {id_account} does not belong to user with id {id_user}.")
+        return None
+
+    # 2. If id_payee is set, make sure the id_payee belongs to the right user.
+    if ('id_payee' in request_params) and (request_params['id_payee'] != ''):
+        id_payee = request_params['id_payee']
+        if not payee.validate_owner(id_user, id_payee):
+            print(f"Error : Payee with id {id_payee} does not belong to user with id {id_user}.")
+            return None
+    else:
+        id_payee = None
+    
+    # 3. If id_category is set, make sure the id_category belongs to the right user.
+    if ('id_category' in request_params) and (request_params['id_category'] != ''):
+        id_category = request_params['id_category']
+        if not category.validate_owner(id_user, id_category):
+            print(f"Error : Category with id {id_category} does not belong to user with id {id_user}.")
+            return None
+    else:
+        id_category = None
+
+    # 4. Make sure the date is in this format : DD/MM/YYYY.
+    txn_date = request_params['date']
+    try:
+        txn_date = mysql_format_date(txn_date)
+    except Exception as err:
+        print(f"Error : Date is not in the correct format : DD/MM/YYYY.")
+        return None
+
+    try:
+        query = (
+            "insert into TRANSACTION "
+            "(ID_USER, ID_ACCOUNT, ID_PAYEE, ID_CATEGORY, TRANSACTION_FLOW, TRANSACTION_AMOUNT, TRANSACTION_DATE, TRANSACTION_MEMO, IS_TRANSFER) "
+            "VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)"
+        )
+        values = (id_user, id_account, id_payee, id_category, request_params['flow'], request_params['amount'], txn_date, request_params['memo'], request_params['is_transfer'])
+        result = execute_query(query, values, commit=True)
+        return result
+    except Exception as err:
+        print(f"Could not add the transaction : {err}")
+        raise
+    
+
+def delete(id_user, request_params):
+    try:
+        id_transaction = request_params['id_transaction']
+        # 1. Make sure the id_transaction belongs to the right user.
+        if not validate_owner(id_user, id_transaction):
+            print(f"Error : Transaction with id {id_transaction} does not belong to user with id {id_user}.")
+            return None
+    
+        # 2. Check if transaction is a part of a Transfer
+        if is_transfer(id_transaction):
+            id_transfer = get_transfer_id(id_transaction)
+            print(f"This transaction is part of transfer with id_transfer : {id_transfer}")
+            return transfer.delete(id_user, id_transfer)
+        else:
+            query = "delete from TRANSACTION where ID_TRANSACTION = (%s)"
+            return execute_query(query, (id_transaction,), commit=True)
+    except Exception as err:
+        print(f"Exception: {err}")
+        return None
+
+# Utilities functions
+def is_transfer(id_transaction):
+    query = "select is_transfer from TRANSACTION where ID_TRANSACTION = %s"
+    result = execute_query(query, (id_transaction,), fetch=True)
+    if result[0][0] == 1:
+        return True
+    else:
+        return False
+
+def get_transfer_id(id_transaction):
+    query = (
+        "select ID_TRANSFER from TRANSFER "
+        "where ID_TRANSACTION_OUTFLOW = %s or ID_TRANSACTION_INFLOW = %s"
+    )
+    result = execute_query(query, (id_transaction, id_transaction), fetch=True)
+    if len(result) > 0:
+        return result[0][0]
+
+def mysql_format_date(date_string):
+    return datetime.strftime(datetime.strptime(date_string, '%d/%m/%Y'), '%Y-%m-%d')
+
+def validate_owner(id_user, id_transaction):
+    query = "select 1 from TRANSACTION where ID_USER = %s and ID_TRANSACTION = %s"
+    rows = execute_query(query, (id_user, id_transaction), fetch=True)
+    return len(rows) > 0

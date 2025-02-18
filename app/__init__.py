@@ -1,0 +1,22 @@
+from flask import Flask
+
+def create_app():
+    app = Flask(__name__)
+    
+    # Import routes
+    from app.routes.transaction_routes import transaction_bp
+    from app.routes.transfer_routes import transfer_bp
+    from app.routes.payee_routes import payee_bp
+    from app.routes.category_routes import category_bp
+    from app.routes.account_routes import account_bp
+    from app.routes.user_routes import user_bp
+    
+    # Register routes
+    app.register_blueprint(transaction_bp)
+    app.register_blueprint(transfer_bp)
+    app.register_blueprint(payee_bp)
+    app.register_blueprint(category_bp)
+    app.register_blueprint(account_bp)
+    app.register_blueprint(user_bp)
+    
+    return app

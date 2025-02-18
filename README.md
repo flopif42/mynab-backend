@@ -1,1 +1,3 @@
-# mynab-backend
+# backend
+Python server using Flask
+

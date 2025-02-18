@@ -1,0 +1,11 @@
+.vs
+jwtRS256.key
+jwtRS256.key.pub
+__pycache__/
+mynab/__pycache__/
+mynab/controller/__pycache__/
+mynab/model/__pycache__/
+mynab/auth/__pycache__/
+mynab/controller/user/__pycache__/
+config.json
+start_gunicorn.sh

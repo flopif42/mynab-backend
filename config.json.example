@@ -1,0 +1,33 @@
+{
+  "_comment": "This is an example file. Rename it to config.json after it's been edited.",
+
+  "CorsParams": {
+    "origin": "https://yourdomain.com:*",
+    "expose_headers": "*",
+    "supports_credentials": true
+  },
+
+  "DatabaseParams": {
+    "host": "x.x.x.x",
+    "port": 3306,
+    "user": "user_name",
+    "password": "pAsSwOrD",
+    "database": "database_name"
+  },
+
+  "JwtParams": {
+    "Algorithm": "RS256 or another algorithm",
+    "PublicKeyFile": "something.key.pub",
+    "PrivateKeyFile": "something.key",
+    "Encoding": "UTF-8",
+    "AccessToken": {
+      "CookieName": "MYNAB_ACCESS_TOKEN",
+      "LifespanSeconds": 600
+    },
+    "CookieSettings": {
+      "secure": true,
+      "httponly": true,
+      "samesite": "None"
+    }
+  }
+}
