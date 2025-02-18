@@ -91,7 +91,6 @@ def create(id_user, request_params):
     except Exception as err:
         print(f"Could not add the transaction : {err}")
         raise
-    
 
 def delete(id_user, request_params):
     try:
