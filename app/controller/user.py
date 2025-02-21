@@ -12,7 +12,7 @@ def get_profile(id_user):
 def login(request_params):
     try:
         query = "select ID_USER from USER where EMAIL_ADDRESS = (%s) and PASSPHRASE_MD5 = (%s)"
-        result = db.excute_query(query, (request_params['email_address'], request_params['passphrase_md5']), fetch=True)
+        result = db.execute_query(query, (request_params['email_address'], request_params['passphrase_md5']), fetch=True)
         print(result)
     except Exception as err:
         print(f"Exception in login() : {err}")
