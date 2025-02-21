@@ -7,6 +7,7 @@ user_bp = flask.Blueprint('user', __name__)
 @user_bp.route('/user/login', methods=['POST'])
 def user_login():
     login_result = user.login(flask.request.json)
+    print(login_result)
     return "test in progress", 500
 
 @user_bp.route('/user/profile', methods=['GET'])
