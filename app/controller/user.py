@@ -31,7 +31,6 @@ def signup(request_params):
             request_params['passphrase_md5']
         )
         result = db.execute_query(query, values, commit=True)
-        print(result)
     except mysql.connector.IntegrityError:
         print(f"Could not create user : email address already used")
         return 403
@@ -39,21 +38,18 @@ def signup(request_params):
         print(f"Exception in signup() : {error}")
         return 400
         
-
-
-def signup_old(formData):
-    query = "insert into USER (FIRST_NAME, LAST_NAME, EMAIL_ADDRESS, PASSPHRASE_MD5) values (%s, %s, %s, %s)"
-    values = (formData['first_name'], formData['last_name'], formData['email_address'], formData['passphrase_md5'])
+# This function checks the database to see if an email address is available to use to sign up
+# return values: 1 The email address is available
+#                0 The email address is already used
+#               -1 There was an error in the query
+def is_available(request_params):
     try:
-        conn = DbPool.get_connection()
-        cursor = conn.cursor()
-        cursor.execute(query, values)
-        conn.commit()
-        cursor.close()
-        conn.close()
-        return ""
+        query = "select 1 from USER where EMAIL_ADDRESS = (%s)"
+        result = db.execute_query(query, request_params[EMAIL_ADDRESS], fetch=True)
+        if len(result) == 1:
+            return 0
+        else:
+            return 1
     except Exception as error:
-        print('Exception : %s %s' % (type(error).__name__, error))
-        return None
-
-
+        print(f"Exception in is_available() : {error}")
+        return -1

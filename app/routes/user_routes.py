@@ -25,3 +25,13 @@ def sign_up():
     if ret == 400: # other error
         return "", HTTPStatus.BAD_REQUEST
     return "", HTTPStatus.OK
+
+@user_bp.route('/user/available', methods=['POST'])
+def available():
+    ret = user.is_available(flask.request.json)
+    if ret == 1:
+        return '{ "available" : "yes" }', HTTPStatus.OK
+    if ret == 0:
+        return '{ "available" : "no" }', HTTPStatus.OK
+    if ret == -1:
+        return "", HTTPStatus.BAD_REQUEST
