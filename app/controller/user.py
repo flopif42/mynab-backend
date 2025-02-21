@@ -45,7 +45,7 @@ def signup(request_params):
 def is_available(request_params):
     try:
         query = "select 1 from USER where EMAIL_ADDRESS = (%s)"
-        result = db.execute_query(query, request_params['email_address'], fetch=True)
+        result = db.execute_query(query, (request_params['email_address'],), fetch=True)
         if len(result) == 1:
             return 0
         else:
