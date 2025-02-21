@@ -1,8 +1,8 @@
-from app.db import DbPool, execute_query
+import app.db as db
 
 def validate_owner(id_user, id_account):
     query = "select 1 from ACCOUNT where ID_USER = %s and ID_ACCOUNT = %s"
-    rows = execute_query(query, (id_user, id_account), fetch=True)
+    rows = db.execute_query(query, (id_user, id_account), fetch=True)
     return len(rows) > 0
 
 def fetch_all(id_user, unused):
@@ -16,7 +16,7 @@ def fetch_all(id_user, unused):
             "where acc.ID_USER = %s "
             "group by acc.ID_ACCOUNT"
         )
-        result = execute_query(query, (str(id_user),), fetch=True, dictionary=True)
+        result = db.execute_query(query, (str(id_user),), fetch=True, dictionary=True)
         return result
     except Exception as err:
         print(f"Could not fetch accounts : {err}")
@@ -25,7 +25,7 @@ def fetch_all(id_user, unused):
 def create(id_user, request_params):
     try:
         query = "INSERT INTO ACCOUNT (ID_USER, ACCOUNT_NAME, ACCOUNT_TYPE) VALUES (%s, %s, %s)"
-        execute_query(query, (id_user, request_params['account_name'], request_params['account_type']), commit=True)
+        db.execute_query(query, (id_user, request_params['account_name'], request_params['account_type']), commit=True)
     except Exception as err:
         print(f"Could not create the account : {err}")
         raise
@@ -37,7 +37,7 @@ def delete(id_user, request_params):
         raise
     try:
         query = "delete from ACCOUNT where ID_ACCOUNT = (%s)"
-        execute_query(query, (request_params['id_account'],), commit=True)
+        db.execute_query(query, (request_params['id_account'],), commit=True)
     except Exception as err:
         print(f"Could not delete the account : {err}")
         raise
@@ -49,7 +49,7 @@ def toggle_status(id_user, request_params):
         raise
     try:
         query = "update ACCOUNT set ACCOUNT_STATUS = (ACCOUNT_STATUS + 1) %2 where ID_ACCOUNT = (%s)"
-        execute_query(query, (request_params['id_account'],), commit=True)
+        db.execute_query(query, (request_params['id_account'],), commit=True)
     except Exception as err:
         print(f"Could not open/close the account : {err}")
         raise

@@ -1,9 +1,14 @@
-from flask import Blueprint, request
-from http import HTTPStatus
+from flask import Blueprint
+from app.routes import handle_route_action
 from app.controller import user
-from app.jwt import JwtManager
 
 user_bp = Blueprint('user', __name__)
+
+@user_bp.route('/user/profile', methods=['GET'])
+def user_profile():
+    return handle_route_action(user.get_profile)    
+
+
 
 @user_bp.route('/sign-up', methods=['POST'])
 def sign_up():
@@ -21,18 +26,7 @@ def user_login():
     else:
         return JwtManager.generate_access_token(id_user)
 
-@user_bp.route('/user/profile', methods=['GET'])
-def user_profile():
-    access_token_valid = JwtManager.check_token_valid(request)
-    if access_token_valid:
-        id_user = JwtManager.get_id_user_from_token(request)
-        user_data = user.get_profile(id_user)
-        if user_data is None:
-            return "", HTTPStatus.UNAUTHORIZED
-        else:
-            return user_data, HTTPStatus.OK
-    else:
-        return "", HTTPStatus.UNAUTHORIZED
+
 
 @user_bp.route('/user/logout', methods=['POST'])
 def user_logout():

@@ -1,13 +1,13 @@
-from app.db import DbPool, execute_query
+import app.db as db
 
 def validate_owner(id_user, id_category):
     query = "select 1 from CATEGORY where ID_USER = %s and ID_CATEGORY = %s"
-    rows = execute_query(query, (id_user, id_category), fetch=True)
+    rows = db.execute_query(query, (id_user, id_category), fetch=True)
     return len(rows) > 0
 
 def validate_parent_owner(id_user, id_parent_category):
     query = "select 1 from PARENT_CATEGORY where ID_USER = %s and ID_PARENT_CATEGORY = %s"
-    rows = execute_query(query, (id_user, id_parent_category), fetch=True)
+    rows = db.execute_query(query, (id_user, id_parent_category), fetch=True)
     return len(rows) > 0
 
 def fetch_all(id_user, unused):
@@ -21,7 +21,7 @@ def fetch_all(id_user, unused):
             "where p.ID_USER = (%s) "
             "group by c.ID_CATEGORY, p.ID_PARENT_CATEGORY "
         )
-        result = execute_query(query, (str(id_user),), fetch=True, dictionary=True)
+        result = db.execute_query(query, (str(id_user),), fetch=True, dictionary=True)
         return result
     except Exception as err:
         print(f"Could not fetch categories : {err}")
@@ -31,7 +31,7 @@ def fetch_all(id_user, unused):
 def create_parent(id_user, request_params):
     try:
         query = "insert into PARENT_CATEGORY (ID_USER, PARENT_CATEGORY_NAME) VALUES (%s, %s)"
-        execute_query(query, (id_user, request_params['parent_category_name']), commit=True)
+        db.execute_query(query, (id_user, request_params['parent_category_name']), commit=True)
     except Exception as err:
         print(f"Could not create the parent category : {err}")
         raise
@@ -44,7 +44,7 @@ def create(id_user, request_params):
         raise
     try:
         query = "insert into CATEGORY (ID_USER, ID_PARENT_CATEGORY, CATEGORY_NAME) values (%s, %s, %s)"
-        execute_query(query, (id_user, request_params['id_parent'], request_params['category_name']), commit=True)
+        db.execute_query(query, (id_user, request_params['id_parent'], request_params['category_name']), commit=True)
     except Exception as err:
         print(f"Could not create the category : {err}")
         raise
@@ -56,7 +56,7 @@ def delete_parent(id_user, request_params):
         raise
     try:
         query = "delete from PARENT_CATEGORY where ID_PARENT_CATEGORY = (%s)"
-        execute_query(query, (request_params['id_parent'],), commit=True)
+        db.execute_query(query, (request_params['id_parent'],), commit=True)
     except Exception as err:
         print(f"Could not delete the parent category : {err}")
         raise
@@ -68,7 +68,7 @@ def delete(id_user, request_params):
         raise
     try:
         query = "delete from CATEGORY where ID_CATEGORY = (%s)"
-        execute_query(query, (request_params['id_category'],), commit=True)
+        db.execute_query(query, (request_params['id_category'],), commit=True)
     except Exception as err:
         print(f"Could not delete the category : {err}")
         raise
