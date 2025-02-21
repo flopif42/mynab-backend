@@ -26,6 +26,7 @@ def fetch_all(id_user, unused):
         result = db.execute_query(query, (str(id_user),), fetch=True, dictionary=True)
         return result
     except Exception as err:
+        print(query)
         print(f"Could not fetch categories : {err}")
         raise
 
