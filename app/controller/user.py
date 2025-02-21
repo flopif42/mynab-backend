@@ -1,6 +1,6 @@
 import app.db as db
     
-def get_profile(id_user):
+def get_profile(id_user, unused):
     try:
         query = "select FIRST_NAME, LAST_NAME, EMAIL_ADDRESS from USER where ID_USER = (%s)"
         result = db.excute_query(query, (str(id_user),), fetch=True)
