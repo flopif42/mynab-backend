@@ -1,7 +1,7 @@
 import flask
 from app.routes import handle_route_action
 from app.controller import user
-from app.jwt import generate_access_token
+from app.jwt import JwtManager
 
 user_bp = flask.Blueprint('user', __name__)
 
@@ -11,7 +11,7 @@ def user_login():
     if id_user is None:
         return "", HTTPStatus.UNAUTHORIZED
     else:
-        return generate_access_token(id_user)
+        return JwtManager.generate_access_token(id_user)
 
 @user_bp.route('/user/profile', methods=['GET'])
 def user_profile():
