@@ -11,8 +11,9 @@ def user_login():
     id_user = user.login(flask.request.json)
     if id_user is None:
         return "", http.HTTPStatus.UNAUTHORIZED
-    else:
-        return JwtManager.generate_access_token(id_user)
+    response = JwtManager.generate_access_token(id_user)
+    print(response)
+    return response
 
 @user_bp.route('/user/profile', methods=['GET'])
 def user_profile():

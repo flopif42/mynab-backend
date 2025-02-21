@@ -21,21 +21,6 @@ def login(request_params):
         raise
 
 
-def get_profile_old(id_user):
-    query_profile = "select FIRST_NAME, LAST_NAME, EMAIL_ADDRESS from USER where ID_USER = %s"
-    try:
-        conn = DbPool.get_connection()
-        cursor = conn.cursor()
-        cursor.execute(query_profile, (str(id_user),))
-        response = cursor.fetchall()
-        cursor.close()
-        conn.close()
-        return response
-    except Exception as error:
-        print('Exception : %s %s' % (type(error).__name__, error))
-        raise
-    return None
-
 def signup(formData):
     query = "insert into USER (FIRST_NAME, LAST_NAME, EMAIL_ADDRESS, PASSPHRASE_MD5) values (%s, %s, %s, %s)"
     values = (formData['first_name'], formData['last_name'], formData['email_address'], formData['passphrase_md5'])
