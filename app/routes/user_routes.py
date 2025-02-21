@@ -20,9 +20,11 @@ def user_profile():
 @user_bp.route('/user/sign-up', methods=['POST'])
 def sign_up():
     ret = user.signup(flask.request.json)
-    if ret == False:
+    if ret == 403: # duplicate email_address
+        return "", http.HTTPStatus.FORBIDDEN
+    if ret == 400: # other error
         return "", http.HTTPStatus.BAD_REQUEST
-    return "Test in progress", 500
+    return "", HTTPStatus.OK
 
 @user_bp.route('/user/logout', methods=['POST'])
 def user_logout():

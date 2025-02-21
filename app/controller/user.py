@@ -34,10 +34,10 @@ def signup(request_params):
         print(result)
     except mysql.connector.IntegrityError:
         print(f"Could not create user : email address already used")
-        return False
+        return 403
     except Exception as error:
         print(f"Exception in signup() : {error}")
-        return False
+        return 400
         
 
 
