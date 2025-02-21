@@ -21,7 +21,8 @@ def fetch_all(id_user, unused):
             "left join TRANSACTION txn on txn.ID_CATEGORY = c.ID_CATEGORY "
             "inner join PARENT_CATEGORY_POSITION ppos on ppos.ID_PARENT_CATEGORY = p.ID_PARENT_CATEGORY "
             "where p.ID_USER = (%s) "
-            "group by c.ID_CATEGORY, p.ID_PARENT_CATEGORY, ppos.POSITION"
+            "group by c.ID_CATEGORY, p.ID_PARENT_CATEGORY, ppos.POSITION "
+            "order by ppos.POSITION desc"
         )
         result = db.execute_query(query, (str(id_user),), fetch=True, dictionary=True)
         return result
