@@ -31,8 +31,9 @@ def signup(request_params):
         )
         result = db.execute_query(query, values, commit=True)
         print(result)
-    except Exception as err:
-        print(f"Exception in signup() : {err}")
+    except Exception as error:
+        name = type(error).__name__
+        print(f"Exception in signup() : {error} {name}")
         return False
         
 
