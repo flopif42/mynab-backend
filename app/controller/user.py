@@ -1,3 +1,4 @@
+import mysql.connector
 import app.db as db
     
 def get_profile(id_user, unused):
@@ -31,7 +32,7 @@ def signup(request_params):
         )
         result = db.execute_query(query, values, commit=True)
         print(result)
-    except IntegrityError:
+    except mysql.connector.IntegrityError:
         print(f"Could not create user : email address already used")
         return False
     except Exception as error:
