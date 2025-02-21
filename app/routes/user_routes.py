@@ -11,26 +11,16 @@ def user_login():
     id_user = user.login(flask.request.json)
     if id_user is None:
         return "", http.HTTPStatus.UNAUTHORIZED
-    response = JwtManager.generate_access_token(id_user)
-    print(response)
-    return response
+    return JwtManager.generate_access_token(id_user)
 
 @user_bp.route('/user/profile', methods=['GET'])
 def user_profile():
     return handle_route_action(user.get_profile)
 
-
-
 @user_bp.route('/sign-up', methods=['POST'])
 def sign_up():
-    ret = user.signup(request.json)
-    if ret is None:
-        return "", HTTPStatus.UNAUTHORIZED
-    else:
-        return ret
-
-
-
+    user.signup(request.json)
+    return "Test in progress", 500
 
 @user_bp.route('/user/logout', methods=['POST'])
 def user_logout():

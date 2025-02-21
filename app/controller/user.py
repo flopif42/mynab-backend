@@ -20,8 +20,24 @@ def login(request_params):
         print(f"Exception in login() : {err}")
         raise
 
+def signup(request_params):
+    try:
+        query = "insert into USER (FIRST_NAME, LAST_NAME, EMAIL_ADDRESS, PASSPHRASE_MD5) values (%s, %s, %s, %s)"
+        values = (
+            request_params['first_name'],
+            request_params['last_name'],
+            request_params['email_address'],
+            request_params['passphrase_md5']
+        )
+        result = db.execute_query(query, values, commit=True)
+        print(result)
+    except Exception as err:
+        print(f"Exception in signup() : {err}")
+        raise
+        
 
-def signup(formData):
+
+def signup_old(formData):
     query = "insert into USER (FIRST_NAME, LAST_NAME, EMAIL_ADDRESS, PASSPHRASE_MD5) values (%s, %s, %s, %s)"
     values = (formData['first_name'], formData['last_name'], formData['email_address'], formData['passphrase_md5'])
     try:
