@@ -31,9 +31,11 @@ def signup(request_params):
         )
         result = db.execute_query(query, values, commit=True)
         print(result)
+    except IntegrityError:
+        print(f"Could not create user : email address already used")
+        return False
     except Exception as error:
-        name = type(error)
-        print(f"Exception in signup() : {error} {name}")
+        print(f"Exception in signup() : {error}")
         return False
         
 
