@@ -19,7 +19,9 @@ def user_profile():
 
 @user_bp.route('/user/sign-up', methods=['POST'])
 def sign_up():
-    user.signup(flask.request.json)
+    ret = user.signup(flask.request.json)
+    if ret == False:
+        return "", http.HTTPStatus.BAD_REQUEST
     return "Test in progress", 500
 
 @user_bp.route('/user/logout', methods=['POST'])

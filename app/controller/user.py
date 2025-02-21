@@ -33,7 +33,7 @@ def signup(request_params):
         print(result)
     except Exception as err:
         print(f"Exception in signup() : {err}")
-        raise
+        return False
         
 
 
