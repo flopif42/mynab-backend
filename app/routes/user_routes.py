@@ -1,12 +1,17 @@
-from flask import Blueprint
+import flask
 from app.routes import handle_route_action
 from app.controller import user
 
-user_bp = Blueprint('user', __name__)
+user_bp = flask.Blueprint('user', __name__)
+
+@user_bp.route('/user/login', methods=['POST'])
+def user_login():
+    login_result = user.login(flask.request.json)
+    return "test in progress", 500
 
 @user_bp.route('/user/profile', methods=['GET'])
 def user_profile():
-    return handle_route_action(user.get_profile)    
+    return handle_route_action(user.get_profile)
 
 
 
@@ -18,13 +23,6 @@ def sign_up():
     else:
         return ret
 
-@user_bp.route('/user/login', methods=['POST'])
-def user_login():
-    id_user = user.authenticate(request.json)
-    if id_user is None:
-        return "", HTTPStatus.UNAUTHORIZED
-    else:
-        return JwtManager.generate_access_token(id_user)
 
 
 
