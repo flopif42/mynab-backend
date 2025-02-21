@@ -11,4 +11,5 @@ def handle_route_action(action):
         responseBody = "" if (result is None) else jsonify(result)
         return responseBody, HTTPStatus.OK
     except Exception as error:
+        print(f"Exception in handle_route_action() : {error}")
         return "", HTTPStatus.BAD_REQUEST
