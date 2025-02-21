@@ -14,12 +14,14 @@ def fetch_all(id_user, unused):
     try:    
         query = (
             "select c.ID_CATEGORY as id, p.ID_PARENT_CATEGORY as id_parent, PARENT_CATEGORY_NAME as parent_name, CATEGORY_NAME as name, "
-            "case when count(txn.ID_TRANSACTION) > 0 then 0 else 1 end as can_be_deleted "
+            "case when count(txn.ID_TRANSACTION) > 0 then 0 else 1 end as can_be_deleted, "
+            "ppos.POSITION as position"
             "from CATEGORY c "
             "right join PARENT_CATEGORY p on p.ID_PARENT_CATEGORY = c.ID_PARENT_CATEGORY "
             "left join TRANSACTION txn on txn.ID_CATEGORY = c.ID_CATEGORY "
+            "inner join PARENT_CATEGORY_POSITION ppos on ppos.ID_PARENT_CATEGORY = p.ID_PARENT_CATEGORY "
             "where p.ID_USER = (%s) "
-            "group by c.ID_CATEGORY, p.ID_PARENT_CATEGORY "
+            "group by c.ID_CATEGORY, p.ID_PARENT_CATEGORY, ppos.POSITION"
         )
         result = db.execute_query(query, (str(id_user),), fetch=True, dictionary=True)
         return result
