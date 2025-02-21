@@ -1,5 +1,5 @@
 import datetime as dt
-from app.db import DbPool, execute_query
+import app.db as db
 from app.controller import payee, account, category, transfer
 
 def fetch_all(id_user, request_params):
