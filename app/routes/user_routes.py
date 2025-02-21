@@ -17,7 +17,7 @@ def user_login():
 def user_profile():
     return handle_route_action(user.get_profile)
 
-@user_bp.route('/sign-up', methods=['POST'])
+@user_bp.route('/user/sign-up', methods=['POST'])
 def sign_up():
     user.signup(request.json)
     return "Test in progress", 500
