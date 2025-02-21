@@ -1,9 +1,9 @@
-from flask import Flask
-from flask_cors import CORS, cross_origin
-from http import HTTPStatus
 import json
 import requests
 import sys
+from flask import Flask
+from flask_cors import CORS, cross_origin
+from http import HTTPStatus
 from app import create_app
 from app.jwt import JwtManager
 from app.db import DbPool

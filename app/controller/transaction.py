@@ -1,4 +1,4 @@
-from datetime import datetime
+import datetime as dt
 from app.db import DbPool, execute_query
 from app.controller import payee, account, category, transfer
 
@@ -131,7 +131,7 @@ def get_transfer_id(id_transaction):
         return result[0][0]
 
 def mysql_format_date(date_string):
-    return datetime.strftime(datetime.strptime(date_string, '%d/%m/%Y'), '%Y-%m-%d')
+    return dt.datetime.strftime(dt.datetime.strptime(date_string, '%d/%m/%Y'), '%Y-%m-%d')
 
 def validate_owner(id_user, id_transaction):
     query = "select 1 from TRANSACTION where ID_USER = %s and ID_TRANSACTION = %s"
