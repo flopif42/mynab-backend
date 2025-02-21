@@ -15,7 +15,7 @@ def fetch_all(id_user, unused):
         query = (
             "select c.ID_CATEGORY as id, p.ID_PARENT_CATEGORY as id_parent, PARENT_CATEGORY_NAME as parent_name, CATEGORY_NAME as name, "
             "case when count(txn.ID_TRANSACTION) > 0 then 0 else 1 end as can_be_deleted, "
-            "ppos.POSITION as position"
+            "ppos.POSITION as position "
             "from CATEGORY c "
             "right join PARENT_CATEGORY p on p.ID_PARENT_CATEGORY = c.ID_PARENT_CATEGORY "
             "left join TRANSACTION txn on txn.ID_CATEGORY = c.ID_CATEGORY "
