@@ -19,7 +19,7 @@ def user_profile():
 
 @user_bp.route('/user/sign-up', methods=['POST'])
 def sign_up():
-    user.signup(request.json)
+    user.signup(flask.request.json)
     return "Test in progress", 500
 
 @user_bp.route('/user/logout', methods=['POST'])
