@@ -30,8 +30,8 @@ def sign_up():
 def available():
     ret = user.is_available(flask.request.json)
     if ret == 1:
-        return '{ "available" : "yes" }', HTTPStatus.OK
+        return { "available" : "yes" ', HTTPStatus.OK
     if ret == 0:
-        return '{ "available" : "no" }', HTTPStatus.OK
+        return { "available" : "no" }, HTTPStatus.OK
     if ret == -1:
         return "", HTTPStatus.BAD_REQUEST
