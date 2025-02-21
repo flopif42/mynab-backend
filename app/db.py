@@ -1,5 +1,4 @@
 import mysql.connector
-from mysql.connector import pooling
 
 class DbPool:
     _pool_instance = None
