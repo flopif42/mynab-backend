@@ -12,7 +12,7 @@ class DbPool:
     def get_instance():
         if DbPool._pool_instance is None:
             # Create the connection pool once at startup
-            DbPool._pool_instance = pooling.MySQLConnectionPool(
+            DbPool._pool_instance = mysql.connector.pooling.MySQLConnectionPool(
                 pool_name="mypool",
                 pool_size=10,  # Max connections
                 pool_reset_session=True,
