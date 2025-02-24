@@ -17,18 +17,7 @@ def fetch_all(id_user, unused):
         query = "select ID_PARENT_CATEGORY, PARENT_CATEGORY_NAME from PARENT_CATEGORY where ID_USER = (%s)"
         result = db.execute_query(query, (str(id_user),), fetch=True, dictionary=True)
 
-        print(result)
-
-        for (id, name) in result:
-            parent_cat = { "id": id, "name": name }
-            json_parent = json.dumps(parent_cat)
-            print(json_parent)
-            parent_categories.append(json_parent)
-
-        result_json = json.dumps(parent_categories)
-        print(result_json)
-
-        return result_json
+        return json.dumps(result)
     except Exception as err:
 #        print(query)
         print(f"Could not fetch categories : {err}")
