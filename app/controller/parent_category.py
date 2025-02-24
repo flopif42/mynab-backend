@@ -21,7 +21,7 @@ def create(id_user, request_params):
 
 def delete(id_user, request_params):
     # 1. Make sure the id_parent belongs to the right user.
-    if not validate_parent_owner(id_user, request_params['id_parent']):
+    if not validate_owner(id_user, request_params['id_parent']):
         print(f"Error : Parent with id {request_params['id_parent']} does not belong to user with id {id_user}.")
         raise
     try:
@@ -35,7 +35,7 @@ def set_position(id_user, request_params):
     id_parent_category = request_params['id_parent_category']
     new_position = request_params['new_position']
     # Make sure the id_parent_category belongs to the right user.
-    if not validate_parent_owner(id_user, id_parent_category):
+    if not validate_owner(id_user, id_parent_category):
         print(f"Error : Parent with id {id_parent_category} does not belong to user with id {id_user}.")
         raise
     parent_positions = db.execute_query("select ID_PARENT_CATEGORY, PARENT_CATEGORY_POSITION from PARENT_CATEGORY where ID_USER = (%s)", (id_user,), fetch=True)
