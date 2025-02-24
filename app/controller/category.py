@@ -113,6 +113,6 @@ def set_parent_position(id_user, request_params):
     print(f"Saved: {saved}")
     print(f"New list: {new_list}")
 
-    new_list.insert(saved, new_position)
+    new_list.insert(new_position, saved)
 
     print(f"New list: {new_list}")
