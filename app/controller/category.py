@@ -41,10 +41,8 @@ def fetch_all(id_user, unused):
 # Create a parent category
 def create_parent(id_user, request_params):
     try:
-        id_parent = db.get_next_val('CATEGORIES')
-
         query = "insert into PARENT_CATEGORY (ID_PARENT_CATEGORY, ID_USER, PARENT_CATEGORY_NAME) VALUES (%s, %s, %s)"
-        db.execute_query(query, (id_parent, id_user, request_params['parent_category_name']), commit=True)
+        db.execute_query(query, (db.get_next_val('CATEGORIES'), id_user, request_params['parent_category_name']), commit=True)
     except Exception as err:
         print(f"Could not create the parent category : {err}")
         raise
@@ -56,8 +54,8 @@ def create(id_user, request_params):
         print(f"Error : Parent category with id {request_params['id_parent']} does not belong to user with id {id_user}.")
         raise
     try:
-        query = "insert into CATEGORY (ID_USER, ID_PARENT_CATEGORY, CATEGORY_NAME) values (%s, %s, %s)"
-        db.execute_query(query, (id_user, request_params['id_parent'], request_params['category_name']), commit=True)
+        query = "insert into CATEGORY (ID_CATEGORY, ID_USER, ID_PARENT_CATEGORY, CATEGORY_NAME) values (%s, %s, %s)"
+        db.execute_query(query, (db.get_next_val('CATEGORIES'), id_user, request_params['id_parent'], request_params['category_name']), commit=True)
     except Exception as err:
         print(f"Could not create the category : {err}")
         raise
