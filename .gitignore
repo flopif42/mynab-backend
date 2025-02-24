@@ -9,3 +9,5 @@ mynab/auth/__pycache__/
 mynab/controller/user/__pycache__/
 config.json
 start_gunicorn.sh
+
+categories_example.json
