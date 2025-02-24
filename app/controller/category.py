@@ -14,7 +14,7 @@ def validate_parent_owner(id_user, id_parent_category):
 def fetch_all(id_user, unused):
     parent_categories = []
     try:
-        query_parent_categories = "select ID_PARENT_CATEGORY, PARENT_CATEGORY_NAME from PARENT_CATEGORY"
+        query = "select ID_PARENT_CATEGORY, PARENT_CATEGORY_NAME from PARENT_CATEGORY"
         result = db.execute_query(query, (str(id_user),), fetch=True, dictionary=True)
 
         for (id, name) in result:
