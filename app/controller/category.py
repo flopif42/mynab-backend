@@ -96,31 +96,17 @@ def set_parent_position(id_user, request_params):
 
     query = "select ID_PARENT_CATEGORY, PARENT_CATEGORY_POSITION from PARENT_CATEGORY where ID_USER = (%s)"
     parent_positions = db.execute_query(query, (id_user,), fetch=True)
-
-    my_list = sorted(parent_positions, key=lambda tup: tup[1])
-    print(my_list)
-
+    nb_parent_categories = len(parent_positions)
+    sorted_list = sorted(parent_positions, key=lambda tup: tup[1])
+    print(sorted_list)
     new_list = []
-
-    saved = ()
-
-    for parent_category in my_list:
+    for parent_category in sorted_list:
         if parent_category[0] == id_parent_category:
             saved = parent_category
         else:
             new_list.append(parent_category)
-
-    print(f"Saved: {saved}")
-    print(f"New list: {new_list}")
-
     new_list.insert(new_position-1, saved)
-
-    print(f"New list: {new_list}")
-
-    nb_parent_categories = len(new_list)
     for i in range(nb_parent_categories):
-        db.execute_query("update PARENT_CATEGORY set PARENT_CATEGORY_POSITION=(%s) where ID_PARENT_CATEGORY=(%s)",
-            (nb_parent_categories+i+1, new_list[i][0]), commit=True)
+        db.execute_query("update PARENT_CATEGORY set PARENT_CATEGORY_POSITION=(%s) where ID_PARENT_CATEGORY=(%s)", (nb_parent_categories+i+1, new_list[i][0]), commit=True)
     for i in range(nb_parent_categories):
-        db.execute_query("update PARENT_CATEGORY set PARENT_CATEGORY_POSITION=(%s) where ID_PARENT_CATEGORY=(%s)",
-            (i+1, new_list[i][0]), commit=True)
+        db.execute_query("update PARENT_CATEGORY set PARENT_CATEGORY_POSITION=(%s) where ID_PARENT_CATEGORY=(%s)", (i+1, new_list[i][0]), commit=True)
