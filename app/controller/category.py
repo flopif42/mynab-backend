@@ -19,7 +19,7 @@ def fetch_all(id_user, unused):
         for parent_category in parent_categories:
             print(parent_category)
             query_children = (
-                "select ID_CATEGORY as id, CATEGORY_NAME as name, ID_PARENT_CATEGORY as id_parent "
+                "select ID_CATEGORY as id, CATEGORY_NAME as name, ID_PARENT_CATEGORY as id_parent, 0 as can_be_deleted "
                 "from CATEGORY "
                 "where ID_USER = (%s) and ID_PARENT_CATEGORY = (%s)"
             )
