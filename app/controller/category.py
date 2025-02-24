@@ -120,4 +120,4 @@ def set_parent_position(id_user, request_params):
     
     for i in range(len(new_list)):
         db.execute_query("update PARENT_CATEGORY set PARENT_CATEGORY_POSITION=(%s) where ID_PARENT_CATEGORY=(%s)",
-            (i+1, my_list[i][0]), commit=True)
+            (i+1, new_list[i][0]), commit=True)
