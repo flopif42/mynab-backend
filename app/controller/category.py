@@ -14,10 +14,10 @@ def validate_parent_owner(id_user, id_parent_category):
 def fetch_all(id_user, unused):
     parent_categories = []
     try:
-        query = "select ID_PARENT_CATEGORY, PARENT_CATEGORY_NAME from PARENT_CATEGORY where ID_USER = (%s)"
+        query = "select ID_PARENT_CATEGORY as id, PARENT_CATEGORY_NAME as name from PARENT_CATEGORY where ID_USER = (%s)"
         result = db.execute_query(query, (str(id_user),), fetch=True, dictionary=True)
 
-        return json.dumps(result)
+        return result
     except Exception as err:
 #        print(query)
         print(f"Could not fetch categories : {err}")
