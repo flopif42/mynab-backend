@@ -98,7 +98,6 @@ def set_parent_position(id_user, request_params):
     parent_positions = db.execute_query(query, (id_user,), fetch=True)
     nb_parent_categories = len(parent_positions)
     sorted_list = sorted(parent_positions, key=lambda tup: tup[1])
-    print(sorted_list)
     new_list = []
     for parent_category in sorted_list:
         if parent_category[0] == id_parent_category:
