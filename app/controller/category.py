@@ -1,4 +1,5 @@
 import app.db as db
+import app.model.parent_category
 
 def validate_owner(id_user, id_category):
     query = "select 1 from CATEGORY where ID_USER = %s and ID_CATEGORY = %s"
@@ -11,18 +12,17 @@ def validate_parent_owner(id_user, id_parent_category):
     return len(rows) > 0
 
 def fetch_all(id_user, unused):
-    try:    
-        query = (
-            "select c.ID_CATEGORY as id, p.ID_PARENT_CATEGORY as id_parent, PARENT_CATEGORY_NAME as parent_name, CATEGORY_NAME as name, "
-            "case when count(txn.ID_TRANSACTION) > 0 then 0 else 1 end as can_be_deleted "
-            "from CATEGORY c "
-            "right join PARENT_CATEGORY p on p.ID_PARENT_CATEGORY = c.ID_PARENT_CATEGORY "
-            "left join TRANSACTION txn on txn.ID_CATEGORY = c.ID_CATEGORY "
-            "where p.ID_USER = (%s) "
-            "group by c.ID_CATEGORY, p.ID_PARENT_CATEGORY"
-        )
+    parent_categories = []
+    try:
+        query_parent_categories = "select ID_PARENT_CATEGORY, PARENT_CATEGORY_NAME from PARENT_CATEGORY"
         result = db.execute_query(query, (str(id_user),), fetch=True, dictionary=True)
-        return result
+
+        for (id, name) in result:
+            parent_categories.append(new Parent_category(id, name))
+
+        print(parent_categories)
+
+        return parent_categories
     except Exception as err:
         print(query)
         print(f"Could not fetch categories : {err}")
