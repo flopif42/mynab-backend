@@ -1,5 +1,6 @@
 import json
 import app.db as db
+from app.controller.parent_category as p_cat
 
 def validate_owner(id_user, id_category):
     query = "select 1 from CATEGORY where ID_USER = %s and ID_CATEGORY = %s"
@@ -33,7 +34,7 @@ def fetch_all(id_user, unused):
 # Create a category and attach it to an existing parent category
 def create(id_user, request_params):
     # 1. Make sure the id_parent belongs to the right user.
-    if not validate_parent_owner(id_user, request_params['id_parent']):
+    if not p_cat.validate_owner(id_user, request_params['id_parent']):
         print(f"Error : Parent category with id {request_params['id_parent']} does not belong to user with id {id_user}.")
         raise
     try:
