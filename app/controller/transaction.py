@@ -1,6 +1,6 @@
 import datetime as dt
 import app.db as db
-from app.controller import payee, account, category, transfer
+from app.controller import payee, account, child_category, parent_category, transfer
 
 def fetch_all(id_user, request_params):
     # 1. Make sure the id_account belongs to the right user.
@@ -65,7 +65,7 @@ def create(id_user, request_params):
     # 3. If id_category is set, make sure the id_category belongs to the right user.
     if ('id_category' in request_params) and (request_params['id_category'] != ''):
         id_category = request_params['id_category']
-        if not category.validate_owner(id_user, id_category):
+        if not child_category.validate_owner(id_user, id_category):
             print(f"Error : Category with id {id_category} does not belong to user with id {id_user}.")
             return None
     else:
