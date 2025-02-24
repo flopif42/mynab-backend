@@ -20,12 +20,12 @@ def category_delete():
 # Parent categories routes
 @category_bp.route('/category/create_parent', methods=['POST'])
 def parent_category_create():
-    return handle_route_action(parent_category.create_parent)
+    return handle_route_action(parent_category.create)
 
 @category_bp.route('/category/delete_parent', methods=['POST'])
 def parent_category_delete():
-    return handle_route_action(parent_category.delete_parent)
+    return handle_route_action(parent_category.delete)
 
 @category_bp.route('/category/move_parent', methods=['POST'])
 def parent_category_move():
-    return handle_route_action(parent_category.set_parent_position)
+    return handle_route_action(parent_category.set_position)

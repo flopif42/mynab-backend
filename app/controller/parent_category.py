@@ -31,7 +31,7 @@ def delete(id_user, request_params):
         print(f"Could not delete the parent category : {err}")
         raise
 
-def set_parent_position(id_user, request_params):
+def set_position(id_user, request_params):
     id_parent_category = request_params['id_parent_category']
     new_position = request_params['new_position']
     # Make sure the id_parent_category belongs to the right user.
