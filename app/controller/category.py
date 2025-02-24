@@ -21,11 +21,12 @@ def fetch_all(id_user, unused):
         for (id, name) in result:
             parent_categories.append(Parent_category(id, name))
 
-        print(parent_categories)
+        result_json = json.dumps(parent_categories)
+        print(result_json)
 
-        return json.dumps(parent_categories)
+        return result_json
     except Exception as err:
-        print(query)
+#        print(query)
         print(f"Could not fetch categories : {err}")
         raise
 
