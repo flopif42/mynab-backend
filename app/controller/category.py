@@ -19,7 +19,7 @@ def fetch_all(id_user, unused):
         result = db.execute_query(query, (str(id_user),), fetch=True, dictionary=True)
 
         for (id, name) in result:
-            parent_cat = Parent_category(id, name)
+            parent_cat = { "id": id, "name": name }
             json_parent = json.dumps(parent_cat)
             print(json_parent)
             parent_categories.append(json_parent)
