@@ -18,7 +18,7 @@ def fetch_all(id_user, unused):
         result = db.execute_query(query, (str(id_user),), fetch=True, dictionary=True)
 
         for (id, name) in result:
-            parent_categories.append(new Parent_category(id, name))
+            parent_categories.append(Parent_category(id, name))
 
         print(parent_categories)
 
