@@ -35,7 +35,11 @@ def fetch_all(id_user, unused):
 # Create a parent category
 def create_parent(id_user, request_params):
     try:
-        query = "insert into PARENT_CATEGORY (ID_PARENT_CATEGORY, ID_USER, PARENT_CATEGORY_NAME) VALUES (%s, %s, %s)"
+        query = (
+            "insert into PARENT_CATEGORY "
+            "select (%s) as ID_PARENT_CATEGORY, (%s) as ID_USER, (%s) as PARENT_CATEGORY_NAME, ifnull(max(PARENT_CATEGORY_POSITION), 0) + 1 as position "
+            "from PARENT_CATEGORY"
+        )
         db.execute_query(query, (db.get_next_val('CATEGORIES'), id_user, request_params['parent_category_name']), commit=True)
     except Exception as err:
         print(f"Could not create the parent category : {err}")
