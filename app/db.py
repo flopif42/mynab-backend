@@ -46,9 +46,8 @@ def execute_query(query, values=None, *, commit=False, fetch=False, dictionary=F
 def get_next_val(sequence_name):
     try:
         next_val = execute_query("select SEQUENCE_VAL from SEQUENCES where SEQUENCE_NAME = (%s)", values=(sequence_name,), fetch=True)
-        print(next_val)
         execute_query("update SEQUENCES set SEQUENCE_VAL = SEQUENCE_VAL + 1 where SEQUENCE_NAME = (%s)", values=(sequence_name,), commit=True)
-        return next_val
+        return next_val[0][0]
     except Exception as error:
         print('db.get_next_val() exception : %s %s' % (type(error).__name__, error))
         raise
