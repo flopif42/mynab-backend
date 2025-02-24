@@ -13,7 +13,10 @@ def validate_parent_owner(id_user, id_parent_category):
 
 def fetch_all(id_user, unused):
     try:
-        query = "select ID_PARENT_CATEGORY as id, PARENT_CATEGORY_NAME as name from PARENT_CATEGORY where ID_USER = (%s)"
+        query = (
+            "select ID_PARENT_CATEGORY as id, PARENT_CATEGORY_NAME as name, PARENT_CATEGORY_POSITION as position "
+            "from PARENT_CATEGORY where ID_USER = (%s)"
+        )
         parent_categories = db.execute_query(query, (str(id_user),), fetch=True, dictionary=True)
         for parent_category in parent_categories:
             query_children = (
