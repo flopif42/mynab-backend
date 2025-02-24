@@ -84,3 +84,18 @@ def delete(id_user, request_params):
     except Exception as err:
         print(f"Could not delete the category : {err}")
         raise
+
+def set_parent_position(id_user, request_params):
+    # Make sure the id_parent_category belongs to the right user.
+    if not validate_parent_owner(id_user, request_params['id_parent_category']):
+        print(f"Error : Parent with id {request_params['id_parent_category']} does not belong to user with id {id_user}.")
+        raise
+
+    query = "select ID_PARENT_CATEGORY, PARENT_CATEGORY_POSITION from PARENT_CATEGORY where ID_USER = (%s) order by ID_PARENT_CATEGORY"
+    parent_positions = db.execute_query(query, (id_user,), fetch=True)
+    new_position = request_params['new_position']
+
+    print(parent_positions)
+
+    my_list = sorted(parent_postitions, key=lambda tup: tup[1])
+    print(my_list)
