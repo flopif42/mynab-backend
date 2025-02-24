@@ -1,3 +1,4 @@
+import json
 import app.db as db
 from app.model.parent_category import Parent_category
 
@@ -22,7 +23,7 @@ def fetch_all(id_user, unused):
 
         print(parent_categories)
 
-        return parent_categories
+        return json.dumps(parent_categories)
     except Exception as err:
         print(query)
         print(f"Could not fetch categories : {err}")
