@@ -97,5 +97,5 @@ def set_parent_position(id_user, request_params):
 
     print(parent_positions)
 
-    my_list = sorted(parent_postitions, key=lambda tup: tup[1])
+    my_list = sorted(parent_positions, key=lambda tup: tup[1])
     print(my_list)
