@@ -17,8 +17,10 @@ def fetch_all(id_user, unused):
         parent_categories = db.execute_query(query, (str(id_user),), fetch=True, dictionary=True)
         for parent_category in parent_categories:
             query_children = (
-                "select ID_CATEGORY as id, CATEGORY_NAME as name, ID_PARENT_CATEGORY as id_parent, 0 as can_be_deleted "
-                "from CATEGORY where ID_USER = (%s) and ID_PARENT_CATEGORY = (%s)"
+                "select cat.ID_CATEGORY as id, CATEGORY_NAME as name, ID_PARENT_CATEGORY as id_parent, count(ID_TRANSACTION) as can_be_deleted "
+                "from CATEGORY cat left join TRANSACTION txn on txn.ID_CATEGORY = cat.ID_CATEGORY "
+                "where ID_USER = (%s) and ID_PARENT_CATEGORY = (%s) "
+                "group by cat.ID_CATEGORY , CATEGORY_NAME , ID_PARENT_CATEGORY "
             )
             categories = db.execute_query(query_children, (id_user, parent_category['id']), fetch=True, dictionary=True)
             parent_category['child_categories'] = []
