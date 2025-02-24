@@ -17,6 +17,9 @@ def fetch_all(id_user, unused):
         query = "select ID_PARENT_CATEGORY as id, PARENT_CATEGORY_NAME as name from PARENT_CATEGORY where ID_USER = (%s)"
         result = db.execute_query(query, (str(id_user),), fetch=True, dictionary=True)
 
+        for row in result:
+            print(row)
+
         return result
     except Exception as err:
 #        print(query)
