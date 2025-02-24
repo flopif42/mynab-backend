@@ -1,6 +1,6 @@
 import json
 import app.db as db
-from app.controller.parent_category as p_cat
+import app.controller.parent_category as p_cat
 
 def validate_owner(id_user, id_category):
     query = "select 1 from CATEGORY where ID_USER = %s and ID_CATEGORY = %s"
