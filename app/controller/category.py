@@ -20,8 +20,9 @@ def fetch_all(id_user, unused):
 
         for (id, name) in result:
             parent_cat = Parent_category(id, name)
-            print(parent_cat)
-            parent_categories.append(parent_cat)
+            json_parent = json.dumps(parent_cat)
+            print(json_parent)
+            parent_categories.append(json_parent)
 
         result_json = json.dumps(parent_categories)
         print(result_json)
