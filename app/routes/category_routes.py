@@ -23,3 +23,7 @@ def category_delete():
 @category_bp.route('/category/delete_parent', methods=['POST'])
 def parent_category_delete():
     return handle_route_action(category.delete_parent)
+
+@category_bp.route('/category/move_parent', methods=['POST'])
+def parent_category_move():
+    return handle_route_action(category.set_parent_position)
