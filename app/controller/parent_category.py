@@ -49,6 +49,4 @@ def set_position(id_user, request_params):
             new_list.append(parent_category)
     new_list.insert(new_position-1, saved)
     for i in range(nb_parent_categories):
-        db.execute_query("update PARENT_CATEGORY set PARENT_CATEGORY_POSITION=(%s) where ID_PARENT_CATEGORY=(%s)", (nb_parent_categories+i+1, new_list[i][0]), commit=True)
-    for i in range(nb_parent_categories):
         db.execute_query("update PARENT_CATEGORY set PARENT_CATEGORY_POSITION=(%s) where ID_PARENT_CATEGORY=(%s)", (i+1, new_list[i][0]), commit=True)
