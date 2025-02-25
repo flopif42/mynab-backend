@@ -11,10 +11,11 @@ def create(id_user, request_params):
     try:
         query = (
             "insert into PARENT_CATEGORY "
-            "select (%s) as ID_PARENT_CATEGORY, (%s) as ID_USER, (%s) as PARENT_CATEGORY_NAME, ifnull(max(PARENT_CATEGORY_POSITION), 0) + 1 as position "
-            "from PARENT_CATEGORY"
+            "select (%s) as ID_USER, max(ID_PARENT_CATEGORY)+1 as ID_PARENT_CATEGORY, (%s) as PARENT_CATEGORY_NAME, max(PARENT_CATEGORY_POSITION)+1 as position "
+            "from PARENT_CATEGORY "
+            "where ID_USER = (%s)"
         )
-        db.execute_query(query, (db.get_next_val('CATEGORIES'), id_user, request_params['parent_category_name']), commit=True)
+        db.execute_query(query, (id_user, request_params['parent_category_name'], id_user), commit=True)
     except Exception as err:
         print(f"Could not create the parent category : {err}")
         raise
