@@ -14,7 +14,9 @@ def fetch(id_user, unused):
             "where p.ID_USER = (%s) "
         )
         result = db.execute_query(query, (id_user,), fetch=True, dictionary=True)
-        for (year, month, id_category, funded, spent) in result:
+        for (my_tuple, ) in result:
+            (year, month, id_category, funded, spent) = my_tuple
+            print(my_tuple)
             category = { "id": id_category, "funded": funded, "spent": spent  }            
 
         return category
