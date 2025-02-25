@@ -8,15 +8,16 @@ def fetch(id_user, unused):
             "truncate(ifnull(EXP_AMOUNT, 0)/100,2) as spent "
             "from BUDGET_PERIOD p "
             "left join BUDGET_LINE bl "
-	        "on bl.BUDGET_LINE_YEAR = p.YEAR and bl.BUDGET_LINE_MONTH = p.MONTH "
-            "and bl.ID_CATEGORY = p.ID_CATEGORY and bl.ID_USER = p.ID_USER "
+	        "on bl.BUDGET_LINE_YEAR = p.YEAR and bl.BUDGET_LINE_MONTH = p.MONTH and bl.ID_CATEGORY = p.ID_CATEGORY and bl.ID_USER = p.ID_USER "
             "left join EXPENSES e "
-            "on e.EXP_YEAR = p.YEAR and e.EXP_MONTH = p.MONTH "
-            "and e.ID_CATEGORY = p.ID_CATEGORY and e.ID_USER = p.ID_USER "
+            "on e.EXP_YEAR = p.YEAR and e.EXP_MONTH = p.MONTH and e.ID_CATEGORY = p.ID_CATEGORY and e.ID_USER = p.ID_USER "
             "where p.ID_USER = (%s) "
         )
         result = db.execute_query(query, (id_user,), fetch=True, dictionary=True)
-        return result
+        for (year, month, id_category, funded, spent) in result:
+            category = { "id": id_category, "funded": funded, "spent": spent  }            
+
+        return category
     except Exception as err:
         print(f"Could not fetch budget : {err}")
         raise
