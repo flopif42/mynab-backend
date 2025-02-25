@@ -3,7 +3,9 @@ import app.db as db
 def fetch(id_user, unused):
     try:
         query = (
-            "select p.YEAR as year, p.MONTH as month, p.ID_CATEGORY as id_category, ifnull(BUDGET_LINE_AMOUNT, 0) as funded, ifnull(EXP_AMOUNT, 0) as spent "
+            "select p.YEAR as year, p.MONTH as month, p.ID_CATEGORY as id_category, "
+            "truncate(ifnull(BUDGET_LINE_AMOUNT, 0)/100,2) as funded, "
+            "truncate(ifnull(EXP_AMOUNT, 0)/100,2) as spent "
             "from BUDGET_PERIOD p "
             "left join BUDGET_LINE bl "
 	        "on bl.BUDGET_LINE_YEAR = p.YEAR and bl.BUDGET_LINE_MONTH = p.MONTH "
