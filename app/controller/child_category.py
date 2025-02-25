@@ -17,7 +17,7 @@ def fetch_all(id_user, unused):
         for parent_category in parent_categories:
             query_children = (
                 "select cat.ID_CATEGORY as id, CATEGORY_NAME as name, ID_PARENT_CATEGORY as id_parent, "
-                "case when count(ID_TRANSACTION) > 0 then 0 else 1 end as can_be_deleted "
+                "case when (cat.ID_CATEGORY <> 0 and count(ID_TRANSACTION) > 0) then 0 else 1 end as can_be_deleted "
                 "from CATEGORY cat left join TRANSACTION txn on txn.ID_CATEGORY = cat.ID_CATEGORY "
                 "where cat.ID_USER = (%s) and ID_PARENT_CATEGORY = (%s) "
                 "group by cat.ID_CATEGORY , CATEGORY_NAME , ID_PARENT_CATEGORY "
@@ -47,7 +47,7 @@ def create(id_user, request_params):
 
 def delete(id_user, request_params):
     try:
-        query = "delete from CATEGORY where ID_USER = (%s) and ID_CATEGORY = (%s)"
+        query = "delete from CATEGORY where ID_USER = (%s) and ID_CATEGORY = (%s) and ID_CATEGORY <> 0"
         db.execute_query(query, (id_user, request_params['id_category'],), commit=True)
     except Exception as err:
         print(f"Could not delete the category : {err}")
