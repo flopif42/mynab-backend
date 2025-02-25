@@ -74,7 +74,6 @@ def create(id_user, request_params):
     except Exception as err:
         print(f"Error : Date is not in the correct format : DD/MM/YYYY.")
         return None
-
     try:
         query = (
             "insert into TRANSACTION "
@@ -91,11 +90,8 @@ def create(id_user, request_params):
 def delete(id_user, request_params):
     try:
         id_transaction = request_params['id_transaction']
-    
-        # Check if transaction is a part of a Transfer
         if is_transfer(id_transaction):
             id_transfer = get_transfer_id(id_transaction)
-            print(f"This transaction is part of transfer with id_transfer : {id_transfer}")
             return transfer.delete(id_user, id_transfer)
         else:
             query = "delete from TRANSACTION where ID_USER = (%s) and ID_TRANSACTION = (%s)"
@@ -106,14 +102,11 @@ def delete(id_user, request_params):
 
 # Utilities functions
 def is_transfer(id_transaction):
-    print(f"Transaction to delete : {id_transaction}")
     query = "select IS_TRANSFER from TRANSACTION where ID_TRANSACTION = %s"
     result = db.execute_query(query, (id_transaction,), fetch=True)
     if result[0][0] == 1:
-        print("True")
         return True
     else:
-        print("False")
         return False
 
 def get_transfer_id(id_transaction):
@@ -127,8 +120,3 @@ def get_transfer_id(id_transaction):
 
 def mysql_format_date(date_string):
     return dt.datetime.strftime(dt.datetime.strptime(date_string, '%d/%m/%Y'), '%Y-%m-%d')
-
-#def validate_owner(id_user, id_transaction):
-#    query = "select 1 from TRANSACTION where ID_USER = %s and ID_TRANSACTION = %s"
-#    rows = db.execute_query(query, (id_user, id_transaction), fetch=True)
-#    return len(rows) > 0
