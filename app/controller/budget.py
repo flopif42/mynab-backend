@@ -1,6 +1,7 @@
 import app.db as db
 
 def fetch(id_user, unused):
+    my_list = []
     try:
         query = (
             "select p.YEAR as year, p.MONTH as month, p.ID_CATEGORY as id_category, "
@@ -16,10 +17,10 @@ def fetch(id_user, unused):
         result = db.execute_query(query, (id_user,), fetch=True)
         for row in result:
             (year, month, id_category, funded, spent) = row
-            print(row)
-            category = { "id": id_category, "funded": funded, "spent": spent  }            
+            category = { "id_category": id_category, "funded": funded, "spent": spent  }
+            my_list.append(category)
 
-        return category
+        return my_list
     except Exception as err:
         print(f"Could not fetch budget : {err}")
         raise
