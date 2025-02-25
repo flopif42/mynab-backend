@@ -55,22 +55,18 @@ def create(id_user, request_params):
         return None
 
 def delete(id_user, id_transfer):
-    # Make sure the id_transfer belongs to the right user.
-    if not validate_owner(id_user, id_transfer):
-        print(f"Error : Transfer with id {id_transfer} does not belong to user with id {id_user}.")
-        raise
     try:
         # Retrieve the transcation ids associated with the transfer
         query_retrieve = "select ID_TRANSACTION_OUTFLOW, ID_TRANSACTION_INFLOW from TRANSFER where ID_TRANSFER = (%s)"
         result_retrieve = db.execute_query(query_retrieve, (id_transfer,), fetch=True)
 
         # delete the transfer
-        query = "delete from TRANSFER where ID_TRANSFER = (%s)"
-        result = db.execute_query(query, (id_transfer,), commit=True)
+        query = "delete from TRANSFER where ID_USER = (%s) and ID_TRANSFER = (%s)"
+        result = db.execute_query(query, (id_user, id_transfer,), commit=True)
 
         # delete the associated transactions
-        query = "delete from TRANSACTION where ID_TRANSACTION in ((%s), (%s))"
-        result = db.execute_query(query, result_retrieve[0], commit=True)
+        query = "delete from TRANSACTION where ID_USER = (%s) and ID_TRANSACTION in ((%s), (%s))"
+        result = db.execute_query(query, (id_user, result_retrieve[0]), commit=True)
         return result
     except Exception as err:
         print(f"Could not delete transfer: {err}")

@@ -106,7 +106,7 @@ def delete(id_user, request_params):
 
 # Utilities functions
 def is_transfer(id_transaction):
-    query = "select is_transfer from TRANSACTION where ID_TRANSACTION = %s"
+    query = "select IS_TRANSFER from TRANSACTION where ID_TRANSACTION = %s"
     result = db.execute_query(query, (id_transaction,), fetch=True)
     if result[0][0] == 1:
         return True
@@ -125,7 +125,7 @@ def get_transfer_id(id_transaction):
 def mysql_format_date(date_string):
     return dt.datetime.strftime(dt.datetime.strptime(date_string, '%d/%m/%Y'), '%Y-%m-%d')
 
-def validate_owner(id_user, id_transaction):
-    query = "select 1 from TRANSACTION where ID_USER = %s and ID_TRANSACTION = %s"
-    rows = db.execute_query(query, (id_user, id_transaction), fetch=True)
-    return len(rows) > 0
+#def validate_owner(id_user, id_transaction):
+#    query = "select 1 from TRANSACTION where ID_USER = %s and ID_TRANSACTION = %s"
+#    rows = db.execute_query(query, (id_user, id_transaction), fetch=True)
+#    return len(rows) > 0
