@@ -33,25 +33,22 @@ def fetch_all(id_user, unused):
 
 # Create a category and attach it to an existing parent category
 def create(id_user, request_params):
-    # 1. Make sure the id_parent belongs to the right user.
-    if not p_cat.validate_owner(id_user, request_params['id_parent']):
-        print(f"Error : Parent category with id {request_params['id_parent']} does not belong to user with id {id_user}.")
-        raise
     try:
-        query = "insert into CATEGORY (ID_USER, ID_PARENT_CATEGORY, CATEGORY_NAME) values (%s, %s, %s, %s)"
-        db.execute_query(query, (id_user, request_params['id_parent'], request_params['category_name']), commit=True)
+        query = (
+            "insert into CATEGORY "
+            "select (%s) as ID_USER, max(ID_CATEGORY)+1 as ID_CATEGORY, (%s) as ID_PARENT_CATEGORY, (%s) as CATEGORY_NAME "
+            "from CATEGORY "
+            "where ID_USER = (%s) "
+        )
+        db.execute_query(query, (id_user, request_params['id_parent'], request_params['category_name'], id_user), commit=True)
     except Exception as err:
         print(f"Could not create the category : {err}")
         raise
 
 def delete(id_user, request_params):
-    # 1. Make sure the id_category belongs to the right user.
-    if not validate_owner(id_user, request_params['id_category']):
-        print(f"Error : Category with id {request_params['id_category']} does not belong to user with id {id_user}.")
-        raise
     try:
-        query = "delete from CATEGORY where ID_CATEGORY = (%s)"
-        db.execute_query(query, (request_params['id_category'],), commit=True)
+        query = "delete from CATEGORY where ID_USER = (%s) and ID_CATEGORY = (%s)"
+        db.execute_query(query, (id_user, request_params['id_category'],), commit=True)
     except Exception as err:
         print(f"Could not delete the category : {err}")
         raise
