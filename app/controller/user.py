@@ -33,7 +33,8 @@ def signup(request_params):
         id_user = db.execute_query(query, values, commit=True)
 
         db.execute_query("insert into PARENT_CATEGORY (ID_PARENT_CATEGORY, ID_USER, PARENT_CATEGORY_NAME) values (0, (%s), 'Income')", (id_user,), commit=True)
-        db.execute_query("insert into CATEGORY (ID_CATEGORY, ID_USER, ID_PARENT_CATEGORY, CATEGORY_NAME) values (0, (%s), 0, 'Available')", (id_user,), commit=True)
+        db.execute_query("insert into CATEGORY (ID_CATEGORY, ID_USER, ID_PARENT_CATEGORY, CATEGORY_NAME) values (0, (%s), 0, 'Available this month')", (id_user,), commit=True)
+        db.execute_query("insert into CATEGORY (ID_CATEGORY, ID_USER, ID_PARENT_CATEGORY, CATEGORY_NAME) values (1, (%s), 0, 'Available next month')", (id_user,), commit=True)
 
     except mysql.connector.IntegrityError:
         print(f"Could not create user : email address already used")
