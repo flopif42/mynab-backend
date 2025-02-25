@@ -91,19 +91,15 @@ def create(id_user, request_params):
 def delete(id_user, request_params):
     try:
         id_transaction = request_params['id_transaction']
-        # 1. Make sure the id_transaction belongs to the right user.
-        if not validate_owner(id_user, id_transaction):
-            print(f"Error : Transaction with id {id_transaction} does not belong to user with id {id_user}.")
-            return None
     
-        # 2. Check if transaction is a part of a Transfer
+        # Check if transaction is a part of a Transfer
         if is_transfer(id_transaction):
             id_transfer = get_transfer_id(id_transaction)
             print(f"This transaction is part of transfer with id_transfer : {id_transfer}")
             return transfer.delete(id_user, id_transfer)
         else:
-            query = "delete from TRANSACTION where ID_TRANSACTION = (%s)"
-            return db.execute_query(query, (id_transaction,), commit=True)
+            query = "delete from TRANSACTION where ID_USER = (%s) and ID_TRANSACTION = (%s)"
+            return db.execute_query(query, (id_user, id_transaction,), commit=True)
     except Exception as err:
         print(f"Exception: {err}")
         return None
