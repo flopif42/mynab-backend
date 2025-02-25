@@ -3,10 +3,6 @@ import app.db as db
 from app.controller import payee, account, child_category, parent_category, transfer
 
 def fetch_all(id_user, request_params):
-    # 1. Make sure the id_account belongs to the right user.
-    if (not request_params is None) and ('id_account' in request_params) and (not account.validate_owner(id_user, request_params['id_account'])):
-        print(f"Error : Account with id {request_params['id_account']} does not belong to user with id {id_user}.")
-        raise
     try:
         query = (
             "select acc.ACCOUNT_NAME as account, "
@@ -23,7 +19,7 @@ def fetch_all(id_user, request_params):
             "from TRANSACTION txn "
             "inner join ACCOUNT acc on acc.ID_ACCOUNT = txn.ID_ACCOUNT "
             "left join PAYEE pay on pay.ID_PAYEE = txn.ID_PAYEE "
-            "left join CATEGORY cat on txn.ID_CATEGORY = cat.ID_CATEGORY "
+            "left join CATEGORY cat on txn.ID_USER = cat.ID_USER and txn.ID_CATEGORY = cat.ID_CATEGORY "
             "left join TRANSFER trs_out on trs_out.ID_TRANSACTION_OUTFLOW = txn.ID_TRANSACTION and txn.TRANSACTION_FLOW = -1 "
             "left join TRANSFER trs_in on trs_in.ID_TRANSACTION_INFLOW = txn.ID_TRANSACTION and txn.TRANSACTION_FLOW = 1 "
             "left join TRANSACTION txn_trs_out on txn_trs_out.ID_TRANSACTION = trs_out.ID_TRANSACTION_INFLOW "
