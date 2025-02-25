@@ -106,11 +106,14 @@ def delete(id_user, request_params):
 
 # Utilities functions
 def is_transfer(id_transaction):
+    print(f"Transaction to delete : {id_transaction}")
     query = "select IS_TRANSFER from TRANSACTION where ID_TRANSACTION = %s"
     result = db.execute_query(query, (id_transaction,), fetch=True)
     if result[0][0] == 1:
+        print("True")
         return True
     else:
+        print("False")
         return False
 
 def get_transfer_id(id_transaction):
