@@ -13,7 +13,7 @@ def fetch(id_user, unused):
             "on e.EXP_YEAR = p.YEAR and e.EXP_MONTH = p.MONTH and e.ID_CATEGORY = p.ID_CATEGORY and e.ID_USER = p.ID_USER "
             "where p.ID_USER = (%s) "
         )
-        result = db.execute_query(query, (id_user,), fetch=True)
+        result = db.execute_query(query, (id_user,), fetch=True, dict=True)
         return result
     except Exception as err:
         print(f"Could not fetch budget : {err}")
