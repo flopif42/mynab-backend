@@ -3,7 +3,7 @@ import app.db as db
 def fetch(id_user, unused):
     try:
         query = (
-            "select p.ID_USER, p.YEAR, p.MONTH, p.ID_CATEGORY, cat.CATEGORY_NAME, BUDGET_LINE_AMOUNT, EXP_AMOUNT "
+            "select p.ID_USER, p.YEAR, p.MONTH, p.ID_CATEGORY, cat.CATEGORY_NAME, BUDGET_LINE_AMOUNT, ifnull(EXP_AMOUNT, 0) "
             "from BUDGET_PERIOD p "
             "left join BUDGET_LINE bl "
 	        "on bl.BUDGET_LINE_YEAR = p.YEAR and bl.BUDGET_LINE_MONTH = p.MONTH "
