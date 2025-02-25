@@ -66,7 +66,7 @@ def delete(id_user, id_transfer):
 
         # delete the associated transactions
         query = "delete from TRANSACTION where ID_USER = (%s) and ID_TRANSACTION in ((%s), (%s))"
-        result = db.execute_query(query, (id_user, result_retrieve[0]), commit=True)
+        result = db.execute_query(query, (id_user,) + result_retrieve[0], commit=True)
         return result
     except Exception as err:
         print(f"Could not delete transfer: {err}")
