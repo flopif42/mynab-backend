@@ -5,7 +5,7 @@ def fetch(id_user, unused):
     budget = []
     try:
         query = (
-            "select p.YEAR as year, p.MONTH as month, p.ID_CATEGORY as id_category, "
+            "select p.YEAR as year, p.MONTH as month, p.ID_CATEGORY as id, "
             "truncate(ifnull(BUDGET_LINE_AMOUNT, 0)/100,2) as funded, "
             "truncate(ifnull(EXP_AMOUNT, 0)/100,2) as spent "
             "from BUDGET_PERIOD p "
