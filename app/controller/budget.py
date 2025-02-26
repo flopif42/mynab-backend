@@ -18,7 +18,7 @@ def fetch(id_user, unused):
 
         for budget_line in result:
             year_month = str(budget_line['year']) + '_' + str(budget_line['month'])
-            if not month_year in budget_lines:
+            if not year_month in budget_lines:
                 budget_lines[year_month] = []
             budget_lines[year_month].append(budget_line)
         return budget_lines
