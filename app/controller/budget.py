@@ -20,11 +20,15 @@ def fetch(id_user, unused):
         result = db.execute_query(query, (id_user,), fetch=True, dictionary=True)
 
         for budget_line in result:
-            year = budget_line.pop('year')
-            month = budget_line.pop('month')
+#            year = budget_line.pop('year')
+#            month = budget_line.pop('month')
+            year = budget_line['year']
+            month = budget_line['month']
             id_month = f"{year}_{month:02d}"
 
-            monthly_budget = { "id_month": id_month }
+            category_lines.append(budget_line)
+
+            monthly_budget = { "id_month": id_month, "categories": category_lines }
             if not monthly_budget in budget:
                 budget.append(monthly_budget)
         return budget
