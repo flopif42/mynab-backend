@@ -5,7 +5,7 @@ def fetch(id_user, unused):
     budget = []
     try:
         query = (
-            "select p.YEAR as year, p.MONTH as month, p.ID_CATEGORY as id, "
+            "select p.YEAR as year, p.MONTH as month, p.ID_CATEGORY as id, cat.CATEGORY_NAME "
             "truncate(ifnull(BUDGET_LINE_AMOUNT, 0)/100,2) as funded, "
             "truncate(ifnull(EXP_AMOUNT, 0)/100,2) as spent "
             "from BUDGET_PERIOD p "
@@ -13,6 +13,8 @@ def fetch(id_user, unused):
 	        "on bl.BUDGET_LINE_YEAR = p.YEAR and bl.BUDGET_LINE_MONTH = p.MONTH and bl.ID_CATEGORY = p.ID_CATEGORY and bl.ID_USER = p.ID_USER "
             "left join EXPENSES e "
             "on e.EXP_YEAR = p.YEAR and e.EXP_MONTH = p.MONTH and e.ID_CATEGORY = p.ID_CATEGORY and e.ID_USER = p.ID_USER "
+            "left join CATEGORY cat "
+            "on cat.ID_USER = p.ID_USER and cat.ID_CATEGORY = p.ID_CATEGORY "
             "where p.ID_USER = (%s) "
         )
         result = db.execute_query(query, (id_user,), fetch=True, dictionary=True)
