@@ -28,7 +28,7 @@ def fetch(id_user, unused):
             budget_tmp[id_month].append(budget_line)
 
         for id_month in budget_tmp.keys():
-            budget.append({'id_month': id_month, 'categories': budget_temp[id_month]})
+            budget.append({'id_month': id_month, 'categories': budget_tmp[id_month]})
 
         return budget
     except Exception as err:
