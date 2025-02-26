@@ -6,8 +6,8 @@ def fetch(id_user, unused):
     try:
         query = (
             "select p.YEAR as year, p.MONTH as month, p.ID_CATEGORY as id, cat.CATEGORY_NAME as name, "
-            "truncate(ifnull(BUDGET_LINE_AMOUNT, 0)/100,2) as funded, "
-            "truncate(ifnull(EXP_AMOUNT, 0)/100,2) as spent "
+            "ifnull(BUDGET_LINE_AMOUNT, 0) as funded, "
+            "ifnull(EXP_AMOUNT, 0) as spent "
             "from BUDGET_PERIOD p "
             "left join BUDGET_LINE bl "
 	        "on bl.BUDGET_LINE_YEAR = p.YEAR and bl.BUDGET_LINE_MONTH = p.MONTH and bl.ID_CATEGORY = p.ID_CATEGORY and bl.ID_USER = p.ID_USER "
