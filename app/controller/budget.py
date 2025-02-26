@@ -16,20 +16,15 @@ def fetch(id_user, unused):
             "where p.ID_USER = (%s) "
         )
         result = db.execute_query(query, (id_user,), fetch=True, dictionary=True)
-
         for budget_line in result:
             year = budget_line.pop('year')
             month = budget_line.pop('month')
-#            year = budget_line['year']
-#            month = budget_line['month']
             id_month = f"{year}_{month:02d}"
             if not id_month in budget_tmp:
                 budget_tmp[id_month] = []
             budget_tmp[id_month].append(budget_line)
-
         for id_month in budget_tmp.keys():
             budget.append({'id_month': id_month, 'categories': budget_tmp[id_month]})
-
         return budget
     except Exception as err:
         print(f"Could not fetch budget : {err}")
