@@ -18,7 +18,7 @@ def fetch(id_user, unused):
         month_year = ()
         for budget_line in result:
             month_year = budget_line['month'], budget_line['year']
-            print(typeof(month_year))
+            print(type(month_year))
             print(month_year)
 
         return result
