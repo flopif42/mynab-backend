@@ -14,6 +14,13 @@ def fetch(id_user, unused):
             "where p.ID_USER = (%s) "
         )
         result = db.execute_query(query, (id_user,), fetch=True, dictionary=True)
+
+        month_year = ()
+        for budget_line in result:
+            month_year = budget_line['month'], budget_line['year']
+            print(typeof(month_year))
+            print(month_year)
+
         return result
     except Exception as err:
         print(f"Could not fetch budget : {err}")
