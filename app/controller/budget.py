@@ -16,12 +16,11 @@ def fetch(id_user, unused):
         )
         result = db.execute_query(query, (id_user,), fetch=True, dictionary=True)
 
-        month_year = ()
         for budget_line in result:
-            month_year = budget_line['month'], budget_line['year']
+            year_month = str(budget_line['year']) + '_' + str(budget_line['month'])
             if not month_year in budget_lines:
-                budget_lines[month_year] = []
-            budget_lines[month_year].append(budget_line)
+                budget_lines[year_month] = []
+            budget_lines[year_month].append(budget_line)
         return budget_lines
 #        return result
     except Exception as err:
