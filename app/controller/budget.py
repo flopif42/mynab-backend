@@ -25,12 +25,14 @@ def fetch(id_user, unused):
             year = budget_line['year']
             month = budget_line['month']
             id_month = f"{year}_{month:02d}"
-
-            category_lines.append(budget_line)
-
-            monthly_budget = { "id_month": id_month, "categories": category_lines }
+            
+            monthly_budget = { 'id_month': id_month, 'categories': category_lines }
+            monthly_budget['categories'].append(budget_line)
+            
             if not monthly_budget in budget:
                 budget.append(monthly_budget)
+                category_lines = []
+
         return budget
 #        return result
     except Exception as err:
