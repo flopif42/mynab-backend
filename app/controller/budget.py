@@ -22,6 +22,7 @@ def fetch(id_user, unused):
             year = budget_line.pop('year')
             month = budget_line.pop('month')
             id_month = f"{year}_{month:02d}"
+            budget_line['spent'] = int(budget_line['spent'])
             if not id_month in budget_tmp:
                 budget_tmp[id_month] = []
             budget_tmp[id_month].append(budget_line)
