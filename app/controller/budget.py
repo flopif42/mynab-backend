@@ -25,7 +25,8 @@ def fetch(id_user, unused):
             id_month = f"{year}_{month:02d}"
 
             monthly_budget = { "id_month": id_month }
-            budget.append(monthly_budget)
+            if not monthly_budget in budget:
+                budget.append(monthly_budget)
         return budget
 #        return result
     except Exception as err:
