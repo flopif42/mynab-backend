@@ -22,7 +22,8 @@ def fetch(id_user, unused):
             if not month_year in budget_lines:
                 budget_lines[month_year] = []
             budget_lines[month_year].append(budget_line)
-        return result
+        return budget_lines
+#        return result
     except Exception as err:
         print(f"Could not fetch budget : {err}")
         raise
