@@ -1,7 +1,8 @@
 import app.db as db
 
 def fetch(id_user, unused):
-    budget = {}
+    budget_tmp = {}
+    budget = []
     try:
         query = (
             "select p.YEAR as year, p.MONTH as month, p.ID_CATEGORY as id_category, "
@@ -22,9 +23,13 @@ def fetch(id_user, unused):
             year = budget_line['year']
             month = budget_line['month']
             id_month = f"{year}_{month:02d}"
-            if not id_month in budget:
-                budget[id_month] = []
-            budget[id_month].append(budget_line)
+            if not id_month in budget_tmp:
+                budget_tmp[id_month] = []
+            budget_tmp[id_month].append(budget_line)
+
+        for month in budget_tmp.keys():
+            budget.append(budget_tmp.value())
+
         return budget
     except Exception as err:
         print(f"Could not fetch budget : {err}")
