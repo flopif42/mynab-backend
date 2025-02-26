@@ -18,10 +18,10 @@ def fetch(id_user, unused):
         result = db.execute_query(query, (id_user,), fetch=True, dictionary=True)
 
         for budget_line in result:
-#            year = budget_line.pop('year')
-#            month = budget_line.pop('month')
-            year = budget_line['year']
-            month = budget_line['month']
+            year = budget_line.pop('year')
+            month = budget_line.pop('month')
+#            year = budget_line['year']
+#            month = budget_line['month']
             id_month = f"{year}_{month:02d}"
             if not id_month in budget_tmp:
                 budget_tmp[id_month] = []
