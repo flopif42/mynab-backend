@@ -1,10 +1,7 @@
 import app.db as db
 
 def fetch(id_user, unused):
-    budget = []
-    monthly_budget = {}
-    category_lines = []
-
+    budget = {}
     try:
         query = (
             "select p.YEAR as year, p.MONTH as month, p.ID_CATEGORY as id_category, "
@@ -25,12 +22,7 @@ def fetch(id_user, unused):
             year = budget_line['year']
             month = budget_line['month']
             id_month = f"{year}_{month:02d}"
-            
-            monthly_budget = { 'id_month': id_month }
-            
-            if not monthly_budget in budget:
-                budget.append(monthly_budget)
-
+            budget[id_month].append(budget_line)
         return budget
 #        return result
     except Exception as err:
