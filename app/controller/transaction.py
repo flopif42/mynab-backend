@@ -13,7 +13,7 @@ def fetch_all(id_user, request_params):
             "else PAYEE_NAME end as payee, "
             "CATEGORY_NAME as category, "
             "if(txn.TRANSACTION_FLOW=-1, 'Outflow', 'Inflow') as flow, "
-            "truncate(txn.TRANSACTION_AMOUNT / 100, 2) as amount, "
+            "txn.TRANSACTION_AMOUNT as amount, "
             "date_format(txn.TRANSACTION_DATE, \"%d/%m/%Y\") as date, "
             "txn.TRANSACTION_MEMO as memo "
             "from TRANSACTION txn "

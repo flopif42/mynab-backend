@@ -9,7 +9,7 @@ def fetch_all(id_user, unused):
     try:
         query = (
             "select acc.ID_ACCOUNT as id, ACCOUNT_NAME as name, ACCOUNT_TYPE as type, ACCOUNT_STATUS as status, "
-            "ifnull(truncate(sum(txn.TRANSACTION_AMOUNT * txn.TRANSACTION_FLOW)/100, 2), 0) as balance, "
+            "ifnull(sum(txn.TRANSACTION_AMOUNT * txn.TRANSACTION_FLOW), 0) as balance, "
             "case when count(txn.ID_TRANSACTION) > 0 then 0 else 1 end as can_be_deleted "
             "from ACCOUNT acc "
             "left join TRANSACTION txn on txn.ID_ACCOUNT = acc.ID_ACCOUNT "
