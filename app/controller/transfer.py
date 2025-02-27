@@ -5,15 +5,8 @@ def create(id_user, request_params):
     # request_params contains the following :
     # id_account_outflow, id_account_inflow, amount, date, memo
     
-    # Make sure the id_accounts belong to the right user.
     id_account_outflow = request_params['id_account_outflow']
-    if not account.validate_owner(id_user, id_account_outflow):
-        print(f"Error : Account with id {id_account_outflow} does not belong to user with id {id_user}.")
-        raise
     id_account_inflow = request_params['id_account_inflow']
-    if not account.validate_owner(id_user, id_account_inflow):
-        print(f"Error : Account with id {id_account_inflow} does not belong to user with id {id_user}.")
-        raise
 
     # Make sure the id_accounts From and To are different
     if id_account_outflow == id_account_inflow:
