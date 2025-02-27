@@ -40,7 +40,7 @@ def create(id_user, request_params):
         return result
     except Exception as err:
         print(f"Could not create transfer : {err}")
-        return None
+        raise
 
 def delete(id_user, id_transfer):
     try:
