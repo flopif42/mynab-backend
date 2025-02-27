@@ -25,6 +25,7 @@ group by year, month, id
             month = budget_line.pop('month')
             id_period = f"{year}_{month:02d}"
             budget_line['spent'] = int(budget_line['spent'])
+            budget_line['remaining'] = int(budget_line['remaining'])
             if not id_period in budget_tmp:
                 budget_tmp[id_period] = []
             budget_tmp[id_period].append(budget_line)
