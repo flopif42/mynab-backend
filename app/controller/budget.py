@@ -4,19 +4,22 @@ def fetch(id_user, unused):
     budget_tmp = {}
     budget = []
     try:
-        query = """
-            select p.YEAR as year, p.MONTH as month, p.ID_CATEGORY as id, cat.CATEGORY_NAME as name, 
-            ifnull(BUDGET_LINE_AMOUNT, 0) as funded, 
-            ifnull(EXP_AMOUNT, 0) as spent 
-            from BUDGET_PERIOD p 
-            left join BUDGET_LINE bl 
-	        on bl.BUDGET_LINE_YEAR = p.YEAR and bl.BUDGET_LINE_MONTH = p.MONTH and bl.ID_CATEGORY = p.ID_CATEGORY and bl.ID_USER = p.ID_USER 
-            left join EXPENSES e 
-            on e.EXP_YEAR = p.YEAR and e.EXP_MONTH = p.MONTH and e.ID_CATEGORY = p.ID_CATEGORY and e.ID_USER = p.ID_USER 
-            left join CATEGORY cat 
-            on cat.ID_USER = p.ID_USER and cat.ID_CATEGORY = p.ID_CATEGORY 
-            where p.ID_USER = (%s) 
-        """
+        query =
+"""
+select p.YEAR as year, p.MONTH as month, p.ID_CATEGORY as id, cat.CATEGORY_NAME as name, 
+    ifnull(BUDGET_LINE_AMOUNT, 0) as funded, 
+    ifnull(EXP_AMOUNT, 0) as spent,
+    sum(ifnull(BUDGET_LINE_AMOUNT, 0) + ifnull(EXP_AMOUNT, 0)) over(partition by p.ID_CATEGORY order by year, month rows between unbounded preceding and current row) as remaining
+from BUDGET_PERIOD p 
+left join BUDGET_LINE bl 
+    on bl.BUDGET_LINE_YEAR = p.YEAR and bl.BUDGET_LINE_MONTH = p.MONTH and bl.ID_CATEGORY = p.ID_CATEGORY and bl.ID_USER = p.ID_USER 
+left join EXPENSES e 
+    on e.EXP_YEAR = p.YEAR and e.EXP_MONTH = p.MONTH and e.ID_CATEGORY = p.ID_CATEGORY and e.ID_USER = p.ID_USER 
+left join CATEGORY cat 
+    on cat.ID_USER = p.ID_USER and cat.ID_CATEGORY = p.ID_CATEGORY 
+where p.ID_USER = (%s)
+group by year, month, id
+"""
         result = db.execute_query(query, (id_user,), fetch=True, dictionary=True)
         for budget_line in result:
             year = budget_line.pop('year')
