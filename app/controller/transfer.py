@@ -8,6 +8,14 @@ def create(id_user, request_params):
     id_account_outflow = request_params['id_account_outflow']
     id_account_inflow = request_params['id_account_inflow']
 
+    # Make sure the id_accounts belong to the right user
+    query_check = "select 1 from ACCOUNT where ID_USER = (%s) and ID_ACCOUNT in ((%s),(%s))"
+    values = (id_user, id_account_outflow, id_account_inflow)
+    rows = db.execute_query(query, (id_user, id_txn_outflow, id_txn_inflow), fetch=True)
+    if rows < 2:
+        print(f"Error : transfer incorrect : at least one off the accounts does not belong to the user.")
+        raise
+
     # Make sure the id_accounts From and To are different
     if id_account_outflow == id_account_inflow:
         print(f"Error : Cannot make transfer between the same account.")
