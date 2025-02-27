@@ -6,13 +6,13 @@ def fetch_all(id_user, unused):
     try:
         query = (
             "select ID_PARENT_CATEGORY as id, PARENT_CATEGORY_NAME as name, PARENT_CATEGORY_POSITION as position "
-            "from PARENT_CATEGORY where ID_USER = (%s)"
+            "from PARENT_CATEGORY where ID_USER = (%s) and PARENT_CATEGORY > 0"
         )
         parent_categories = db.execute_query(query, (str(id_user),), fetch=True, dictionary=True)
         for parent_category in parent_categories:
             query_children = (
                 "select cat.ID_CATEGORY as id, CATEGORY_NAME as name, ID_PARENT_CATEGORY as id_parent, "
-                "case when cat.ID_CATEGORY in (0,1) or count(ID_TRANSACTION) > 0 then 0 else 1 end as can_be_deleted "
+                "case when count(ID_TRANSACTION) > 0 then 0 else 1 end as can_be_deleted "
                 "from CATEGORY cat left join TRANSACTION txn on txn.ID_USER = cat.ID_USER and txn.ID_CATEGORY = cat.ID_CATEGORY "
                 "where cat.ID_USER = (%s) and ID_PARENT_CATEGORY = (%s) "
                 "group by cat.ID_CATEGORY , CATEGORY_NAME , ID_PARENT_CATEGORY "
