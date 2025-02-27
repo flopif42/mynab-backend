@@ -62,7 +62,7 @@ def create(id_user, request_params):
             "(ID_USER, ID_ACCOUNT, ID_PAYEE, ID_CATEGORY, TRANSACTION_FLOW, TRANSACTION_AMOUNT, TRANSACTION_DATE, TRANSACTION_MEMO, IS_TRANSFER) "
             "VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)"
         )
-        values = (id_user, id_account, id_payee, id_category, request_params['flow'], request_params['amount'], txn_date, request_params['memo'], request_params['is_transfer'])
+        values = (id_user, request_params['id_account'], request_params['id_payee'], id_category, request_params['flow'], request_params['amount'], txn_date, request_params['memo'], request_params['is_transfer'])
         result = db.execute_query(query, values, commit=True)
         return result
     except Exception as err:
