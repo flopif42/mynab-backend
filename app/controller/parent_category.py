@@ -1,10 +1,10 @@
 import json
 import app.db as db
 
-def validate_owner(id_user, id_parent_category):
-    query = "select 1 from PARENT_CATEGORY where ID_USER = %s and ID_PARENT_CATEGORY = %s"
-    rows = db.execute_query(query, (id_user, id_parent_category), fetch=True)
-    return len(rows) > 0
+#def validate_owner(id_user, id_parent_category):
+#    query = "select 1 from PARENT_CATEGORY where ID_USER = %s and ID_PARENT_CATEGORY = %s"
+#    rows = db.execute_query(query, (id_user, id_parent_category), fetch=True)
+#    return len(rows) > 0
 
 # Create a parent category
 def create(id_user, request_params):
@@ -21,13 +21,9 @@ def create(id_user, request_params):
         raise
 
 def delete(id_user, request_params):
-    # 1. Make sure the id_parent belongs to the right user.
-    if not validate_owner(id_user, request_params['id_parent']):
-        print(f"Error : Parent with id {request_params['id_parent']} does not belong to user with id {id_user}.")
-        raise
     try:
-        query = "delete from PARENT_CATEGORY where ID_PARENT_CATEGORY = (%s)"
-        db.execute_query(query, (request_params['id_parent'],), commit=True)
+        query = "delete from PARENT_CATEGORY where ID_PARENT_CATEGORY = (%s) and ID_USER = (%s)"
+        db.execute_query(query, (request_params['id_parent'], id_user), commit=True)
     except Exception as err:
         print(f"Could not delete the parent category : {err}")
         raise
@@ -35,10 +31,6 @@ def delete(id_user, request_params):
 def set_position(id_user, request_params):
     id_parent_category = request_params['id_parent_category']
     new_position = request_params['new_position']
-    # Make sure the id_parent_category belongs to the right user.
-    if not validate_owner(id_user, id_parent_category):
-        print(f"Error : Parent with id {id_parent_category} does not belong to user with id {id_user}.")
-        raise
     parent_positions = db.execute_query("select ID_PARENT_CATEGORY, PARENT_CATEGORY_POSITION from PARENT_CATEGORY where ID_USER = (%s)", (id_user,), fetch=True)
     nb_parent_categories = len(parent_positions)
     sorted_list = sorted(parent_positions, key=lambda tup: tup[1])

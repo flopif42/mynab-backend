@@ -2,10 +2,10 @@ import json
 import app.db as db
 import app.controller.parent_category as p_cat
 
-def validate_owner(id_user, id_category):
-    query = "select 1 from CATEGORY where ID_USER = %s and ID_CATEGORY = %s"
-    rows = db.execute_query(query, (id_user, id_category), fetch=True)
-    return len(rows) > 0
+#def validate_owner(id_user, id_category):
+#    query = "select 1 from CATEGORY where ID_USER = %s and ID_CATEGORY = %s"
+#    rows = db.execute_query(query, (id_user, id_category), fetch=True)
+#    return len(rows) > 0
 
 def fetch_all(id_user, unused):
     try:
