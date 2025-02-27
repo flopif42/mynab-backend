@@ -1,11 +1,6 @@
 import json
 import app.db as db
 
-#def validate_owner(id_user, id_parent_category):
-#    query = "select 1 from PARENT_CATEGORY where ID_USER = %s and ID_PARENT_CATEGORY = %s"
-#    rows = db.execute_query(query, (id_user, id_parent_category), fetch=True)
-#    return len(rows) > 0
-
 # Create a parent category
 def create(id_user, request_params):
     try:

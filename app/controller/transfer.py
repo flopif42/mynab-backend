@@ -1,11 +1,6 @@
 import app.db as db
 from app.controller import account, transaction
 
-#def validate_owner(id_user, id_transfer):
-#    query = "select 1 from TRANSFER where ID_USER = %s and ID_TRANSFER = %s"
-#    rows = db.execute_query(query, (id_user, id_transfer), fetch=True)
-#    return len(rows) > 0
-
 def create(id_user, request_params):
     # request_params contains the following :
     # id_account_outflow, id_account_inflow, amount, date, memo

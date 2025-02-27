@@ -1,10 +1,5 @@
 import app.db as db
 
-def validate_owner(id_user, id_account):
-    query = "select 1 from ACCOUNT where ID_USER = %s and ID_ACCOUNT = %s"
-    rows = db.execute_query(query, (id_user, id_account), fetch=True)
-    return len(rows) > 0
-
 def fetch_all(id_user, unused):
     try:
         query = (
@@ -16,7 +11,7 @@ def fetch_all(id_user, unused):
             "where acc.ID_USER = %s "
             "group by acc.ID_ACCOUNT"
         )
-        result = db.execute_query(query, (str(id_user),), fetch=True, dictionary=True)
+        result = db.execute_query(query, (id_user,), fetch=True, dictionary=True)
         return result
     except Exception as err:
         print(f"Could not fetch accounts : {err}")
@@ -31,25 +26,17 @@ def create(id_user, request_params):
         raise
 
 def delete(id_user, request_params):
-    # 1. Make sure the id_account belongs to the right user.
-    if not validate_owner(id_user, request_params['id_account']):
-        print(f"Error : Account with id {request_params['id_account']} does not belong to user with id {id_user}.")
-        raise
     try:
-        query = "delete from ACCOUNT where ID_ACCOUNT = (%s)"
-        db.execute_query(query, (request_params['id_account'],), commit=True)
+        query = "delete from ACCOUNT where ID_ACCOUNT = (%s) and ID_USER = (%s)"
+        db.execute_query(query, (request_params['id_account'], id_user), commit=True)
     except Exception as err:
         print(f"Could not delete the account : {err}")
         raise
 
 def toggle_status(id_user, request_params):
-    # 1. Make sure the id_account belongs to the right user.
-    if not validate_owner(id_user, request_params['id_account']):
-        print(f"Error : Account with id {request_params['id_account']} does not belong to user with id {id_user}.")
-        raise
     try:
-        query = "update ACCOUNT set ACCOUNT_STATUS = (ACCOUNT_STATUS + 1) %2 where ID_ACCOUNT = (%s)"
-        db.execute_query(query, (request_params['id_account'],), commit=True)
+        query = "update ACCOUNT set ACCOUNT_STATUS = (ACCOUNT_STATUS + 1) %2 where ID_ACCOUNT = (%s) and ID_USER = (%s)"
+        db.execute_query(query, (request_params['id_account'], id_user), commit=True)
     except Exception as err:
         print(f"Could not open/close the account : {err}")
         raise
