@@ -6,7 +6,7 @@ def fetch_all(id_user, unused):
     try:
         query = (
             "select ID_PARENT_CATEGORY as id, PARENT_CATEGORY_NAME as name, PARENT_CATEGORY_POSITION as position "
-            "from PARENT_CATEGORY where ID_USER = (%s) and PARENT_CATEGORY > 0"
+            "from PARENT_CATEGORY where ID_USER = (%s) and ID_PARENT_CATEGORY > 0"
         )
         parent_categories = db.execute_query(query, (str(id_user),), fetch=True, dictionary=True)
         for parent_category in parent_categories:
