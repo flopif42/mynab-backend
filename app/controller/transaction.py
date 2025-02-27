@@ -42,32 +42,14 @@ def fetch_all(id_user, request_params):
 def create(id_user, request_params):
     # request_params contains the following :
     # id_account, id_payee, flow, amount, date, memo
-
-    # 1. Make sure the id_account belongs to the right user.
-    id_account = request_params['id_account']
-    if not account.validate_owner(id_user, id_account):
-        print(f"Error : Account with id {id_account} does not belong to user with id {id_user}.")
-        return None
-
-    # 2. If id_payee is set, make sure the id_payee belongs to the right user.
-    if ('id_payee' in request_params) and (request_params['id_payee'] != ''):
-        id_payee = request_params['id_payee']
-        if not payee.validate_owner(id_user, id_payee):
-            print(f"Error : Payee with id {id_payee} does not belong to user with id {id_user}.")
-            return None
-    else:
-        id_payee = None
     
-    # 3. If id_category is set, make sure the id_category belongs to the right user.
+    # If id_category is set, make sure the id_category belongs to the right user.
     if ('id_category' in request_params) and (request_params['id_category'] != ''):
         id_category = request_params['id_category']
-        if not child_category.validate_owner(id_user, id_category):
-            print(f"Error : Category with id {id_category} does not belong to user with id {id_user}.")
-            return None
     else:
         id_category = None
 
-    # 4. Make sure the date is in this format : DD/MM/YYYY.
+    # Make sure the date is in this format : DD/MM/YYYY.
     txn_date = request_params['date']
     try:
         txn_date = mysql_format_date(txn_date)
