@@ -21,13 +21,13 @@ def fetch(id_user, unused):
         for budget_line in result:
             year = budget_line.pop('year')
             month = budget_line.pop('month')
-            id_month = f"{year}_{month:02d}"
+            id_period = f"{year}_{month:02d}"
             budget_line['spent'] = int(budget_line['spent'])
-            if not id_month in budget_tmp:
-                budget_tmp[id_month] = []
-            budget_tmp[id_month].append(budget_line)
-        for id_month in budget_tmp.keys():
-            budget.append({'id_month': id_month, 'categories': budget_tmp[id_month]})
+            if not id_period in budget_tmp:
+                budget_tmp[id_period] = []
+            budget_tmp[id_period].append(budget_line)
+        for id_period in budget_tmp.keys():
+            budget.append({'id_period': id_period, 'categories': budget_tmp[id_period]})
         return budget
     except Exception as err:
         print(f"Could not fetch budget : {err}")
