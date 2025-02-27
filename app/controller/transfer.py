@@ -12,7 +12,7 @@ def create(id_user, request_params):
     query_check = "select 1 from ACCOUNT where ID_USER = (%s) and ID_ACCOUNT in ((%s),(%s))"
     values = (id_user, id_account_outflow, id_account_inflow)
     rows = db.execute_query(query_check, (id_user, id_account_outflow, id_account_inflow), fetch=True)
-    if rows < 2:
+    if len(rows) < 2:
         print(f"Error : transfer incorrect : at least one off the accounts does not belong to the user.")
         raise
 
