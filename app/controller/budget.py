@@ -4,8 +4,7 @@ def fetch(id_user, unused):
     budget_tmp = {}
     budget = []
     try:
-        query =
-"""
+        query = """
 select p.YEAR as year, p.MONTH as month, p.ID_CATEGORY as id, cat.CATEGORY_NAME as name, 
     ifnull(BUDGET_LINE_AMOUNT, 0) as funded, 
     ifnull(EXP_AMOUNT, 0) as spent,
