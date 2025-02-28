@@ -46,12 +46,16 @@ def set_funded(id_user, request_params):
         if amount < 0:
             print(f"Error : budget amount cannot be negative")
             raise
-        query = """
-insert into BUDGET_LINE (ID_USER, ID_CATEGORY, BUDGET_LINE_YEAR, BUDGET_LINE_MONTH, BUDGET_LINE_AMOUNT) 
-values ((%s), (%s), (%s), (%s), (%s)) 
-ON DUPLICATE KEY UPDATE BUDGET_LINE_AMOUNT = (%s)
-"""
-        values = (id_user, request_params['id_category'], period.year, period.month, amount, amount)
+        if amount == 0:
+            query = "delete from BUDGET_LINE where ID_USER = (%s) and ID_CATEGORY = (%s) and BUDGET_LINE_YEAR = (%s) and BUDGET_LINE_MONTH = (%s)"
+            values = (id_user, request_params['id_category'], period.year, period.month)
+        else:
+            query = """
+                    insert into BUDGET_LINE (ID_USER, ID_CATEGORY, BUDGET_LINE_YEAR, BUDGET_LINE_MONTH, BUDGET_LINE_AMOUNT) 
+                    values ((%s), (%s), (%s), (%s), (%s)) 
+                    ON DUPLICATE KEY UPDATE BUDGET_LINE_AMOUNT = (%s)
+                    """
+            values = (id_user, request_params['id_category'], period.year, period.month, amount, amount)
         db.execute_query(query, values, commit=True)
     except Exception as err:
         print(f"Could not create the budget line : {err}")
