@@ -37,3 +37,19 @@ group by year, month, id
     except Exception as err:
         print(f"Could not fetch budget : {err}")
         raise
+
+def set_funded(id_user, request_params):
+    try:
+        id_period = request_params['id_period']
+        budget_line_year = int(id_period[:4])
+        budget_line_month = int(id_period[5:])
+        amount = int(request_params['funded'])
+        query = """
+insert into BUDGET_LINE (ID_USER, ID_CATEGORY, BUDGET_LINE_YEAR, BUDGET_LINE_MONTH, BUDGET_LINE_AMOUNT) 
+values ((%s), (%s), (%s), (%s), (%s))
+"""
+        values = (id_user, request_params['id_category'], budget_line_year, budget_line_month, amount)
+        db.execute_query(query, values, commit=True)
+    except Exception as err:
+        print(f"Could not create the budget line : {err}")
+        raise
