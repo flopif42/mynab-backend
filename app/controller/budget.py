@@ -6,8 +6,8 @@ def fetch(id_user, unused):
     try:
         query = """
 select p.YEAR as year, p.MONTH as month, p.ID_CATEGORY as id, cat.CATEGORY_NAME as name, 
-    ifnull(BUDGET_LINE_AMOUNT, 0) as funded, 
-    ifnull(EXP_AMOUNT, 0) as spent,
+    BUDGET_LINE_AMOUNT as funded, 
+    EXP_AMOUNT as spent,
     sum(ifnull(BUDGET_LINE_AMOUNT, 0) + ifnull(EXP_AMOUNT, 0)) over(partition by p.ID_CATEGORY order by year, month rows between unbounded preceding and current row) as remaining
 from BUDGET_PERIOD p 
 left join BUDGET_LINE bl 
