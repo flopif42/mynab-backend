@@ -41,21 +41,17 @@ group by year, month, id
 
 def set_funded(id_user, request_params):
     try:
-        id_period = request_params['id_period']
-
-        date_string = id_period + "_01"
-        x = dt.datetime.strptime(date_string, '%Y_%m_%d')
-
-        budget_line_year = x.year
-        budget_line_month = x.month
-
+        period = dt.datetime.strptime(request_params['id_period'] + "_01", '%Y_%m_%d')
         amount = int(request_params['funded'])
+        if amount < 0:
+            print(f"Error : budget amount cannot be negative")
+            raise
         query = """
 insert into BUDGET_LINE (ID_USER, ID_CATEGORY, BUDGET_LINE_YEAR, BUDGET_LINE_MONTH, BUDGET_LINE_AMOUNT) 
 values ((%s), (%s), (%s), (%s), (%s)) 
 ON DUPLICATE KEY UPDATE BUDGET_LINE_AMOUNT = (%s)
 """
-        values = (id_user, request_params['id_category'], budget_line_year, budget_line_month, amount, amount)
+        values = (id_user, request_params['id_category'], period.year, period.month, amount, amount)
         db.execute_query(query, values, commit=True)
     except Exception as err:
         print(f"Could not create the budget line : {err}")
