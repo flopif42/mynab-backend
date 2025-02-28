@@ -46,10 +46,8 @@ def set_funded(id_user, request_params):
         date_string = id_period + "_01"
         x = dt.datetime.strptime(date_string, '%Y_%m_%d')
 
-        print(x)
-
-        budget_line_year = int(id_period[:4])
-        budget_line_month = int(id_period[5:])
+        budget_line_year = x.year
+        budget_line_month = x.month
 
         amount = int(request_params['funded'])
         query = """
