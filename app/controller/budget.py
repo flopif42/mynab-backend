@@ -1,3 +1,4 @@
+import datetime as dt
 import app.db as db
 
 def fetch(id_user, unused):
@@ -41,8 +42,15 @@ group by year, month, id
 def set_funded(id_user, request_params):
     try:
         id_period = request_params['id_period']
+
+        date_string = id_period + "_01"
+        x = dt.datetime.strptime(date_string, '%Y_%m_%d')
+
+        print(x)
+
         budget_line_year = int(id_period[:4])
         budget_line_month = int(id_period[5:])
+
         amount = int(request_params['funded'])
         query = """
 insert into BUDGET_LINE (ID_USER, ID_CATEGORY, BUDGET_LINE_YEAR, BUDGET_LINE_MONTH, BUDGET_LINE_AMOUNT) 
