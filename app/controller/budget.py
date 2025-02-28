@@ -24,8 +24,10 @@ group by year, month, id
             year = budget_line.pop('year')
             month = budget_line.pop('month')
             id_period = f"{year}_{month:02d}"
-            budget_line['spent'] = int(budget_line['spent']) if budget_line['spent'] is not None
-            budget_line['remaining'] = int(budget_line['remaining']) if budget_line['remaining'] is not None
+            if budget_line['spent'] is not None:
+                budget_line['spent'] = int(budget_line['spent'])
+            if budget_line['remaining'] is not None:
+                budget_line['remaining'] = int(budget_line['remaining']) 
             if not id_period in budget_tmp:
                 budget_tmp[id_period] = []
             budget_tmp[id_period].append(budget_line)
