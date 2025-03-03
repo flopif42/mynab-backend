@@ -41,6 +41,7 @@ def fetch(id_user, unused):
                 if row['spent']:
                     row['spent'] = int(row['spent'])
                 if row['remaining']:
+                    print(f"id_cat = {row['id']}; row[remaining] = {row['remaining'}")
                     row['remaining'] = int(row['remaining']) 
                 categories[id_period].append(row)
 
