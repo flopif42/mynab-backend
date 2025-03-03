@@ -26,7 +26,7 @@ def fetch(id_user, unused):
                 left join BUDGET_LINE bl
                   on bl.ID_USER = p.ID_USER and bl.BUDGET_LINE_YEAR = p.YEAR and bl.BUDGET_LINE_MONTH = p.MONTH and bl.ID_CATEGORY = cat.ID_CATEGORY
                 where p.ID_USER = (%s)
-                order by month, id_category
+                order by month, cat.id_category
                 """
         result = db.execute_query(query, (id_user,), fetch=True, dictionary=True)
         for row in result:
