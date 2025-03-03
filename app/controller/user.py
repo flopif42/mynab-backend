@@ -32,6 +32,7 @@ def signup(request_params):
         )
         id_user = db.execute_query(query, values, commit=True)
 
+        # ID_CATEGORY 0 is a technical value for Income.
         db.execute_query("insert into PARENT_CATEGORY (ID_PARENT_CATEGORY, ID_USER, PARENT_CATEGORY_NAME) values (0, (%s), '(system)')", (id_user,), commit=True)
         db.execute_query("insert into CATEGORY (ID_CATEGORY, ID_USER, ID_PARENT_CATEGORY, CATEGORY_NAME) values (0, (%s), 0, 'Income')", (id_user,), commit=True)
 
