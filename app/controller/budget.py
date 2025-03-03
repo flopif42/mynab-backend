@@ -9,7 +9,7 @@ def fetch(id_user, unused):
     try:
         query = """
                 select p.YEAR as year, p.MONTH as month, cat.ID_CATEGORY as id,
-                  ifnull(i.INC_AMOUNT, 0) as ifnull(total_income, 0), atb.available,
+                  ifnull(i.INC_AMOUNT, 0) as total_income, ifnull(atb.available, 0) as available,
                   bl.BUDGET_LINE_AMOUNT as funded, e.EXP_AMOUNT as spent,
                   sum(ifnull(BUDGET_LINE_AMOUNT, 0) + ifnull(EXP_AMOUNT, 0)) over(partition by cat.ID_CATEGORY order by year, month rows between unbounded preceding and current row) as remaining
                 from BUDGET_PERIOD p
