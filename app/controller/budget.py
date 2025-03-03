@@ -27,7 +27,6 @@ def fetch(id_user, unused):
                 """
         result = db.execute_query(query, (id_user,), fetch=True, dictionary=True)
         for row in result:
-            print(f"row: {row}")
             year = row.pop('year')
             month = row.pop('month')
             id_period = f"{year}_{month:02d}"
@@ -41,8 +40,6 @@ def fetch(id_user, unused):
                 row.pop('available')
                 if row['spent']:
                     row['spent'] = int(row['spent'])
-                # if row['remaining']:
-                print(f"id_cat = {row['id']}; row[remaining] = {row['remaining']}")
                 row['remaining'] = int(row['remaining']) 
                 categories[id_period].append(row)
 
