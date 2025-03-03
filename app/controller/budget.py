@@ -36,7 +36,7 @@ def fetch(id_user, unused):
                 budget_tmp[id_period] = []
             budget_tmp[id_period].append(budget_line)
         for id_period in budget_tmp.keys():
-            budget.append({'id_period': id_period, 'total_income': income[id_period], 'categories': budget_tmp[id_period]})
+            budget.append({'id_period': id_period, 'categories': budget_tmp[id_period]})
         return budget
     except Exception as err:
         print(f"Could not fetch budget : {err}")
