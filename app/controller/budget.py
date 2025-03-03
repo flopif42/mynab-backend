@@ -27,7 +27,6 @@ def fetch(id_user, unused):
                 """
         result = db.execute_query(query, (id_user,), fetch=True, dictionary=True)
         for row in result:
-            print(row)
             year = row.pop('year')
             month = row.pop('month')
             id_period = f"{year}_{month:02d}"
