@@ -42,6 +42,8 @@ def create(id_user, request_params):
 
 def delete(id_user, request_params):
     try:
+        query = "delete from BUDGET_LINE where ID_USER = (%s) and ID_CATEGORY = (%s) and ID_CATEGORY <> 0"
+        db.execute_query(query, (id_user, request_params['id_category'],), commit=True)
         query = "delete from CATEGORY where ID_USER = (%s) and ID_CATEGORY = (%s) and ID_CATEGORY <> 0"
         db.execute_query(query, (id_user, request_params['id_category'],), commit=True)
     except Exception as err:
