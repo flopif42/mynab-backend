@@ -29,7 +29,8 @@ def fetch(id_user, unused):
             year = row.pop('year')
             month = row.pop('month')
             id_period = f"{year}_{month:02d}"
-
+            if not id_period in categories:
+                categories[id_period] = []
             if row['id'] == 0:
                 total_income[id_period] = row['total_income']
             else:
@@ -37,8 +38,6 @@ def fetch(id_user, unused):
                     row['spent'] = int(row['spent'])
                 if row['remaining']:
                     row['remaining'] = int(row['remaining']) 
-                if not id_period in categories:
-                    categories[id_period] = []
                 categories[id_period].append(row)
         for id_period in categories.keys():
             budget.append({'id_period': id_period, 'total_income': total_income[id_period], 'categories': categories[id_period]})
