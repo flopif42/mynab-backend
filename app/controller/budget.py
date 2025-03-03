@@ -8,7 +8,7 @@ def fetch(id_user, unused):
     available = {}
     try:
         query = """
-                select p.ID_USER, p.YEAR as year, p.MONTH as month, cat.ID_CATEGORY,
+                select p.ID_USER, p.YEAR as year, p.MONTH as month, cat.ID_CATEGORY as id,
                   i.INC_AMOUNT as total_income,
                   atb.available,
                   bl.BUDGET_LINE_AMOUNT as funded,
