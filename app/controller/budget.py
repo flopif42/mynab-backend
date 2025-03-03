@@ -41,6 +41,8 @@ def fetch(id_user, unused):
                     row['remaining'] = int(row['remaining']) 
                 categories[id_period].append(row)
         for id_period in categories.keys():
+            if not id_period in total_income:
+                total_income[id_period] = 0
             budget.append({'id_period': id_period, 'total_income': total_income[id_period], 'categories': categories[id_period]})
         return budget
     except Exception as err:
