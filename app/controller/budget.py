@@ -10,7 +10,7 @@ def fetch(id_user, unused):
         query = """
                 select p.ID_USER, p.YEAR as year, p.MONTH as month, cat.ID_CATEGORY as id,
                   i.INC_AMOUNT as total_income,
-                  ifnull(atb.available, 0),
+                  ifnull(atb.available, 0) as available,
                   bl.BUDGET_LINE_AMOUNT as funded,
 	                e.EXP_AMOUNT as spent,
                   sum(ifnull(BUDGET_LINE_AMOUNT, 0) + ifnull(EXP_AMOUNT, 0)) over(partition by cat.ID_CATEGORY order by year, month rows between unbounded preceding and current row) as remaining
@@ -46,6 +46,7 @@ def fetch(id_user, unused):
                 if row['remaining']:
                     row['remaining'] = int(row['remaining']) 
                 categories[id_period].append(row)
+
         for id_period in categories.keys():
             if not id_period in total_income:
                 total_income[id_period] = 0
