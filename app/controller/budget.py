@@ -2,8 +2,9 @@ import datetime as dt
 import app.db as db
 
 def fetch(id_user, unused):
-    budget_tmp = {}
     budget = []
+    categories = {}
+    total_income = {}
     try:
         query = """
                 select p.YEAR as year, p.MONTH as month, p.ID_CATEGORY as id, cat.CATEGORY_NAME as name, 
@@ -24,19 +25,23 @@ def fetch(id_user, unused):
                 group by year, month, id
                 """
         result = db.execute_query(query, (id_user,), fetch=True, dictionary=True)
-        for budget_line in result:
-            year = budget_line.pop('year')
-            month = budget_line.pop('month')
+        for row in result:
+            year = row.pop('year')
+            month = row.pop('month')
             id_period = f"{year}_{month:02d}"
-            if budget_line['spent']:
-                budget_line['spent'] = int(budget_line['spent'])
-            if budget_line['remaining']:
-                budget_line['remaining'] = int(budget_line['remaining']) 
-            if not id_period in budget_tmp:
-                budget_tmp[id_period] = []
-            budget_tmp[id_period].append(budget_line)
-        for id_period in budget_tmp.keys():
-            budget.append({'id_period': id_period, 'categories': budget_tmp[id_period]})
+
+            if row['id'] == 0:
+                total_income[id_period] = row['total_income']
+            else:
+                if row['spent']:
+                    row['spent'] = int(row['spent'])
+                if row['remaining']:
+                    row['remaining'] = int(row['remaining']) 
+                if not id_period in categories:
+                    categories[id_period] = []
+                categories[id_period].append(row)
+        for id_period in categories.keys():
+            budget.append({'id_period': id_period, 'total_income': total_income[id_period], 'categories': categories[id_period]})
         return budget
     except Exception as err:
         print(f"Could not fetch budget : {err}")
