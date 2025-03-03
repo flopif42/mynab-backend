@@ -34,6 +34,7 @@ def fetch(id_user, unused):
             if row['id'] == 0:
                 total_income[id_period] = row['total_income']
             else:
+                row.pop('total_income')
                 if row['spent']:
                     row['spent'] = int(row['spent'])
                 if row['remaining']:
