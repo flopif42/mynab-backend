@@ -9,10 +9,8 @@ def fetch(id_user, unused):
     try:
         query = """
                 select p.YEAR as year, p.MONTH as month, cat.ID_CATEGORY as id,
-                  i.INC_AMOUNT as total_income,
-                  ifnull(atb.available, 0) as available,
-                  bl.BUDGET_LINE_AMOUNT as funded,
-	                e.EXP_AMOUNT as spent,
+                  i.INC_AMOUNT as total_income, atb.available,
+                  bl.BUDGET_LINE_AMOUNT as funded, e.EXP_AMOUNT as spent,
                   sum(ifnull(BUDGET_LINE_AMOUNT, 0) + ifnull(EXP_AMOUNT, 0)) over(partition by cat.ID_CATEGORY order by year, month rows between unbounded preceding and current row) as remaining
                 from BUDGET_PERIOD p
                 left join CATEGORY cat
@@ -26,7 +24,6 @@ def fetch(id_user, unused):
                 left join BUDGET_LINE bl
                   on bl.ID_USER = p.ID_USER and bl.BUDGET_LINE_YEAR = p.YEAR and bl.BUDGET_LINE_MONTH = p.MONTH and bl.ID_CATEGORY = cat.ID_CATEGORY
                 where p.ID_USER = (%s)
-                order by month, cat.id_category
                 """
         result = db.execute_query(query, (id_user,), fetch=True, dictionary=True)
         for row in result:
@@ -35,10 +32,10 @@ def fetch(id_user, unused):
             id_period = f"{year}_{month:02d}"
             if not id_period in categories:
                 categories[id_period] = []
-            if row['id'] == 0:
+            if row['id'] == 0: # Manage income values (total income for the month and available to budget)
                 total_income[id_period] = row['total_income']
                 available[id_period] = row['available']
-            else:
+            else: # Manage budget values (funded, spent and remaining)
                 row.pop('total_income')
                 row.pop('available')
                 if row['spent']:
@@ -54,8 +51,8 @@ def fetch(id_user, unused):
                 available[id_period] = 0
             budget.append({
                 'id_period': id_period,
-                'total_income': total_income[id_period],
-                'available': available[id_period],
+                'total_income': int(total_income[id_period]),
+                'available': int(available[id_period]),
                 'categories': categories[id_period]
             })
         return budget
