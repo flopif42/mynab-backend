@@ -1,5 +1,5 @@
 from flask import Blueprint
-from app.routes import handle_route_action
+from app import handle_route_action
 from app.controller import transfer
 
 transfer_bp = Blueprint('transfer', __name__)

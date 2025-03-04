@@ -1,5 +1,5 @@
 from flask import Blueprint, request
-from app.routes import handle_route_action
+from app import handle_route_action
 from app.controller import transaction
 
 transaction_bp = Blueprint('transaction', __name__)
