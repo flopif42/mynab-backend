@@ -1,5 +1,4 @@
-from flask import Flask
-from flask import request, jsonify
+from flask import Flask, request, jsonify
 from app.jwt import JwtManager
 from http import HTTPStatus
 
