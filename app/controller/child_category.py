@@ -4,7 +4,7 @@ import app.controller.parent_category as p_cat
 
 def fetch_all(id_user, unused):
     try:
-        query = """"
+        query = """
             select ID_PARENT_CATEGORY as id, PARENT_CATEGORY_NAME as name, PARENT_CATEGORY_POSITION as position 
             from PARENT_CATEGORY where ID_USER = (%s) and ID_PARENT_CATEGORY > 0
             """
