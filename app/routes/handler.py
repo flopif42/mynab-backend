@@ -1,5 +1,5 @@
 from flask import Flask, request, jsonify
-from app.jwt import JwtManager
+from app.jwt_manager import JwtManager
 from http import HTTPStatus
 
 def handle_route_action(action):

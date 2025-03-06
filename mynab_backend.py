@@ -5,7 +5,7 @@ from flask import Flask
 from flask_cors import CORS, cross_origin
 from http import HTTPStatus
 import app
-from app.jwt import JwtManager
+from app.jwt_manager import JwtManager
 from app.sql_manager import SqlManager
 
 def load_configuration():

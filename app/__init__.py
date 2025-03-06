@@ -1,5 +1,4 @@
 from flask import Flask
-from app.jwt import JwtManager
 from app.routes.about_routes import about_bp
 from app.routes.transaction_routes import transaction_bp
 from app.routes.transfer_routes import transfer_bp
