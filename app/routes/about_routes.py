@@ -21,6 +21,7 @@ def hello():
             "Database version": db_version
         }
         return body, HTTPStatus.OK
-    except Exception as err:
-        print(f"Could not load version file. Exception: {err}")
+
+    except ZeroDivisionError:
+        print(f"Exception: {err}")
         return "", HTTPStatus.INTERNAL_SERVER_ERROR
