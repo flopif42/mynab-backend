@@ -10,7 +10,7 @@ about_bp = Blueprint('about', __name__)
 @about_bp.route('/hello', methods=['GET'])
 def hello():
     db_version = 'N/A'
-    db_status = 'Down'
+    db_status = "Running"
 
     try:
         api_version = json.load(open('version.json'))['version']
@@ -22,13 +22,15 @@ def hello():
         query = "select VERSION from VERSION"
         result = db.execute_query(query, fetch=True)
         db_version = result[0][0]
-        db_status = "Running"
+        
     except IndexError:
         print(f"Could not retrieve the database version : no rows.")
     except ProgrammingError as err:
         print(f"There was a problem with a query : {err}.")
+        db_status = 'Down'
     except DatabaseError:
         print(f"Could not connect to the database.")
+        db_status = 'Down'
 
     body = {
         "API server status": "Running",
