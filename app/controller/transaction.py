@@ -77,8 +77,8 @@ def delete(id_user, request_params):
             query = "delete from TRANSACTION where ID_USER = (%s) and ID_TRANSACTION = (%s)"
             return SqlManager.execute_query(query, (id_user, id_transaction,), commit=True)
     except Exception as err:
-        print(f"Exception: {err}")
-        return None
+        print(f"Could not delete the transaction: {err}")
+        raise
 
 # Utilities functions
 def is_transfer(id_transaction):
