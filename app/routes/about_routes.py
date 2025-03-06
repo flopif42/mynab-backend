@@ -23,7 +23,7 @@ def hello():
         result = db.execute_query(query, fetch=True)
         db_version = result[0][0]
         db_status = "Running"
-    except ProgrammingError err:
+    except ProgrammingError as err:
         print(f"There was a problem with a query : {err}.")
     except DatabaseError:
         print(f"Could not connect to the database.")
