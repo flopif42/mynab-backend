@@ -1,5 +1,5 @@
 from flask import Blueprint
-from app import handle_route_action
+from app.handler import handle_route_action
 from app.controller import child_category, parent_category
 
 category_bp = Blueprint('category', __name__)

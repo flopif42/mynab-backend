@@ -1,5 +1,5 @@
 from flask import Blueprint
-from app import handle_route_action
+from app.handler import handle_route_action
 from app.controller import account
 
 account_bp = Blueprint('account', __name__)

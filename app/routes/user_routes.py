@@ -1,6 +1,6 @@
 import flask
 from http import HTTPStatus
-from app import handle_route_action
+from app.handler import handle_route_action
 from app.controller import user
 from app.jwt import JwtManager
 
