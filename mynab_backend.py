@@ -19,6 +19,10 @@ def load_configuration():
         print(f"Could not load server configuration file. Exception: {err}")
         sys.exit(1)
 
-app = app.create_app()
-load_configuration()
-CORS(app, **_server_config['CorsParams'])
+def main():
+    mynab_app = app.create_app()
+    load_configuration()
+    CORS(app, **_server_config['CorsParams'])
+
+if __name__ == "__main__":
+    main()
