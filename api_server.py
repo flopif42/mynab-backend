@@ -10,8 +10,7 @@ from app.db import DbPool
 
 def load_configuration():
     try:
-        config_fd = open('config.json')
-        server_config = json.load(config_fd)
+        server_config = json.load(open('config.json'))
         JwtManager._config = server_config['JwtParams']
         DbPool._config = server_config['DatabaseParams']
         return server_config
