@@ -6,7 +6,7 @@ from flask_cors import CORS, cross_origin
 from http import HTTPStatus
 import app
 from app.jwt import JwtManager
-from app.db import DbPool
+from app.sql_manager import SqlManager
 
 def load_configuration():
     global _server_config
@@ -14,7 +14,7 @@ def load_configuration():
     try:
         _server_config = json.load(open('config.json'))
         JwtManager._config = _server_config['JwtParams']
-        DbPool._config = _server_config['DatabaseParams']
+        SqlManager.set_config(_server_config['DatabaseParams'])
     except Exception as err:
         print(f"Could not load server configuration file. Exception: {err}")
         sys.exit(1)
