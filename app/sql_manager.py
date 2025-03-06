@@ -26,21 +26,22 @@ class SqlManager:
             print('Could not get a connection from the pool.')
             raise
 
-def execute_query(query, values=None, *, commit=False, fetch=False, dictionary=False):
-    try:
-        conn = SqlManager.get_conn()
-        # Choose the appropriate cursor based on the 'dictionary' flag.
-        cursor = conn.cursor(dictionary=dictionary) if dictionary else conn.cursor()
-        cursor.execute(query, values)
+    @staticmethod
+    def execute_query(query, values=None, *, commit=False, fetch=False, dictionary=False):
+        try:
+            conn = SqlManager.get_conn()
+            # Choose the appropriate cursor based on the 'dictionary' flag.
+            cursor = conn.cursor(dictionary=dictionary) if dictionary else conn.cursor()
+            cursor.execute(query, values)
         
-        if commit:
-            conn.commit()
-            result = cursor.lastrowid
-        if fetch:
-            result = cursor.fetchall()
-        cursor.close()
-        conn.close()
-        return result
-    except Exception as error:
-        print('SqlManager.execute_query() exception : %s %s %s' % (type(error), type(error).__name__, error))
-        raise
+            if commit:
+                conn.commit()
+                result = cursor.lastrowid
+            if fetch:
+                result = cursor.fetchall()
+            cursor.close()
+            conn.close()
+            return result
+        except Exception as error:
+            print('SqlManager.execute_query() exception : %s %s %s' % (type(error), type(error).__name__, error))
+            raise
