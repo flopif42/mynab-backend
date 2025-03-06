@@ -3,7 +3,7 @@ import sys
 import json
 from http import HTTPStatus
 from flask import Blueprint
-import app.db as db
+from app.sql_manager import SqlManager
 
 about_bp = Blueprint('about', __name__)
 
