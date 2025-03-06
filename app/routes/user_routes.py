@@ -2,7 +2,7 @@ import flask
 from http import HTTPStatus
 from app.routes.handler import handle_route_action
 from app.controller import user
-from app.jwt import JwtManager
+from app.jwt_manager import JwtManager
 
 user_bp = flask.Blueprint('user', __name__)
 
