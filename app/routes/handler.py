@@ -1,7 +1,6 @@
 from flask import Flask, request, jsonify
 from app.jwt import JwtManager
 from http import HTTPStatus
-from app.routes.about_routes import about_bp
 
 def handle_route_action(action):
     if not JwtManager.check_token_valid(request):
