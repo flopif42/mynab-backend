@@ -22,7 +22,11 @@ class DbPool:
 
     @staticmethod
     def get_connection():
-        return DbPool.get_instance().get_connection()
+        try:
+            return DbPool.get_instance().get_connection()
+        except  Exception as error:
+            print('db.get_connection() exception : %s %s' % (type(error).__name__, error))
+            raise
 
 def execute_query(query, values=None, *, commit=False, fetch=False, dictionary=False):
     try:
