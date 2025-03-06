@@ -1,9 +1,10 @@
 from flask import Flask
 from app.jwt import JwtManager
 from app.routes.about_routes import about_bp
+from app.routes.transaction_routes import transaction_bp
 
 def create_app():
-    from app.routes.transaction_routes import transaction_bp
+    
     from app.routes.transfer_routes import transfer_bp
     from app.routes.payee_routes import payee_bp
     from app.routes.category_routes import category_bp
