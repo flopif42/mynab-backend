@@ -13,8 +13,8 @@ def load_configuration():
 
     try:
         _server_config = json.load(open('config.json'))
-        JwtManager._config = server_config['JwtParams']
-        DbPool._config = server_config['DatabaseParams']
+        JwtManager._config = _server_config['JwtParams']
+        DbPool._config = _server_config['DatabaseParams']
     except Exception as err:
         print(f"Could not load server configuration file. Exception: {err}")
         sys.exit(1)
