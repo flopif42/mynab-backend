@@ -1,4 +1,4 @@
-from mysql.connector.errors import DatabaseError
+from mysql.connector.errors import DatabaseError, ProgrammingError 
 import sys
 import json
 from http import HTTPStatus
@@ -9,6 +9,9 @@ about_bp = Blueprint('about', __name__)
 
 @about_bp.route('/hello', methods=['GET'])
 def hello():
+    db_version = 'N/A'
+    db_status = 'Down'
+
     try:
         api_version = json.load(open('version.json'))['version']
     except:
@@ -20,10 +23,10 @@ def hello():
         result = db.execute_query(query, fetch=True)
         db_version = result[0][0]
         db_status = "Running"
+    except ProgrammingError err:
+        print(f"There was a problem with a query : {err}.")
     except DatabaseError:
         print(f"Could not connect to the database.")
-        db_status = 'Down'
-        db_version = 'N/A'
 
     body = {
         "API server status": "Running",
