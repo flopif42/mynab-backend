@@ -29,7 +29,7 @@ class DbPool:
         try:
             return DbPool.get_instance().get_connection()
         except Exception as error:
-            print('db.get_connection() exception : %s %s' % (type(error).__name__, error))
+            print('db.get_connection() exception : %s %s %s' % (type(error), type(error).__name__, error))
             raise
 
 def execute_query(query, values=None, *, commit=False, fetch=False, dictionary=False):
