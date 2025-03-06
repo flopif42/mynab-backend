@@ -53,14 +53,8 @@ def create(id_user, request_params):
     else:
         id_category = None
 
-    # Make sure the date is in this format : DD/MM/YYYY.
-    txn_date = request_params['date']
     try:
-        txn_date = mysql_format_date(txn_date)
-    except Exception as err:
-        print(f"Error : Date is not in the correct format : DD/MM/YYYY.")
-        return None
-    try:
+        txn_date = mysql_format_date(request_params['date'])
         query = (
             "insert into TRANSACTION "
             "(ID_USER, ID_ACCOUNT, ID_PAYEE, ID_CATEGORY, TRANSACTION_FLOW, TRANSACTION_AMOUNT, TRANSACTION_DATE, TRANSACTION_MEMO, IS_TRANSFER) "
