@@ -19,8 +19,8 @@ class DbPool:
                     pool_reset_session=True,
                     **DbPool._config
                 )
-            except Exception as error:
-                print('db.get_instance() exception : %s %s' % (type(error).__name__, error))
+            except:
+                print('db.get_instance() exception')
                 raise
         return DbPool._pool_instance
 
