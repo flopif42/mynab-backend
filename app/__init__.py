@@ -1,6 +1,5 @@
-from flask import Flask, request, jsonify
+from flask import Flask
 from app.jwt import JwtManager
-from http import HTTPStatus
 from app.routes.about_routes import about_bp
 
 def create_app():
@@ -11,7 +10,6 @@ def create_app():
     from app.routes.account_routes import account_bp
     from app.routes.user_routes import user_bp
     from app.routes.budget_routes import budget_bp
-    
 
     app = Flask(__name__)
     app.register_blueprint(transaction_bp)
@@ -23,15 +21,3 @@ def create_app():
     app.register_blueprint(budget_bp)
     app.register_blueprint(about_bp)
     return app
-
-def handle_route_action(action):
-    if not JwtManager.check_token_valid(request):
-        return "", HTTPStatus.UNAUTHORIZED
-    try:
-        id_user = JwtManager.get_id_user_from_token(request)
-        result = action(id_user, request.json if request.is_json else None)
-        responseBody = "" if (result is None) else jsonify(result)
-        return responseBody, HTTPStatus.OK
-    except Exception as error:
-        print(f"Exception in handle_route_action() : {error}")
-        return "", HTTPStatus.BAD_REQUEST
