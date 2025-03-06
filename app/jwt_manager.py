@@ -8,7 +8,7 @@ class JwtManager:
     __config = None
 
     @staticmethod
-    def set__config(config):
+    def set_config(config):
         JwtManager.__config = config
 
     # returns an HttpResponse with a cookie set for the requested token
