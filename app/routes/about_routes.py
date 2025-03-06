@@ -12,6 +12,7 @@ def hello():
         query = "select VERSION from VERSION"
         result = db.execute_query(query, fetch=True)
         db_version = result[0][0]
+        db_status = "Running"
         api_version = json.load(open('version.json'))['version']
         body = {
             "API server status": "Running",
