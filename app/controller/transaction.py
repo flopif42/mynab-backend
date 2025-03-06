@@ -43,11 +43,7 @@ def create(id_user, request_params):
     # request_params contains the following :
     # id_account, id_payee, flow, amount, date, memo
 
-    if ('id_payee' in request_params) and (request_params['id_payee'] != ''):
-        id_payee = request_params['id_payee']
-    else:
-        id_payee = None
-    
+    id_payee = request_params['id_payee'] if ('id_payee' in request_params) and (request_params['id_payee'] != '') else None
     if ('id_category' in request_params) and (request_params['id_category'] != ''):
         id_category = request_params['id_category']
     else:
