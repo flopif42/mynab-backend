@@ -4,30 +4,30 @@ from app.controller import payee, account, child_category, parent_category, tran
 
 def fetch_all(id_user, request_params):
     try:
-        query = (
-            "select acc.ACCOUNT_NAME as account, "
-            "txn.ID_TRANSACTION as id, "
-            "case "
-            "when (txn.IS_TRANSFER=1 and txn.TRANSACTION_FLOW = -1) then concat('Transfer to: ', acc_trs_out.ACCOUNT_NAME) "
-            "when (txn.IS_TRANSFER=1 and txn.TRANSACTION_FLOW = 1) then concat('Transfer from: ', acc_trs_in.ACCOUNT_NAME) "
-            "else PAYEE_NAME end as payee, "
-            "CATEGORY_NAME as category, "
-            "if(txn.TRANSACTION_FLOW=-1, 'Outflow', 'Inflow') as flow, "
-            "txn.TRANSACTION_AMOUNT as amount, "
-            "date_format(txn.TRANSACTION_DATE, \"%d/%m/%Y\") as date, "
-            "txn.TRANSACTION_MEMO as memo "
-            "from TRANSACTION txn "
-            "inner join ACCOUNT acc on acc.ID_ACCOUNT = txn.ID_ACCOUNT "
-            "left join PAYEE pay on pay.ID_PAYEE = txn.ID_PAYEE "
-            "left join CATEGORY cat on txn.ID_USER = cat.ID_USER and txn.ID_CATEGORY = cat.ID_CATEGORY "
-            "left join TRANSFER trs_out on trs_out.ID_TRANSACTION_OUTFLOW = txn.ID_TRANSACTION and txn.TRANSACTION_FLOW = -1 "
-            "left join TRANSFER trs_in on trs_in.ID_TRANSACTION_INFLOW = txn.ID_TRANSACTION and txn.TRANSACTION_FLOW = 1 "
-            "left join TRANSACTION txn_trs_out on txn_trs_out.ID_TRANSACTION = trs_out.ID_TRANSACTION_INFLOW "
-            "left join TRANSACTION txn_trs_in on txn_trs_in.ID_TRANSACTION = trs_in.ID_TRANSACTION_OUTFLOW "
-            "left join ACCOUNT acc_trs_out on acc_trs_out.ID_ACCOUNT = txn_trs_out.ID_ACCOUNT "
-            "left join ACCOUNT acc_trs_in on acc_trs_in.ID_ACCOUNT = txn_trs_in.ID_ACCOUNT "
-            "where txn.ID_USER = (%s) "
-        )
+        query = """
+                select acc.ACCOUNT_NAME as account, 
+                    txn.ID_TRANSACTION as id, 
+                    case 
+                        when (txn.IS_TRANSFER=1 and txn.TRANSACTION_FLOW = -1) then concat('Transfer to: ', acc_trs_out.ACCOUNT_NAME) 
+                        when (txn.IS_TRANSFER=1 and txn.TRANSACTION_FLOW = 1) then concat('Transfer from: ', acc_trs_in.ACCOUNT_NAME) 
+                    else PAYEE_NAME end as payee, 
+                    CATEGORY_NAME as category, 
+                    if(txn.TRANSACTION_FLOW=-1, 'Outflow', 'Inflow') as flow, 
+                    txn.TRANSACTION_AMOUNT as amount, 
+                    date_format(txn.TRANSACTION_DATE, '%d/%m/%Y') as date, 
+                    txn.TRANSACTION_MEMO as memo 
+                from TRANSACTION txn 
+                    inner join ACCOUNT acc on acc.ID_ACCOUNT = txn.ID_ACCOUNT 
+                    left join PAYEE pay on pay.ID_PAYEE = txn.ID_PAYEE 
+                    left join CATEGORY cat on txn.ID_USER = cat.ID_USER and txn.ID_CATEGORY = cat.ID_CATEGORY 
+                    left join TRANSFER trs_out on trs_out.ID_TRANSACTION_OUTFLOW = txn.ID_TRANSACTION and txn.TRANSACTION_FLOW = -1 
+                    left join TRANSFER trs_in on trs_in.ID_TRANSACTION_INFLOW = txn.ID_TRANSACTION and txn.TRANSACTION_FLOW = 1 
+                    left join TRANSACTION txn_trs_out on txn_trs_out.ID_TRANSACTION = trs_out.ID_TRANSACTION_INFLOW 
+                    left join TRANSACTION txn_trs_in on txn_trs_in.ID_TRANSACTION = trs_in.ID_TRANSACTION_OUTFLOW 
+                    left join ACCOUNT acc_trs_out on acc_trs_out.ID_ACCOUNT = txn_trs_out.ID_ACCOUNT 
+                    left join ACCOUNT acc_trs_in on acc_trs_in.ID_ACCOUNT = txn_trs_in.ID_ACCOUNT 
+                where txn.ID_USER = (%s)
+                """
         if (not request_params is None) and ('id_account' in request_params) and (not request_params['id_account'] is None):
             query = query + "and txn.ID_ACCOUNT = (%s) "
             values = (str(id_user), request_params['id_account'])
@@ -40,15 +40,8 @@ def fetch_all(id_user, request_params):
         raise
 
 def create(id_user, request_params):
-    # request_params contains the following :
-    # id_account, id_payee, flow, amount, date, memo
-
     id_payee = request_params['id_payee'] if ('id_payee' in request_params) and (request_params['id_payee'] != '') else None
-    if ('id_category' in request_params) and (request_params['id_category'] != ''):
-        id_category = request_params['id_category']
-    else:
-        id_category = None
-
+    id_category = request_params['id_category'] if ('id_category' in request_params) and (request_params['id_category'] != '') else None
     try:
         txn_date = mysql_format_date(request_params['date'])
         query = (
