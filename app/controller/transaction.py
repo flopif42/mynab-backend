@@ -84,6 +84,9 @@ def delete(id_user, request_params):
 def is_transfer(id_transaction):
     query = "select IS_TRANSFER from TRANSACTION where ID_TRANSACTION = %s"
     result = SqlManager.execute_query(query, (id_transaction,), fetch=True)
+    if len(result) == 0:
+        print(f"Could not find transaction with id : {id_transaction}")
+        raise ValueError
     if result[0][0] == 1:
         return True
     else:
@@ -95,8 +98,10 @@ def get_transfer_id(id_transaction):
         "where ID_TRANSACTION_OUTFLOW = %s or ID_TRANSACTION_INFLOW = %s"
     )
     result = SqlManager.execute_query(query, (id_transaction, id_transaction), fetch=True)
-    if len(result) > 0:
-        return result[0][0]
+    if len(result) == 0:
+        print(f"Could not find transaction with id : {id_transaction}")
+        raise ValueError
+    return result[0][0]
 
 def mysql_format_date(date_string):
     return dt.datetime.strftime(dt.datetime.strptime(date_string, '%d/%m/%Y'), '%Y-%m-%d')
