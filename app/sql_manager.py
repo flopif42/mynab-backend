@@ -1,4 +1,5 @@
 import mysql.connector
+from mysql.connector.errors import InterfaceError, PoolError
 
 class SqlManager:
     __connection_pool = None
