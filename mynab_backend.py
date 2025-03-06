@@ -22,11 +22,3 @@ def load_configuration():
 app = app.create_app()
 load_configuration()
 CORS(app, **_server_config['CorsParams'])
-
-# -----------------------------------------------------------------------------
-@app.route('/hello', methods=['GET'])
-def hello():
-    version_fd = open('version.json')
-    version = json.load(version_fd)['version']
-    body = { "Server status": "Running", "Version": version }
-    return body, HTTPStatus.OK

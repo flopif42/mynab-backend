@@ -13,6 +13,7 @@ def create_app():
     from app.routes.account_routes import account_bp
     from app.routes.user_routes import user_bp
     from app.routes.budget_routes import budget_bp
+    from app.routes.about_routes import about_bp
     
     # Register routes
     app.register_blueprint(transaction_bp)
@@ -22,6 +23,8 @@ def create_app():
     app.register_blueprint(account_bp)
     app.register_blueprint(user_bp)
     app.register_blueprint(budget_bp)
+    app.register_blueprint(about_bp)
+
     return app
 
 def handle_route_action(action):
