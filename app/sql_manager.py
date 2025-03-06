@@ -15,7 +15,7 @@ class SqlManager:
             if SqlManager.__connection_pool is None:
                 SqlManager.__connection_pool = mysql.connector.pooling.MySQLConnectionPool(
                     pool_name="mypool",
-                    pool_size=0,  # Max connections
+                    pool_size=1,  # Max connections
                     pool_reset_session=True,
                     **SqlManager.__config
                 )
