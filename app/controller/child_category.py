@@ -1,5 +1,5 @@
 import json
-import app.db as db
+from app.sql_manager import SqlManager
 import app.controller.parent_category as p_cat
 
 def fetch_all(id_user, unused):

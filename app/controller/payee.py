@@ -1,4 +1,4 @@
-import app.db as db
+from app.sql_manager import SqlManager
 
 def fetch_all(id_user, unused):
     try:

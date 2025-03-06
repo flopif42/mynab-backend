@@ -1,5 +1,5 @@
 import datetime as dt
-import app.db as db
+from app.sql_manager import SqlManager
 
 def fetch(id_user, unused):
     budget = []

@@ -1,5 +1,5 @@
 import datetime as dt
-import app.db as db
+from app.sql_manager import SqlManager
 from app.controller import payee, account, child_category, parent_category, transfer
 
 def fetch_all(id_user, request_params):

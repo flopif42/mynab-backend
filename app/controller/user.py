@@ -1,5 +1,5 @@
 import mysql.connector
-import app.db as db
+from app.sql_manager import SqlManager
     
 def get_profile(id_user, unused):
     try:

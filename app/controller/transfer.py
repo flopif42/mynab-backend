@@ -1,4 +1,4 @@
-import app.db as db
+from app.sql_manager import SqlManager
 from app.controller import account, transaction
 
 def create(id_user, request_params):

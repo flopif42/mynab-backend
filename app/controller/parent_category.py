@@ -1,5 +1,5 @@
 import json
-import app.db as db
+from app.sql_manager import SqlManager
 
 # Create a parent category
 def create(id_user, request_params):
