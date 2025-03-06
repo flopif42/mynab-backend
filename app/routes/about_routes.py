@@ -17,12 +17,10 @@ def hello():
     except:
         print(f"Could not get API version.")
         api_version = 'N/A'
-
     try:
         query = "select VERSION from VERSION"
         result = db.execute_query(query, fetch=True)
         db_version = result[0][0]
-        
     except IndexError:
         print(f"Could not retrieve the database version : no rows.")
     except ProgrammingError as err:
@@ -31,7 +29,6 @@ def hello():
     except DatabaseError:
         print(f"Could not connect to the database.")
         db_status = 'Down'
-
     body = {
         "API server status": "Running",
         "API version": api_version,
