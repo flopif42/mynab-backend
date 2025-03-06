@@ -10,7 +10,7 @@ about_bp = Blueprint('about', __name__)
 def hello():
     try:
         query = "select VERSION from VERSION"
-        result = db.execute_query(query,, fetch=True)
+        result = db.execute_query(query, fetch=True)
         db_version = result[0][0]
         api_version = json.load(open('version.json'))['version']
         body = {
