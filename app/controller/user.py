@@ -4,7 +4,7 @@ from app.sql_manager import SqlManager
 def get_profile(id_user, unused):
     try:
         query = "select FIRST_NAME, LAST_NAME, EMAIL_ADDRESS from USER where ID_USER = (%s)"
-        result = db.execute_query(query, (id_user,), fetch=True)
+        result = SqlManager.execute_query(query, (id_user,), fetch=True)
         return result
     except Exception as err:
         print(f"Could not retrieve user profile : {err}")
@@ -14,7 +14,7 @@ def get_profile(id_user, unused):
 def login(request_params):
     try:
         query = "select ID_USER from USER where EMAIL_ADDRESS = (%s) and PASSPHRASE_MD5 = (%s)"
-        result = db.execute_query(query, (request_params['email_address'], request_params['passphrase_md5']), fetch=True)
+        result = SqlManager.execute_query(query, (request_params['email_address'], request_params['passphrase_md5']), fetch=True)
         id_user = result[0][0] if len(result) else None
         return id_user
     except Exception as err:
@@ -30,11 +30,11 @@ def signup(request_params):
             request_params['email_address'],
             request_params['passphrase_md5']
         )
-        id_user = db.execute_query(query, values, commit=True)
+        id_user = SqlManager.execute_query(query, values, commit=True)
 
         # ID_CATEGORY 0 is a technical value for Income.
-        db.execute_query("insert into PARENT_CATEGORY (ID_PARENT_CATEGORY, ID_USER, PARENT_CATEGORY_NAME) values (0, (%s), '(system)')", (id_user,), commit=True)
-        db.execute_query("insert into CATEGORY (ID_CATEGORY, ID_USER, ID_PARENT_CATEGORY, CATEGORY_NAME) values (0, (%s), 0, 'Income')", (id_user,), commit=True)
+        SqlManager.execute_query("insert into PARENT_CATEGORY (ID_PARENT_CATEGORY, ID_USER, PARENT_CATEGORY_NAME) values (0, (%s), '(system)')", (id_user,), commit=True)
+        SqlManager.execute_query("insert into CATEGORY (ID_CATEGORY, ID_USER, ID_PARENT_CATEGORY, CATEGORY_NAME) values (0, (%s), 0, 'Income')", (id_user,), commit=True)
 
     except mysql.connector.IntegrityError:
         print(f"Could not create user : email address already used")
@@ -50,7 +50,7 @@ def signup(request_params):
 def is_available(request_params):
     try:
         query = "select 1 from USER where EMAIL_ADDRESS = (%s)"
-        result = db.execute_query(query, (request_params['email_address'],), fetch=True)
+        result = SqlManager.execute_query(query, (request_params['email_address'],), fetch=True)
         if len(result) == 1:
             return 0
         else:

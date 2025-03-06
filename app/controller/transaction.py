@@ -33,7 +33,7 @@ def fetch_all(id_user, request_params):
             values = (str(id_user), request_params['id_account'])
         else:
             values = (str(id_user), )
-        result = db.execute_query(query, values, fetch=True, dictionary=True)
+        result = SqlManager.execute_query(query, values, fetch=True, dictionary=True)
         return result
     except Exception as err:
         print(f"Could not fetch transactions : {err}")
@@ -67,7 +67,7 @@ def create(id_user, request_params):
             "VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)"
         )
         values = (id_user, request_params['id_account'], id_payee, id_category, request_params['flow'], request_params['amount'], txn_date, request_params['memo'], request_params['is_transfer'])
-        result = db.execute_query(query, values, commit=True)
+        result = SqlManager.execute_query(query, values, commit=True)
         return result
     except Exception as err:
         print(f"Could not add the transaction : {err}")
@@ -81,7 +81,7 @@ def delete(id_user, request_params):
             return transfer.delete(id_user, id_transfer)
         else:
             query = "delete from TRANSACTION where ID_USER = (%s) and ID_TRANSACTION = (%s)"
-            return db.execute_query(query, (id_user, id_transaction,), commit=True)
+            return SqlManager.execute_query(query, (id_user, id_transaction,), commit=True)
     except Exception as err:
         print(f"Exception: {err}")
         return None
@@ -89,7 +89,7 @@ def delete(id_user, request_params):
 # Utilities functions
 def is_transfer(id_transaction):
     query = "select IS_TRANSFER from TRANSACTION where ID_TRANSACTION = %s"
-    result = db.execute_query(query, (id_transaction,), fetch=True)
+    result = SqlManager.execute_query(query, (id_transaction,), fetch=True)
     if result[0][0] == 1:
         return True
     else:
@@ -100,7 +100,7 @@ def get_transfer_id(id_transaction):
         "select ID_TRANSFER from TRANSFER "
         "where ID_TRANSACTION_OUTFLOW = %s or ID_TRANSACTION_INFLOW = %s"
     )
-    result = db.execute_query(query, (id_transaction, id_transaction), fetch=True)
+    result = SqlManager.execute_query(query, (id_transaction, id_transaction), fetch=True)
     if len(result) > 0:
         return result[0][0]
 

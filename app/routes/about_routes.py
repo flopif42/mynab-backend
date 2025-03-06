@@ -19,7 +19,7 @@ def hello():
         api_version = 'N/A'
     try:
         query = "select VERSION from VERSION"
-        result = db.execute_query(query, fetch=True)
+        result = SqlManager.execute_query(query, fetch=True)
         db_version = result[0][0]
     except IndexError:
         print(f"Could not retrieve the database version : no rows.")

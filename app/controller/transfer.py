@@ -11,7 +11,7 @@ def create(id_user, request_params):
     # Make sure the id_accounts belong to the right user
     query_check = "select 1 from ACCOUNT where ID_USER = (%s) and ID_ACCOUNT in ((%s),(%s))"
     values = (id_user, id_account_outflow, id_account_inflow)
-    rows = db.execute_query(query_check, (id_user, id_account_outflow, id_account_inflow), fetch=True)
+    rows = SqlManager.execute_query(query_check, (id_user, id_account_outflow, id_account_inflow), fetch=True)
     if len(rows) < 2:
         print(f"Error : transfer incorrect : at least one off the accounts does not belong to the user.")
         raise
@@ -44,7 +44,7 @@ def create(id_user, request_params):
             "(ID_USER, ID_TRANSACTION_OUTFLOW, ID_TRANSACTION_INFLOW ) "
             "values (%s, %s, %s)"
         )
-        result = db.execute_query(query, (id_user, id_txn_outflow, id_txn_inflow), commit=True)
+        result = SqlManager.execute_query(query, (id_user, id_txn_outflow, id_txn_inflow), commit=True)
         return result
     except Exception as err:
         print(f"Could not create transfer : {err}")
@@ -54,15 +54,15 @@ def delete(id_user, id_transfer):
     try:
         # Retrieve the transcation ids associated with the transfer
         query_retrieve = "select ID_TRANSACTION_OUTFLOW, ID_TRANSACTION_INFLOW from TRANSFER where ID_TRANSFER = (%s)"
-        result_retrieve = db.execute_query(query_retrieve, (id_transfer,), fetch=True)
+        result_retrieve = SqlManager.execute_query(query_retrieve, (id_transfer,), fetch=True)
 
         # delete the transfer
         query = "delete from TRANSFER where ID_USER = (%s) and ID_TRANSFER = (%s)"
-        result = db.execute_query(query, (id_user, id_transfer,), commit=True)
+        result = SqlManager.execute_query(query, (id_user, id_transfer,), commit=True)
 
         # delete the associated transactions
         query = "delete from TRANSACTION where ID_USER = (%s) and ID_TRANSACTION in ((%s), (%s))"
-        result = db.execute_query(query, (id_user,) + result_retrieve[0], commit=True)
+        result = SqlManager.execute_query(query, (id_user,) + result_retrieve[0], commit=True)
         return result
     except Exception as err:
         print(f"Could not delete transfer: {err}")

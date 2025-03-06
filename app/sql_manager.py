@@ -42,5 +42,5 @@ def execute_query(query, values=None, *, commit=False, fetch=False, dictionary=F
         conn.close()
         return result
     except Exception as error:
-        print('db.execute_query() exception : %s %s %s' % (type(error), type(error).__name__, error))
+        print('SqlManager.execute_query() exception : %s %s %s' % (type(error), type(error).__name__, error))
         raise
