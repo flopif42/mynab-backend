@@ -1,5 +1,5 @@
 from flask import Blueprint
-from app.handler import handle_route_action
+from app.routes.handler import handle_route_action
 from app.controller import budget
 
 budget_bp = Blueprint('budget', __name__)
