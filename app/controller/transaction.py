@@ -28,13 +28,11 @@ def fetch_all(id_user, request_params):
                     left join ACCOUNT acc_trs_in on acc_trs_in.ID_ACCOUNT = txn_trs_in.ID_ACCOUNT 
                 where txn.ID_USER = (%s)
                 """
+        values = (id_user, )
         if request_params and 'id_account' in request_params and request_params['id_account']:
             query = query + "and txn.ID_ACCOUNT = (%s) "
-            values = (id_user, request_params['id_account'])
-        else:
-            values = (id_user, )
-        result = SqlManager.execute_query(query, values, fetch=True, dictionary=True)
-        return result
+            values += (request_params['id_account'],)
+        return SqlManager.execute_query(query, values, fetch=True, dictionary=True)
     except Exception as err:
         print(f"Could not fetch transactions : {err}")
         raise
@@ -44,14 +42,13 @@ def create(id_user, request_params):
     id_category = request_params['id_category'] if ('id_category' in request_params) and (request_params['id_category'] != '') else None
     try:
         txn_date = mysql_format_date(request_params['date'])
-        query = (
-            "insert into TRANSACTION "
-            "(ID_USER, ID_ACCOUNT, ID_PAYEE, ID_CATEGORY, TRANSACTION_FLOW, TRANSACTION_AMOUNT, TRANSACTION_DATE, TRANSACTION_MEMO, IS_TRANSFER) "
-            "VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)"
-        )
+        query = """
+                insert into TRANSACTION 
+                (ID_USER, ID_ACCOUNT, ID_PAYEE, ID_CATEGORY, TRANSACTION_FLOW, TRANSACTION_AMOUNT, TRANSACTION_DATE, TRANSACTION_MEMO, IS_TRANSFER) 
+                VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)
+                """
         values = (id_user, request_params['id_account'], id_payee, id_category, request_params['flow'], request_params['amount'], txn_date, request_params['memo'], request_params['is_transfer'])
-        result = SqlManager.execute_query(query, values, commit=True)
-        return result
+        return SqlManager.execute_query(query, values, commit=True)
     except Exception as err:
         print(f"Could not add the transaction : {err}")
         raise
@@ -82,10 +79,7 @@ def is_transfer(id_transaction):
         return False
 
 def get_transfer_id(id_transaction):
-    query = (
-        "select ID_TRANSFER from TRANSFER "
-        "where ID_TRANSACTION_OUTFLOW = %s or ID_TRANSACTION_INFLOW = %s"
-    )
+    query = "select ID_TRANSFER from TRANSFER where ID_TRANSACTION_OUTFLOW = %s or ID_TRANSACTION_INFLOW = %s"
     result = SqlManager.execute_query(query, (id_transaction, id_transaction), fetch=True)
     if len(result) == 0:
         print(f"Could not find transaction with id : {id_transaction}")
