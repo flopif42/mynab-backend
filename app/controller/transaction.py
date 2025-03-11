@@ -28,11 +28,11 @@ def fetch_all(id_user, request_params):
                     left join ACCOUNT acc_trs_in on acc_trs_in.ID_ACCOUNT = txn_trs_in.ID_ACCOUNT 
                 where txn.ID_USER = (%s)
                 """
-        if (not request_params is None) and ('id_account' in request_params) and (not request_params['id_account'] is None):
+        if request_params and 'id_account' in request_params and request_params['id_account']:
             query = query + "and txn.ID_ACCOUNT = (%s) "
-            values = (str(id_user), request_params['id_account'])
+            values = (id_user, request_params['id_account'])
         else:
-            values = (str(id_user), )
+            values = (id_user, )
         result = SqlManager.execute_query(query, values, fetch=True, dictionary=True)
         return result
     except Exception as err:
