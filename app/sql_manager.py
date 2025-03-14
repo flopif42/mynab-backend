@@ -5,9 +5,9 @@ class SqlManager:
     __connection_pool = None
     __config = None
 
-    @staticmethod
-    def set_config(config):
-        SqlManager.__config = config
+    @classmethod
+    def set_config(cls, config):
+        cls.__config = config
 
     @staticmethod
     def get_conn():
