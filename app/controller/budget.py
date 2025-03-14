@@ -1,5 +1,5 @@
 import datetime as dt
-from app.sql_manager import SqlManager
+from app.sql_manager import SqlManager as db
 
 def fetch(id_user, unused):
     budget = []
@@ -25,7 +25,7 @@ def fetch(id_user, unused):
                     on bl.ID_USER = p.ID_USER and bl.BUDGET_LINE_YEAR = p.YEAR and bl.BUDGET_LINE_MONTH = p.MONTH and bl.ID_CATEGORY = cat.ID_CATEGORY
                 where p.ID_USER = (%s)
                 """
-        result = SqlManager.execute_query(query, (id_user,), fetch=True, dictionary=True)
+        result = db.execute_query(query, (id_user,), fetch=True, dictionary=True)
         for row in result:
             year = row.pop('year')
             month = row.pop('month')
@@ -72,7 +72,7 @@ def set_funded(id_user, request_params):
                     ON DUPLICATE KEY UPDATE BUDGET_LINE_AMOUNT = (%s)
                     """
             values = (id_user, request_params['id_category'], period.year, period.month, amount, amount)
-        SqlManager.execute_query(query, values, commit=True)
+        db.execute_query(query, values, commit=True)
     except Exception as err:
         print(f"Could not create the budget line : {err}")
         raise
