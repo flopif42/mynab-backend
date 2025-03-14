@@ -45,7 +45,7 @@ class JwtManager:
         except Exception as err:
             print(f"Could not retrieve payload from Access Token. Exception : {err}")
 
-    @staticmethod
+    @classmethod
     def check_token_valid(cls, request):
         try:
             payload = cls.get_payload(request)
@@ -60,6 +60,6 @@ class JwtManager:
         except Exception as err:
             return False
     
-    @staticmethod
+    @classmethod
     def get_id_user_from_token(cls, request):
         return cls.get_payload(request)['idUser']
