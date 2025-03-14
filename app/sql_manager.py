@@ -9,17 +9,17 @@ class SqlManager:
     def set_config(cls, config):
         cls.__config = config
 
-    @staticmethod
-    def get_conn():
+    @classmethod
+    def get_conn(cls):
         try:
-            if SqlManager.__connection_pool is None:
-                SqlManager.__connection_pool = mysql.connector.pooling.MySQLConnectionPool(
+            if cls.__connection_pool is None:
+                cls.__connection_pool = mysql.connector.pooling.MySQLConnectionPool(
                     pool_name="mypool",
                     pool_size=10,  # Max connections
                     pool_reset_session=True,
-                    **SqlManager.__config
+                    **cls.__config
                 )
-            return SqlManager.__connection_pool.get_connection()
+            return cls.__connection_pool.get_connection()
         except InterfaceError :
             print('Could not create the connection pool.')
             raise
@@ -29,9 +29,9 @@ class SqlManager:
 
     @staticmethod
     def execute_query(query, values=None, *, commit=False, fetch=False, dictionary=False):
-        conn = SqlManager.get_conn()
-        cursor = conn.cursor(dictionary=dictionary) if dictionary else conn.cursor()
         try:
+            conn = SqlManager.get_conn()
+            cursor = conn.cursor(dictionary=dictionary) if dictionary else conn.cursor()
             cursor.execute(query, values)
             if commit:
                 conn.commit()
