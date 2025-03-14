@@ -19,7 +19,7 @@ def fetch_all(id_user, unused):
 
 def create(id_user, request_params):
     try:
-        query = "INSERT INTO ACCOUNT (ID_USER, ACCOUNT_NAME, ACCOUNT_TYPE) VALUES (%s, %s, %s)"
+        query = "insert into ACCOUNT (ID_USER, ACCOUNT_NAME, ACCOUNT_TYPE) values (%s, %s, %s)"
         db.execute_query(query, (id_user, request_params['account_name'], request_params['account_type']), commit=True)
     except Exception as err:
         print(f"Could not create the account : {err}")
