@@ -27,10 +27,10 @@ class SqlManager:
             print('Could not get a connection from the pool.')
             raise
 
-    @staticmethod
-    def execute_query(query, values=None, *, commit=False, fetch=False, dictionary=False):
+    @classmethod
+    def execute_query(cls, query, values=None, *, commit=False, fetch=False, dictionary=False):
         try:
-            conn = SqlManager.get_conn()
+            conn = cls.get_conn()
             cursor = conn.cursor(dictionary=dictionary) if dictionary else conn.cursor()
             cursor.execute(query, values)
             if commit:
