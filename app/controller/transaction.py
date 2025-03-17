@@ -29,17 +29,17 @@ def fetch_all(id_user, request_params):
                 where txn.ID_USER = (%s)
                 """
         values = (id_user, )
-        if request_params and 'id_account' in request_params and request_params['id_account']:
-            query = query + "and txn.ID_ACCOUNT = (%s) "
-            values += (request_params['id_account'],)
+        if request_params and request_params.get("id_account"):
+            query += "and txn.ID_ACCOUNT = (%s) "
+            values += (request_params["id_account"],)
         return SqlManager.execute_query(query, values, fetch=True, dictionary=True)
     except Exception as err:
         print(f"Could not fetch transactions : {err}")
         raise
 
 def create(id_user, request_params):
-    id_payee = request_params['id_payee'] if ('id_payee' in request_params) and (request_params['id_payee'] != '') else None
-    id_category = request_params['id_category'] if ('id_category' in request_params) and (request_params['id_category'] != '') else None
+    id_payee = request_params["id_payee"] if request_params.get("id_payee") else None
+    id_category = request_params["id_category"] if request_params.get("id_category") else None
     try:
         txn_date = mysql_format_date(request_params['date'])
         query = """
@@ -55,7 +55,7 @@ def create(id_user, request_params):
 
 def delete(id_user, request_params):
     try:
-        id_transaction = request_params['id_transaction']
+        id_transaction = request_params["id_transaction"]
         if is_transfer(id_transaction):
             id_transfer = get_transfer_id(id_transaction)
             return transfer.delete(id_user, id_transfer)
