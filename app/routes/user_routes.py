@@ -24,7 +24,7 @@ def sign_up():
         return "", HTTPStatus.FORBIDDEN
     if ret == 400: # other error
         return "", HTTPStatus.BAD_REQUEST
-    return "", HTTPStatus.OK
+    return "", HTTPStatus.CREATED
 
 @user_bp.route('/user/available', methods=['POST'])
 def available():
