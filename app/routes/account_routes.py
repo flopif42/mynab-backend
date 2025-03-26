@@ -10,7 +10,7 @@ def account_list():
 
 @account_bp.route('/account/create', methods=['POST'])
 def account_create():
-    return handle_route_action(account.create)
+    return handle_route_action(account.create, create=True)
 
 @account_bp.route('/account/delete', methods=['POST'])
 def account_delete():
