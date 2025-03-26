@@ -11,7 +11,7 @@ def category_list():
 
 @category_bp.route('/category/create', methods=['POST'])
 def category_create():
-    return handle_route_action(child_category.create)
+    return handle_route_action(child_category.create, create=True)
 
 @category_bp.route('/category/delete', methods=['POST'])
 def category_delete():
@@ -20,7 +20,7 @@ def category_delete():
 # Parent categories routes
 @category_bp.route('/category/create_parent', methods=['POST'])
 def parent_category_create():
-    return handle_route_action(parent_category.create)
+    return handle_route_action(parent_category.create, create=True)
 
 @category_bp.route('/category/delete_parent', methods=['POST'])
 def parent_category_delete():
