@@ -10,7 +10,7 @@ def payee_list():
 
 @payee_bp.route('/payee/create', methods=['POST'])
 def payee_create():
-    return handle_route_action(payee.create)
+    return handle_route_action(payee.create, create=True)
 
 @payee_bp.route('/payee/delete', methods=['POST'])
 def payee_delete():
