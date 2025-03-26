@@ -10,7 +10,7 @@ def transaction_list():
 
 @transaction_bp.route('/transaction/create', methods=['POST'])
 def transaction_create():
-    return handle_route_action(transaction.create)
+    return handle_route_action(transaction.create, create=True)
 
 @transaction_bp.route('/transaction/delete', methods=['POST'])
 def transaction_delete():
