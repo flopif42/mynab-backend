@@ -10,7 +10,7 @@ def account_list():
     Account bla bla
     ---
     tags:
-      Account
+      - Account
     parameters:
       - name: email_address
         in: query
