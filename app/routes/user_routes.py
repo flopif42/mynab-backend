@@ -36,15 +36,19 @@ def sign_up():
             first_name:
               type: string
               description: First name
+              example: Scrooge
             last_name:
               type: string
               description: Last name
+              example: McDuck
             email_address:
               type: string
               description: Email address
+              example: scrooge@mail.com
             passphrase_md5:
               type: string
               description: MD5 encoded password
+              example: abcdef1234567890abcdef1234567890
           required:
             - email_address
             - passphrase_md5
