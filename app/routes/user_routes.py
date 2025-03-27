@@ -28,6 +28,15 @@ def sign_up():
 
 @user_bp.route('/user/available', methods=['POST'])
 def available():
+    """
+    Checks if an email address is available for user creation.
+    ---
+    responses:
+      200:
+        description: OK
+      400:
+        description: There was an error.
+    """
     ret = user.is_available(request.json)
     if ret == 1:
         return { "available" : "yes" }, HTTPStatus.OK
