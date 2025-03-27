@@ -1,5 +1,5 @@
 import mysql.connector
-from mysql.connector.errors import InterfaceError, PoolError
+from mysql.connector.errors import InterfaceError, PoolError, DatabaseError
 
 class SqlManager:
     __connection_pool = None
@@ -41,7 +41,7 @@ class SqlManager:
             return result
         except Exception as error:
             print(f'SqlManager.execute_query() exception : {type(error)} - {type(error).__name__} - {error}')
-            raise error
+            raise DatabaseError
         finally:
             cursor.close()
             conn.close()
