@@ -15,11 +15,11 @@ def hello():
     responses:
       200:
         description: Returns various information regarding the frontend app and the API\n
-                     Client version (Jenkins build number)<br>
-                     API server status\r\n
-                     API version
-                     Database server status
-                     Database version
+                     - Client version (Jenkins build number)\n
+                     - API server status\n
+                     - API version\n
+                     - Database server status\n
+                     - Database version\n
     """
     db_version = 'N/A'
     db_status = "Running"
