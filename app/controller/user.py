@@ -47,17 +47,14 @@ def signup(request_params):
 # return values: 1 The email address is available
 #                0 The email address is already used
 #               -1 There was an error in the query
-def is_available(request_params):
+def is_available(email_address):
     try:
         query = "select 1 from USER where EMAIL_ADDRESS = (%s)"
-        result = SqlManager.execute_query(query, (request_params['email_address'],), fetch=True)
+        result = SqlManager.execute_query(query, (email_address,), fetch=True)
         if len(result) == 1:
             return 0
         else:
             return 1
-    except KeyError:
-        print(f"Exception in is_available() : missing parameter : email_address")
-        return 400
     except Exception as error:
         print(f"Exception in is_available() : {type(error)}")
-        return 500
+        raise error

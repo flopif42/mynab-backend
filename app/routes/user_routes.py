@@ -60,14 +60,14 @@ def available():
         description: Internal server error
     """
     try:
-        ret = user.is_available(request.json)
+        print(request)
+        email_address = request.get("email_address")
+        print(email_address)
+        ret = user.is_available(email_address)
         if ret == 1:
             return { "available" : "yes" }, HTTPStatus.OK
-        elif ret == 0:
+        if ret == 0:
             return { "available" : "no" }, HTTPStatus.OK
-        elif ret == 400:
-            return "", HTTPStatus.BAD_REQUEST
-        else:
-            return "", HTTPStatus.INTERNAL_SERVER_ERROR
-    except:
+    except Exception as e:
+        print(f"Exception : {type(e)}")
         return "", HTTPStatus.BAD_REQUEST
