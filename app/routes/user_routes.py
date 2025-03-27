@@ -55,8 +55,9 @@ def sign_up():
         description: Internal server error
     """
     try:
-        if not request.json or not request.json.get('email_address') or not request.json.get('passphrase_md5'):
+        if not request.json:
             raise ValueError
+        print(request.json)
         ret = user.signup(request.json)
         if ret == 0: # OK
             return "", HTTPStatus.CREATED
@@ -65,7 +66,7 @@ def sign_up():
     except ValueError:
         return "", HTTPStatus.BAD_REQUEST
     except Exception as e:
-        print(f"Exception : {type(e)}")
+        print(f"Exception in user_routes.sign_up() exception : {type(error)} - {type(error).__name__} - {error}")
         return "", HTTPStatus.INTERNAL_SERVER_ERROR
 
 @user_bp.route('/user/check_email_available', methods=['GET'])
@@ -102,5 +103,5 @@ def check_email_available():
     except ValueError:
         return "", HTTPStatus.BAD_REQUEST
     except Exception as e:
-        print(f"Exception : {type(e)}")
+        print(f"Exception in user_routes.check_email_available() exception : {type(error)} - {type(error).__name__} - {error}")
         return "", HTTPStatus.INTERNAL_SERVER_ERROR
