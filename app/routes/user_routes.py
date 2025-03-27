@@ -26,22 +26,25 @@ def sign_up():
       - User
     parameters:
       - name: first_name
-        in: body
+        in: query
         required: false
         type: string
         description: First name
+
       - name: last_name
-        in: body
+        in: query
         required: false
         type: string
         description: Last name
+
       - name: email_address
-        in: body
+        in: query
         required: true
         type: string
         description: Email address
+
       - name: passphrase_md5
-        in: body
+        in: query
         required: true
         type: string
         description: MD5 encoded password
@@ -50,7 +53,7 @@ def sign_up():
       201:
         description: User was created successfully
       400:
-        description: Missing required parameters
+        description: Missing required parameters or incorrect parameters
       500:
         description: Internal server error
     """
