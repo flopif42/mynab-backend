@@ -55,8 +55,12 @@ def sign_up():
         description: Internal server error
     """
     try:
-        if not request.is_json:
+        if not request.is_json or 'email_address' not in request.json or 'passphrase_md5' not in request.json:
             raise ValueError
+        if 'first_name' not in request.json:
+            request.json['first_name'] = None
+        if 'last_name' not in request.json:
+            request.json['last_name'] = None
         print(request.json)
         ret = user.signup(request.json)
         if ret == 0: # OK
