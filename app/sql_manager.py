@@ -43,7 +43,7 @@ class SqlManager:
             return result
         except Exception as error:
             print(f'SqlManager.execute_query() exception : {type(error)} - {type(error).__name__} - {error}')
-            raise DatabaseError
+            raise error
         finally:
             if cursor:
                 cursor.close()
