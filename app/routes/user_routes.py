@@ -61,7 +61,7 @@ def available():
     """
     try:
         print(request)
-        email_address = request.get("email_address")
+        email_address = request.args.get("email_address")
         print(email_address)
         ret = user.is_available(email_address)
         if ret == 1:
