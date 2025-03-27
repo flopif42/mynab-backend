@@ -43,5 +43,7 @@ class SqlManager:
             print(f'SqlManager.execute_query() exception : {type(error)} - {type(error).__name__} - {error}')
             raise DatabaseError
         finally:
-            cursor.close()
-            conn.close()
+            if cursor:
+                cursor.close()
+            if conn:
+                conn.close()
