@@ -31,11 +31,31 @@ def available():
     """
     Checks if an email address is available for user creation.
     ---
+    summary: Creates a new user.
+    consumes:
+      - application/json
+    parameters:
+      - in: body
+        name: user
+        description: The user to create.
+        schema:
+          type: object
+        required:
+          - userName
+        properties:
+          userName:
+            type: string
+          firstName:
+            type: string
+          lastName:
+            type: string
     responses:
       200:
         description: OK
       400:
-        description: There was an error.
+        description: Missing parameter
+      500:
+        description: Database error
     """
     try:
         ret = user.is_available(request.json)
@@ -44,6 +64,6 @@ def available():
         if ret == 0:
             return { "available" : "no" }, HTTPStatus.OK
         if ret == -1:
-            return "", HTTPStatus.BAD_REQUEST
+            return "", HTTPStatus.INTERNAL_SERVER_ERROR
     except:
         return "", HTTPStatus.BAD_REQUEST
