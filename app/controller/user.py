@@ -58,5 +58,5 @@ def is_available(email_address):
         else:
             raise
     except Exception as error:
-        print(f"Exception in is_available() : {type(error)}")
+        print(f"Exception in is_available() exception : {type(error)} - {type(error).__name__} - {error}")
         raise error
