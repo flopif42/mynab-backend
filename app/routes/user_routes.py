@@ -55,7 +55,7 @@ def sign_up():
         description: Internal server error
     """
     try:
-        if not request.json:
+        if not request.is_json:
             raise ValueError
         print(request.json)
         ret = user.signup(request.json)
@@ -65,7 +65,7 @@ def sign_up():
             return "", HTTPStatus.CONFLICT # 409
     except ValueError:
         return "", HTTPStatus.BAD_REQUEST
-    except Exception as e:
+    except Exception as error:
         print(f"Exception in user_routes.sign_up() exception : {type(error)} - {type(error).__name__} - {error}")
         return "", HTTPStatus.INTERNAL_SERVER_ERROR
 
