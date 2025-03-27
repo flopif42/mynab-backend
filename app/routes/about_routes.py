@@ -14,7 +14,7 @@ def hello():
     ---
     responses:
       200:
-        description: Returns various information regarding the frontend app and the API :
+        description: Returns various information regarding the frontend app and the API
                      Client version (Jenkins build number)
                      API server status
                      API version
