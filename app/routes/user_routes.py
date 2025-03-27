@@ -69,4 +69,4 @@ def available():
         return "", HTTPStatus.BAD_REQUEST
     except Exception as e:
         print(f"Exception : {type(e)}")
-        return "", HTTPStatus.BAD_REQUEST
+        return "", HTTPStatus.INTERNAL_SERVER_ERROR

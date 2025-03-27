@@ -41,7 +41,7 @@ class SqlManager:
             return result
         except Exception as error:
             print('SqlManager.execute_query() exception : %s %s %s' % (type(error), type(error).__name__, error))
-            raise
+            raise error
         finally:
             cursor.close()
             conn.close()
