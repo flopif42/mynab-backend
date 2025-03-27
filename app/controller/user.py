@@ -51,10 +51,12 @@ def is_available(email_address):
     try:
         query = "select 1 from USER where EMAIL_ADDRESS = (%s)"
         result = SqlManager.execute_query(query, (email_address,), fetch=True)
-        if len(result) == 1:
-            return 0
+        if len(result) == 0:
+            return True
+        elif len(result) == 1:
+            return False
         else:
-            return 1
+            raise
     except Exception as error:
         print(f"Exception in is_available() : {type(error)}")
         raise error

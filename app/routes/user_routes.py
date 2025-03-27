@@ -60,14 +60,13 @@ def available():
         description: Internal server error
     """
     try:
-        print(request)
         email_address = request.args.get("email_address")
-        print(email_address)
-        ret = user.is_available(email_address)
-        if ret == 1:
-            return { "available" : "yes" }, HTTPStatus.OK
-        if ret == 0:
-            return { "available" : "no" }, HTTPStatus.OK
+        if not email_address:
+            raise ValueError
+        body_response = { "available" : user.is_available(email_address) }
+        return body_response, HTTPStatus.OK
+    except ValueError:
+        return "", HTTPStatus.BAD_REQUEST
     except Exception as e:
         print(f"Exception : {type(e)}")
         return "", HTTPStatus.BAD_REQUEST
