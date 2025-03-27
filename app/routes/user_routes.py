@@ -26,8 +26,8 @@ def sign_up():
         return "", HTTPStatus.BAD_REQUEST
     return "", HTTPStatus.CREATED
 
-@user_bp.route('/user/available', methods=['GET'])
-def available():
+@user_bp.route('/user/check_email_available', methods=['GET'])
+def check_email_available():
     """
     Checks if an email address is available for user creation.
     ---
@@ -44,7 +44,6 @@ def available():
         examples:
           application/json:
             available: true
-            message: Email is available
       400:
         description: Missing or invalid email parameter
       500:
