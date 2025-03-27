@@ -61,9 +61,9 @@ def available():
         ret = user.is_available(request.json)
         if ret == 1:
             return { "available" : "yes" }, HTTPStatus.OK
-        else if ret == 0:
+        elif ret == 0:
             return { "available" : "no" }, HTTPStatus.OK
-        else if ret == 400:
+        elif ret == 400:
             return "", HTTPStatus.BAD_REQUEST
         else
             return "", HTTPStatus.INTERNAL_SERVER_ERROR
