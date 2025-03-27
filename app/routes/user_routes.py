@@ -37,12 +37,13 @@ def available():
       400:
         description: There was an error.
     """
-    print('a')
-    ret = user.is_available(request.json)
-    print('b')
-    if ret == 1:
-        return { "available" : "yes" }, HTTPStatus.OK
-    if ret == 0:
-        return { "available" : "no" }, HTTPStatus.OK
-    if ret == -1:
+    try:
+        ret = user.is_available(request.json)
+        if ret == 1:
+            return { "available" : "yes" }, HTTPStatus.OK
+        if ret == 0:
+            return { "available" : "no" }, HTTPStatus.OK
+        if ret == -1:
+            return "", HTTPStatus.BAD_REQUEST
+    except:
         return "", HTTPStatus.BAD_REQUEST

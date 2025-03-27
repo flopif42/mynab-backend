@@ -49,11 +49,7 @@ def signup(request_params):
 #               -1 There was an error in the query
 def is_available(request_params):
     try:
-        print(request_params)
-        print('c')
         query = "select 1 from USER where EMAIL_ADDRESS = (%s)"
-        print('d')
-        print(query)
         result = SqlManager.execute_query(query, (request_params['email_address'],), fetch=True)
         if len(result) == 1:
             return 0
