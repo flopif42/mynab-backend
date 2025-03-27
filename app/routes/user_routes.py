@@ -26,36 +26,38 @@ def sign_up():
         return "", HTTPStatus.BAD_REQUEST
     return "", HTTPStatus.CREATED
 
-@user_bp.route('/user/available', methods=['POST'])
+@user_bp.route('/user/available', methods=['GET'])
 def available():
     """
     Checks if an email address is available for user creation.
     ---
-    summary: Creates a new user.
-    consumes:
-      - application/json
+    get:
+    summary: Check if an email address is available
     parameters:
-      - in: body
-        name: user
-        description: The user to create.
+      - name: email_address
+        in: query
+        required: true
         schema:
-          type: object
-        required:
-          - userName
-        properties:
-          userName:
-            type: string
-          firstName:
-            type: string
-          lastName:
-            type: string
+          type: string
+        description: Email address to check
     responses:
       200:
-        description: OK
+        description: Email availability status
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                available:
+                  type: boolean
+                  example: true
+                message:
+                  type: string
+                  example: "Email is available"
       400:
-        description: Missing parameter
+        description: Missing or invalid email parameter
       500:
-        description: Database error
+        description: Internal server error
     """
     try:
         ret = user.is_available(request.json)
@@ -65,7 +67,7 @@ def available():
             return { "available" : "no" }, HTTPStatus.OK
         elif ret == 400:
             return "", HTTPStatus.BAD_REQUEST
-        else
+        else:
             return "", HTTPStatus.INTERNAL_SERVER_ERROR
     except:
         return "", HTTPStatus.BAD_REQUEST
