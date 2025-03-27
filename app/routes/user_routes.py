@@ -24,30 +24,27 @@ def sign_up():
     ---
     tags:
       - User
+    consumes:
+      - application/json
     parameters:
-      - name: first_name
-        in: query
-        required: false
-        type: string
-        description: First name
-
-      - name: last_name
-        in: query
-        required: false
-        type: string
-        description: Last name
-
-      - name: email_address
-        in: query
+      - in: body
+        name: body
         required: true
-        type: string
-        description: Email address
-
-      - name: passphrase_md5
-        in: query
-        required: true
-        type: string
-        description: MD5 encoded password
+        schema:
+          type: object
+          properties:
+            first_name:
+              type: string
+              description: First name
+            last_name:
+              type: string
+              description: Last name
+            email_address:
+              type: string
+              description: Email address
+            passphrase_md5:
+              type: string
+              description: MD5 encoded password
 
     responses:
       201:
