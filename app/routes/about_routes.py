@@ -20,6 +20,13 @@ def hello():
                      - API version\n
                      - Database server status\n
                      - Database version\n
+        examples:
+            {
+                "API server status": "Running",
+                "API version": "0.1.4",
+                "Database server status": "Running",
+                "Database version": "8.0.32 MySQL Community Server"
+            }
     """
     db_version = 'N/A'
     db_status = "Running"
