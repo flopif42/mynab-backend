@@ -45,12 +45,17 @@ def sign_up():
             passphrase_md5:
               type: string
               description: MD5 encoded password
+          required:
+            - email_address
+            - passphrase_md5
 
     responses:
       201:
         description: User was created successfully
       400:
         description: Missing required parameters or incorrect parameters
+      409:
+        description: Could not create the user because the email address is already used
       500:
         description: Internal server error
     """
