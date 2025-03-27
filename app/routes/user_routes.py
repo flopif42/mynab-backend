@@ -31,6 +31,8 @@ def check_email_available():
     """
     Checks if an email address is available for user creation.
     ---
+    tags:
+      User
     parameters:
       - name: email_address
         in: query

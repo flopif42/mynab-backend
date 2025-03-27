@@ -12,6 +12,8 @@ def hello():
     """
     Sends information about the server status and version
     ---
+    tags:
+      General
     responses:
       200:
         description: Returns various information regarding the frontend app and the API\n
