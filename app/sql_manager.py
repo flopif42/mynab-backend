@@ -29,6 +29,8 @@ class SqlManager:
 
     @classmethod
     def execute_query(cls, query, values=None, *, commit=False, fetch=False, dictionary=False):
+        conn = None
+        cursor = None
         try:
             conn = cls.get_conn()
             cursor = conn.cursor(dictionary=dictionary) if dictionary else conn.cursor()
