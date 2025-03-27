@@ -56,5 +56,5 @@ def is_available(request_params):
         else:
             return 1
     except Exception as error:
-        print(f"Exception in is_available() : {error}")
+        print(f"Exception in is_available() : {type(error)}")
         return -1
