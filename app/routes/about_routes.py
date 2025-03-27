@@ -10,11 +10,16 @@ about_bp = Blueprint('about', __name__)
 @about_bp.route('/about', methods=['GET'])
 def hello():
     """
-    Sends information about the server status
+    Sends information about the server status and version
     ---
     responses:
       200:
-        description: Information
+        description: Returns various information regarding the frontend app and the API :
+                     Client version (Jenkins build number)
+                     API server status
+                     API version
+                     Database server status
+                     Database version
     """
     db_version = 'N/A'
     db_status = "Running"
