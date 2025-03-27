@@ -40,7 +40,7 @@ class SqlManager:
                 result = cursor.fetchall()
             return result
         except Exception as error:
-            print('SqlManager.execute_query() exception : %s %s %s' % (type(error), type(error).__name__, error))
+            print(f'SqlManager.execute_query() exception : {type(error)} - {type(error).__name__} - {error}')
             raise error
         finally:
             cursor.close()
