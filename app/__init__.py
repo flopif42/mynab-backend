@@ -1,4 +1,5 @@
 from flask import Flask
+from flasgger import Swagger
 from app.routes.about_routes import about_bp
 from app.routes.transaction_routes import transaction_bp
 from app.routes.transfer_routes import transfer_bp
@@ -18,4 +19,5 @@ def create_app():
     app.register_blueprint(user_bp)
     app.register_blueprint(budget_bp)
     app.register_blueprint(about_bp)
+    swagger = Swagger(app)
     return app
