@@ -19,12 +19,54 @@ def user_profile():
 
 @user_bp.route('/user/sign-up', methods=['POST'])
 def sign_up():
-    ret = user.signup(request.json)
-    if ret == 403: # duplicate email_address
-        return "", HTTPStatus.FORBIDDEN
-    if ret == 400: # other error
+    """
+    New user registration.
+    ---
+    tags:
+      - User
+    parameters:
+      - name: first_name
+        in: body
+        required: false
+        type: string
+        description: First name
+      - name: last_name
+        in: body
+        required: false
+        type: string
+        description: Last name
+      - name: email_address
+        in: body
+        required: true
+        type: string
+        description: Email address
+      - name: passphrase_md5
+        in: body
+        required: true
+        type: string
+        description: MD5 encoded password
+
+    responses:
+      201:
+        description: User was created successfully
+      400:
+        description: Missing required parameters
+      500:
+        description: Internal server error
+    """
+    try:
+        if not request.json or not request.json.get('email_address') or not request.json.get('passphrase_md5'):
+            raise ValueError
+        ret = user.signup(request.json)
+        if ret == 0: # OK
+            return "", HTTPStatus.CREATED
+        if ret == 1: # duplicate email_address
+            return "", HTTPStatus.CONFLICT # 409
+    except ValueError:
         return "", HTTPStatus.BAD_REQUEST
-    return "", HTTPStatus.CREATED
+    except Exception as e:
+        print(f"Exception : {type(e)}")
+        return "", HTTPStatus.INTERNAL_SERVER_ERROR
 
 @user_bp.route('/user/check_email_available', methods=['GET'])
 def check_email_available():

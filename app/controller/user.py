@@ -35,13 +35,13 @@ def signup(request_params):
         # ID_CATEGORY 0 is a technical value for Income.
         SqlManager.execute_query("insert into PARENT_CATEGORY (ID_PARENT_CATEGORY, ID_USER, PARENT_CATEGORY_NAME) values (0, (%s), '(system)')", (id_user,), commit=True)
         SqlManager.execute_query("insert into CATEGORY (ID_CATEGORY, ID_USER, ID_PARENT_CATEGORY, CATEGORY_NAME) values (0, (%s), 0, 'Income')", (id_user,), commit=True)
-
+        return 0
     except mysql.connector.IntegrityError:
         print(f"Could not create user : email address already used")
-        return 403
+        return 1
     except Exception as error:
-        print(f"Exception in signup() : {error}")
-        return 400
+        print(f"Exception in signup() exception : {type(error)} - {type(error).__name__} - {error}")
+        raise error
         
 # This function checks the database to see if an email address is available to use to sign up
 # return values: 1 The email address is available
