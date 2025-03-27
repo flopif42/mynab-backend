@@ -31,29 +31,20 @@ def available():
     """
     Checks if an email address is available for user creation.
     ---
-    get:
-    summary: Check if an email address is available
     parameters:
       - name: email_address
         in: query
         required: true
-        schema:
-          type: string
+        type: string
         description: Email address to check
+
     responses:
       200:
         description: Email availability status
-        content:
+        examples:
           application/json:
-            schema:
-              type: object
-              properties:
-                available:
-                  type: boolean
-                  example: true
-                message:
-                  type: string
-                  example: "Email is available"
+            available: true
+            message: Email is available
       400:
         description: Missing or invalid email parameter
       500:
