@@ -55,6 +55,9 @@ def is_available(request_params):
             return 0
         else:
             return 1
+    except KeyError:
+        print(f"Exception in is_available() : missing parameter : email_address")
+        return 400
     except Exception as error:
         print(f"Exception in is_available() : {type(error)}")
-        return -1
+        return 500
