@@ -1,0 +1,32 @@
+Deletes an account.
+---
+tags:
+  - Account
+consumes:
+  - application/json
+parameters:
+  - in: body
+    name: body
+    required: true
+    schema:
+      type: object
+      properties:
+        id_account:
+          type: number
+          description: The account number
+          example: 987654321
+      required:
+        - id_account
+responses:
+  204:
+    description: Account was successfully deleted
+  400:
+    description: Missing required parameter or incorrect parameter
+  401:
+    description: No user is logged in
+  403:
+    description: Account doesn't belong to the logged in user
+  409:
+    description: Account could not be deleted because it contains transactions. All transactions must be deleted first.
+  500:
+    description: Internal server error

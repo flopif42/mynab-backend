@@ -1,5 +1,5 @@
 import datetime as dt
-from app.sql_manager import SqlManager
+from app.sql_manager import db
 from app.controller import payee, account, child_category, parent_category, transfer
 
 def fetch_all(id_user, request_params):
@@ -32,7 +32,7 @@ def fetch_all(id_user, request_params):
         if request_params and request_params.get("id_account"):
             query += "and txn.ID_ACCOUNT = (%s) "
             values += (request_params["id_account"],)
-        return SqlManager.execute_query(query, values, fetch=True, dictionary=True)
+        return db.execute_query(query, values, fetch=True, dictionary=True)
     except Exception as err:
         print(f"Could not fetch transactions : {err}")
         raise
@@ -48,7 +48,7 @@ def create(id_user, request_params):
                 VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)
                 """
         values = (id_user, request_params['id_account'], id_payee, id_category, request_params['flow'], request_params['amount'], txn_date, request_params['memo'], request_params['is_transfer'])
-        return SqlManager.execute_query(query, values, commit=True)
+        return db.execute_query(query, values, commit=True)
     except Exception as err:
         print(f"Could not add the transaction : {err}")
         raise
@@ -61,7 +61,7 @@ def delete(id_user, request_params):
             return transfer.delete(id_user, id_transfer)
         else:
             query = "delete from TRANSACTION where ID_USER = (%s) and ID_TRANSACTION = (%s)"
-            return SqlManager.execute_query(query, (id_user, id_transaction,), commit=True)
+            return db.execute_query(query, (id_user, id_transaction,), commit=True)
     except Exception as err:
         print(f"Could not delete the transaction: {err}")
         raise
@@ -69,7 +69,7 @@ def delete(id_user, request_params):
 # Utilities functions
 def is_transfer(id_transaction):
     query = "select IS_TRANSFER from TRANSACTION where ID_TRANSACTION = %s"
-    result = SqlManager.execute_query(query, (id_transaction,), fetch=True)
+    result = db.execute_query(query, (id_transaction,), fetch=True)
     if len(result) == 0:
         print(f"Could not find transaction with id : {id_transaction}")
         raise ValueError
@@ -80,7 +80,7 @@ def is_transfer(id_transaction):
 
 def get_transfer_id(id_transaction):
     query = "select ID_TRANSFER from TRANSFER where ID_TRANSACTION_OUTFLOW = %s or ID_TRANSACTION_INFLOW = %s"
-    result = SqlManager.execute_query(query, (id_transaction, id_transaction), fetch=True)
+    result = db.execute_query(query, (id_transaction, id_transaction), fetch=True)
     if len(result) == 0:
         print(f"Could not find transaction with id : {id_transaction}")
         raise ValueError

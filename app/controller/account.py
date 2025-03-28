@@ -20,6 +20,7 @@ def fetch_all(id_user, unused):
 def create(id_user, request_params):
     acc_name = request_params['account_name']
     acc_type = request_params['account_type']
+
     if acc_name is None:
         raise ValueError("Account name can't be empty.")
     acc_name = acc_name.strip()
@@ -37,12 +38,25 @@ def create(id_user, request_params):
         raise error
 
 def delete(id_user, request_params):
+    id_account = request_params['id_account']
+
+    if id_account is None:
+        raise ValueError(400, "ID account can't be empty.")
     try:
+        id_account = int(id_account)
+        if not is_valid(id_account):
+            raise ValueError(404, "This account doesn't exist.")
+        if not is_valid(id_account, id_user):
+            raise ValueError(403, "This account doesn't belong to this user.")
+        if not is_empty(id_account, id_user):
+            raise ValueError(409, "This account has transactions. Delete the transactions first.")
         query = "delete from ACCOUNT where ID_ACCOUNT = (%s) and ID_USER = (%s)"
         db.execute_query(query, (request_params['id_account'], id_user), commit=True)
-    except Exception as err:
-        print(f"Could not delete the account : {err}")
-        raise
+    except TypeError as error:
+        raise ValueError(400, "ID account must be a number")
+    except Exception as error:
+        print(f"Exception in account.delete() : {type(error)} - {type(error).__name__} - {error}")
+        raise error
 
 def toggle_status(id_user, request_params):
     try:
@@ -51,3 +65,32 @@ def toggle_status(id_user, request_params):
     except Exception as err:
         print(f"Could not open/close the account : {err}")
         raise
+
+def is_valid(id_account, id_user=None):
+    """
+    This function is used to check the existence of id_account in the table. If id_user is provided,
+    it checks that this id_account belongs to the right user.
+    """
+    query = 'select ID_ACCOUNT from ACCOUNT where ID_ACCOUNT = %s '
+    values = (id_account, )
+    if id_user:
+        query += 'and ID_USER = (%s)'
+        values += (id_user,)
+    result = db.execute_query(query, values, fetch=True)
+    nb_rows = len(result)
+    return bool(nb_rows)
+
+def is_empty(id_account):
+    """
+    This function is used to check if the account is free of transactions.
+    """
+    query = '''
+            select ID_TRANSACTION as nb_txn
+            from ACCOUNT acc
+            inner join TRANSACTION txn
+              on txn.ID_ACCOUNT = acc.ID_ACCOUNT
+            where acc.ID_ACCOUNT = %s
+            '''
+    result = db.execute_query(query, (id_account, ), fetch=True)
+    nb_rows = len(result)
+    return bool(nb_rows)
