@@ -14,7 +14,7 @@ class UserSignUpParams(BaseModel):
     @field_validator('first_name', 'last_name')
     @classmethod
     def validate_name(cls, value):
-        if value is None or len(value) == 0:
+        if value in (None, ''):
             return value
         if not value.isalpha():
             raise ValueError('Name must contain only alphabetic characters')
