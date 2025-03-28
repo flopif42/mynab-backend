@@ -10,13 +10,13 @@ account_bp = Blueprint('account', __name__)
 def account_list():
     return handle_route_action(account.fetch_all)
 
-@account_bp.route('/account/delete', methods=['POST'])
+@account_bp.route('/account/delete', methods=['DELETE'])
 @swag_from('../docs/account/account_delete.yml')
 def account_delete():
     try:
         if not request.is_json or 'id_account' not in request.json:
             raise ValueError(400, "The parameter ID account is required.")
-        return return handle_route_action(account.delete)
+        return return handle_route_action(account.delete, delete=True)
     except ValueError as value_error:
         print(value_error.args)
         return "", HTTPStatus.BAD_REQUEST
