@@ -5,14 +5,10 @@ class AccountOperationError(Exception):
 
 def delete(id_user, request_params):
     id_account = request_params['id_account']
-
-    if id_account is None:
-        raise ValueError(400, "ID account can't be empty.")
     try:
-        id_account = str(id_account).strip()
-        if id_account == '':
+        if id_account is None or not str(id_account).strip():
             raise AccountOperationError(400, "ID account can't be empty.")
-        id_account = int(id_account)
+        id_account = int(id_account.strip())
         if not is_valid(id_account):
             raise AccountOperationError(404, "This account doesn't exist.")
         if not is_valid(id_account, id_user):
