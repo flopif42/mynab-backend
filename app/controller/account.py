@@ -3,24 +3,6 @@ from app.sql_manager import SqlManager as db
 class AccountOperationError(Exception):
     pass
 
-def delete(id_user, request_params):
-    id_account = request_params['id_account']
-    try:
-        if id_account is None or not str(id_account).strip():
-            raise AccountOperationError(400, "ID account can't be empty.")
-        id_account = int(id_account)
-        if not is_valid(id_account):
-            raise AccountOperationError(404, "This account doesn't exist.")
-        if not is_valid(id_account, id_user):
-            raise AccountOperationError(403, "This account doesn't belong to this user.")
-        if not is_empty(id_account):
-            raise AccountOperationError(409, "This account has transactions. Delete the transactions first.")
-        query = "delete from ACCOUNT where ID_ACCOUNT = (%s) and ID_USER = (%s)"
-        db.execute_query(query, (request_params['id_account'], id_user), commit=True)
-    except Exception as error:
-        print(f"Exception in account.delete() : {type(error)} - {type(error).__name__} - {error}")
-        raise error
-
 def toggle_status(id_user, request_params):
     try:
         query = "update ACCOUNT set ACCOUNT_STATUS = (ACCOUNT_STATUS + 1) %2 where ID_ACCOUNT = (%s) and ID_USER = (%s)"
@@ -82,7 +64,7 @@ def create(id_user, request_params):
 
     if acc_name is None:
         raise ValueError("Account name can't be empty.")
-    acc_name = acc_name.strip()
+    acc_name = str(acc_name).strip()
     if acc_name == '':
         raise ValueError("Account name can't be empty.")
     if len(acc_name) > 50:
@@ -94,4 +76,22 @@ def create(id_user, request_params):
         db.execute_query(query, (id_user, acc_name, acc_type), commit=True)
     except Exception as error:
         print(f"Exception in account.create() : {type(error)} - {type(error).__name__} - {error}")
+        raise error
+
+def delete(id_user, request_params):
+    id_account = request_params['id_account']
+    try:
+        if id_account is None or not str(id_account).strip():
+            raise AccountOperationError(400, "ID account can't be empty.")
+        id_account = int(id_account)
+        if not is_valid(id_account):
+            raise AccountOperationError(404, "This account doesn't exist.")
+        if not is_valid(id_account, id_user):
+            raise AccountOperationError(403, "This account doesn't belong to this user.")
+        if not is_empty(id_account):
+            raise AccountOperationError(409, "This account has transactions. Delete the transactions first.")
+        query = "delete from ACCOUNT where ID_ACCOUNT = (%s) and ID_USER = (%s)"
+        db.execute_query(query, (request_params['id_account'], id_user), commit=True)
+    except Exception as error:
+        print(f"Exception in account.delete() : {type(error)} - {type(error).__name__} - {error}")
         raise error
