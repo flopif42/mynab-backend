@@ -34,9 +34,9 @@ def get_profile(id_user, unused):
         query = "select FIRST_NAME as first_name, LAST_NAME as last_name, EMAIL_ADDRESS as email_address from USER where ID_USER = (%s)"
         result = SqlManager.execute_query(query, (id_user,), fetch=True, dictionary=True)
         return result[0]
-    except Exception as err:
-        print(f"Could not retrieve user profile : {err}")
-        raise
+    except Exception as error:
+        print(f"Exception in get_profile() : {type(error)} - {type(error).__name__} - {error}")
+        raise error
 
 def login(request_params):
     try:

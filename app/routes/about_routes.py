@@ -3,27 +3,14 @@ import sys
 import json
 from http import HTTPStatus
 from flask import Blueprint
+from flasgger import swag_from
 from app.sql_manager import SqlManager
 
 about_bp = Blueprint('about', __name__)
 
 @about_bp.route('/about', methods=['GET'])
-def hello():
-    """
-    Returns information about the server status and version.
-    ---
-    tags:
-      - General
-    responses:
-      200:
-        description: Various information regarding the frontend app and the API
-        examples:
-          application/json:
-            API server status: Running
-            API version: 0.1.5
-            Database server status: Running
-            Database version: 8.0.32 MySQL Community Server
-    """
+@swag_from('docs/about.yml')
+def about():
     db_version = 'N/A'
     db_status = "Running"
 

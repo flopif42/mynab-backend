@@ -1,0 +1,12 @@
+tags:
+  - General
+summary: Returns information about the server status and version.
+responses:
+  200:
+    description: Various information regarding the frontend app and the API
+    examples:
+      application/json:
+        "API server status": "Running"
+        "API version": "0.1.5"
+        "Database server status": "Running"
+        "Database version": "8.0.32 MySQL Community Server"

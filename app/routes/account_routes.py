@@ -45,7 +45,13 @@ def account_create():
       500:
         description: Internal server error
     """
-    return handle_route_action(account.create, create=True)
+    try:
+        return handle_route_action(account.create, create=True)
+    except ValueError:
+        return "", HTTPStatus.BAD_REQUEST
+    except Exception as error:
+        print(f"Exception in account_routes.account_create() : {type(error)} - {type(error).__name__} - {error}")
+        return "", HTTPStatus.INTERNAL_SERVER_ERROR
 
 @account_bp.route('/account/delete', methods=['POST'])
 def account_delete():

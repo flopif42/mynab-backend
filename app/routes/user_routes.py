@@ -144,7 +144,7 @@ def check_email_available():
         return { "available" : user.is_available(email_address) }, HTTPStatus.OK
     except ValueError:
         return "", HTTPStatus.BAD_REQUEST
-    except Exception as e:
+    except Exception as error:
         print(f"Exception in user_routes.check_email_available() : {type(error)} - {type(error).__name__} - {error}")
         return "", HTTPStatus.INTERNAL_SERVER_ERROR
 
@@ -171,6 +171,6 @@ def user_profile():
     """
     try:
         return handle_route_action(user.get_profile)
-    except Exception as e:
+    except Exception as error:
         print(f"Exception in user_routes.user_profile() : {type(error)} - {type(error).__name__} - {error}")
         return "", HTTPStatus.INTERNAL_SERVER_ERROR
