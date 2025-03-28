@@ -32,8 +32,8 @@ class UserSignUpParams(BaseModel):
 def get_profile(id_user, unused):
     try:
         query = "select FIRST_NAME, LAST_NAME, EMAIL_ADDRESS from USER where ID_USER = (%s)"
-        result = SqlManager.execute_query(query, (id_user,), fetch=True)
-        return result
+        result = SqlManager.execute_query(query, (id_user,), fetch=True, dictionary=True)
+        return result[0]
     except Exception as err:
         print(f"Could not retrieve user profile : {err}")
         raise
