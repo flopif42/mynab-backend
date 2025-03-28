@@ -48,7 +48,7 @@ def delete(id_user, request_params):
             raise ValueError(404, "This account doesn't exist.")
         if not is_valid(id_account, id_user):
             raise ValueError(403, "This account doesn't belong to this user.")
-        if not is_empty(id_account, id_user):
+        if not is_empty(id_account):
             raise ValueError(409, "This account has transactions. Delete the transactions first.")
         query = "delete from ACCOUNT where ID_ACCOUNT = (%s) and ID_USER = (%s)"
         db.execute_query(query, (request_params['id_account'], id_user), commit=True)
