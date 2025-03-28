@@ -16,8 +16,10 @@ def account_list():
 def account_delete():
     try:
         if not request.is_json or 'id_account' not in request.json:
-            raise ValueError(400, "The parameter ID account is required.")
+            raise AccountOperationError(400, "The parameter ID account is required.")
         return handle_route_action(account.delete, delete=True)
+    except ValueError:
+        return "", HTTPStatus.BAD_REQUEST
     except AccountOperationError as error:
         return { "error": error.args[1] }, error.args[0]
     except Exception as error:
