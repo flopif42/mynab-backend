@@ -8,7 +8,7 @@ def delete(id_user, request_params):
     try:
         if id_account is None or not str(id_account).strip():
             raise AccountOperationError(400, "ID account can't be empty.")
-        id_account = int(id_account.strip())
+        id_account = int(id_account)
         if not is_valid(id_account):
             raise AccountOperationError(404, "This account doesn't exist.")
         if not is_valid(id_account, id_user):
