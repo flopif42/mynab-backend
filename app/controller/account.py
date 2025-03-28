@@ -44,7 +44,7 @@ def delete(id_user, request_params):
         raise ValueError(400, "ID account can't be empty.")
     try:
         id_account = str(id_account).strip()
-        if id_account is '':
+        if id_account == '':
             raise ValueError(400, "ID account can't be empty.")
         id_account = int(id_account)
         if not is_valid(id_account):
