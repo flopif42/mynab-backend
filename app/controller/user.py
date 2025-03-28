@@ -1,6 +1,13 @@
 import mysql.connector
 from app.sql_manager import SqlManager
+from pydantic import BaseModel, EmailStr
     
+class UserSignUpParams(BaseModel):
+    first_name: str
+    last_name: str
+    email_address: EmailStr
+    password_md5: str
+
 def get_profile(id_user, unused):
     try:
         query = "select FIRST_NAME, LAST_NAME, EMAIL_ADDRESS from USER where ID_USER = (%s)"
@@ -21,7 +28,19 @@ def login(request_params):
         print(f"Exception in login() : {err}")
         raise
 
+# This function checks the validity of sign up parameters and if all is ok, creates the user in the database.
+# Return values:
+#   0 : parameters are valid and the user has been created
+#   1 : the user could not be created because the submitted email address is already used
+#   2 : the user could not be created because some of the parameters are invalid
+#
 def signup(request_params):
+    try:
+        user = UserInput(request_params)
+        print("All good:", user.dict())
+    except Exception as e:
+        print("Validation failed:", e)
+
     try:
         query = "insert into USER (FIRST_NAME, LAST_NAME, EMAIL_ADDRESS, PASSPHRASE_MD5) values (%s, %s, %s, %s)"
         values = (
