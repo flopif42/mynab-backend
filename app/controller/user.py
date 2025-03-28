@@ -72,9 +72,8 @@ def signup(request_params):
     except ValueError as e:
         print("Validation failed:", e)
         raise e
-    except mysql.connector.IntegrityError as e:
-        print(f"Could not create user : email address already used")
-        raise e
+    except mysql.connector.IntegrityError:
+        raise RuntimeError("Could not create user : email address already used")
     except Exception as error:
         print(f"Exception in signup() exception : {type(error)} - {type(error).__name__} - {error}")
         raise error

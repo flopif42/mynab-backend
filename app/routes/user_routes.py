@@ -66,13 +66,14 @@ def sign_up():
     try:
         if not request.is_json or 'email_address' not in request.json or 'passphrase_md5' not in request.json:
             raise ValueError
-        ret = user.signup(request.json)
-        if ret == 0: # OK
-            return "", HTTPStatus.CREATED
-        if ret == 1: # duplicate email_address
-            return "", HTTPStatus.CONFLICT # 409
+        user.signup(request.json)
+        return "", HTTPStatus.CREATED
+
     except ValueError:
         return "", HTTPStatus.BAD_REQUEST
+    except RuntimeError as integrity_error:
+        print(integrity_error)
+        return "", HTTPStatus.CONFLICT # 409
     except Exception as error:
         print(f"Exception in user_routes.sign_up() exception : {type(error)} - {type(error).__name__} - {error}")
         return "", HTTPStatus.INTERNAL_SERVER_ERROR
