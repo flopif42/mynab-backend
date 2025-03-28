@@ -1,0 +1,41 @@
+Registers a new user.
+---
+tags:
+  - User
+consumes:
+  - application/json
+parameters:
+  - in: body
+    name: body
+    required: true
+    schema:
+      type: object
+      properties:
+        first_name:
+          type: string
+          description: First name
+          example: Scrooge
+        last_name:
+          type: string
+          description: Last name
+          example: McDuck
+        email_address:
+          type: string
+          description: Email address
+          example: scrooge@mail.com
+        passphrase_md5:
+          type: string
+          description: MD5 encoded password
+          example: abcdef1234567890abcdef1234567890
+      required:
+        - email_address
+        - passphrase_md5
+responses:
+  201:
+    description: User was created successfully
+  400:
+    description: Missing required parameters or incorrect parameters
+  409:
+    description: Could not create the user because the email address is already used
+  500:
+    description: Internal server error

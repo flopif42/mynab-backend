@@ -1,0 +1,20 @@
+Checks if an email address is available for user creation.
+---
+tags:
+  - User
+parameters:
+  - name: email_address
+    in: query
+    required: true
+    type: string
+    description: Email address to check
+responses:
+  200:
+    description: Email availability status
+    examples:
+      application/json:
+        available: true
+  400:
+    description: Missing or invalid email parameter
+  500:
+    description: Internal server error
