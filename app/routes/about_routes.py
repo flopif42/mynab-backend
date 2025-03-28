@@ -3,7 +3,6 @@ import sys
 import json
 from http import HTTPStatus
 from flask import Blueprint
-from flasgger import swag_from
 from app.sql_manager import SqlManager
 
 about_bp = Blueprint('about', __name__)
