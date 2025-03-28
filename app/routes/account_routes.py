@@ -10,6 +10,41 @@ def account_list():
 
 @account_bp.route('/account/create', methods=['POST'])
 def account_create():
+    """
+    Adds a new account.
+    ---
+    tags:
+      - Account
+    consumes:
+      - application/json
+    parameters:
+      - in: body
+        name: body
+        required: true
+        schema:
+          type: object
+          properties:
+            account_name:
+              type: string
+              description: The account name
+              example: Checking
+            account_type:
+              type: number
+              description: The type of account (1: on-budget, 2: off-budget)
+              example: 1
+          required:
+            - account_name
+            - account_type
+    responses:
+      201:
+        description: Account was created successfully
+      400:
+        description: Missing required parameters or incorrect parameters
+      401:
+        description: No user is logged in
+      500:
+        description: Internal server error
+    """
     return handle_route_action(account.create, create=True)
 
 @account_bp.route('/account/delete', methods=['POST'])
