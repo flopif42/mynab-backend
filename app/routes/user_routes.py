@@ -42,14 +42,14 @@ def user_login():
       500:
         description: Internal server error
     """
-    id_user = user.login(request.json)
-    if id_user is None:
-        return "", HTTPStatus.UNAUTHORIZED
-    return JwtManager.generate_access_token(id_user)
-
-@user_bp.route('/user/profile', methods=['GET'])
-def user_profile():
-    return handle_route_action(user.get_profile)
+    try:
+        id_user = user.login(request.json)
+        if not id_user:
+            return "", HTTPStatus.UNAUTHORIZED
+        return JwtManager.generate_access_token(id_user) # HTTP response with status code 200 and cookie set (no body)
+    except Exception as error:
+        print(f"Exception in user_routes.login() : {type(error)} - {type(error).__name__} - {error}")
+        return "", HTTPStatus.INTERNAL_SERVER_ERROR
 
 @user_bp.route('/user/sign-up', methods=['POST'])
 def sign_up():
@@ -109,7 +109,7 @@ def sign_up():
         print(integrity_error)
         return "", HTTPStatus.CONFLICT # 409
     except Exception as error:
-        print(f"Exception in user_routes.sign_up() exception : {type(error)} - {type(error).__name__} - {error}")
+        print(f"Exception in user_routes.sign_up() : {type(error)} - {type(error).__name__} - {error}")
         return "", HTTPStatus.INTERNAL_SERVER_ERROR
 
 @user_bp.route('/user/check_email_available', methods=['GET'])
@@ -146,5 +146,13 @@ def check_email_available():
     except ValueError:
         return "", HTTPStatus.BAD_REQUEST
     except Exception as e:
-        print(f"Exception in user_routes.check_email_available() exception : {type(error)} - {type(error).__name__} - {error}")
+        print(f"Exception in user_routes.check_email_available() : {type(error)} - {type(error).__name__} - {error}")
+        return "", HTTPStatus.INTERNAL_SERVER_ERROR
+
+@user_bp.route('/user/profile', methods=['GET'])
+def user_profile():
+    try:
+        return handle_route_action(user.get_profile)
+    except Exception as e:
+        print(f"Exception in user_routes.user_profile() : {type(error)} - {type(error).__name__} - {error}")
         return "", HTTPStatus.INTERNAL_SERVER_ERROR

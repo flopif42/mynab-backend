@@ -8,9 +8,9 @@ def handle_route_action(action, create=False):
     try:
         id_user = JwtManager.get_id_user_from_token(request)
         result = action(id_user, request.json if request.is_json else None)
-        responseBody = "" if (result is None) else jsonify(result)
+        responseBody = "" if result is None else jsonify(result)
         responseStatus = HTTPStatus.CREATED if create else HTTPStatus.OK
         return responseBody, responseStatus
     except Exception as error:
         print(f"Exception in handle_route_action() : {error}")
-        return "", HTTPStatus.BAD_REQUEST
+        raise error
