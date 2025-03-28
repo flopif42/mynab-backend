@@ -54,7 +54,7 @@ def user_login():
 @user_bp.route('/user/sign-up', methods=['POST'])
 def sign_up():
     """
-    New user registration.
+    Registers a new user.
     ---
     tags:
       - User

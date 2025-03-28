@@ -10,13 +10,13 @@ about_bp = Blueprint('about', __name__)
 @about_bp.route('/about', methods=['GET'])
 def hello():
     """
-    Sends information about the server status and version
+    Returns information about the server status and version.
     ---
     tags:
       - General
     responses:
       200:
-        description: Returns various information regarding the frontend app and the API
+        description: Various information regarding the frontend app and the API
         examples:
           application/json:
             API server status: Running
