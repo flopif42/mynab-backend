@@ -91,4 +91,5 @@ def is_empty(id_account):
             '''
     result = db.execute_query(query, (id_account, ), fetch=True)
     nb_rows = len(result)
+    print(f"The account {id_account} has {nb_rows} rows.")
     return bool(nb_rows)
