@@ -16,12 +16,13 @@ def hello():
       - General
     responses:
       200:
-        description: Returns various information regarding the frontend app and the API\n
-                     - Client version (Jenkins build number)\n
-                     - API server status\n
-                     - API version\n
-                     - Database server status\n
-                     - Database version\n
+        description: Returns various information regarding the frontend app and the API
+        examples:
+          application/json:
+            API server status: Running
+            API version: 0.1.5
+            Database server status: Running
+            Database version: 8.0.32 MySQL Community Server
     """
     db_version = 'N/A'
     db_status = "Running"
