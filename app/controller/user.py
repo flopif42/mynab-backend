@@ -2,11 +2,30 @@ import mysql.connector
 from app.sql_manager import SqlManager
 from pydantic import BaseModel, EmailStr
     
+# This class is used to validate data
 class UserSignUpParams(BaseModel):
-    first_name: str
-    last_name: str
+    first_name: str | None
+    last_name: str | None
     email_address: EmailStr
-    password_md5: str
+    passphrase_md5: str
+
+    @field_validator('first_name', 'last_name')
+    @classmethod
+    def validate_name(cls, value):
+        if value is None or len(value) == 0:
+            return value
+        if not value.isalpha():
+            raise ValueError('Name must contain only alphabetic characters')
+        if len(value) > 50:
+            raise ValueError('Name must be 50 characters or fewer')
+        return value
+
+    @field_validator('passphrase_md5')
+    @classmethod
+    def validate_md5(cls, value):
+        if not re.fullmatch(r'^[a-fA-F0-9]{32}$', value):
+            raise ValueError('Password must be a valid MD5 hash')
+        return value
 
 def get_profile(id_user, unused):
     try:
@@ -37,7 +56,7 @@ def login(request_params):
 def signup(request_params):
     try:
         user = UserSignUpParams(request_params)
-        print("All good:", user.dict())
+        # print("All good:", user.dict())
     except Exception as e:
         print("Validation failed:", e)
         return 2
