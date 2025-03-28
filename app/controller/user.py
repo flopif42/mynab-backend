@@ -36,10 +36,11 @@ def login(request_params):
 #
 def signup(request_params):
     try:
-        user = UserInput(request_params)
+        user = UserSignUpParams(request_params)
         print("All good:", user.dict())
     except Exception as e:
         print("Validation failed:", e)
+        return 2
 
     try:
         query = "insert into USER (FIRST_NAME, LAST_NAME, EMAIL_ADDRESS, PASSPHRASE_MD5) values (%s, %s, %s, %s)"
