@@ -21,7 +21,7 @@ def create(id_user, request_params):
     try:
         if request_params['account_name'] in (None, ''):
             raise ValueError("Account name can't be empty.")
-        if int(request_params['account_type']) not in (1, 2):
+        if request_params['account_type'] is None or int(request_params['account_type']) not in (1, 2):
             raise ValueError("Account type must be 1 or 2.")
         query = "insert into ACCOUNT (ID_USER, ACCOUNT_NAME, ACCOUNT_TYPE) values (%s, %s, %s)"
         db.execute_query(query, (id_user, request_params['account_name'], request_params['account_type']), commit=True)
