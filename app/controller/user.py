@@ -15,7 +15,7 @@ class UserSignUpParams(BaseModel):
     @classmethod
     def validate_name(cls, value):
         if value in (None, ''):
-            return value
+            return None
         if not value.isalpha():
             raise ValueError('Name must contain only alphabetic characters')
         if len(value) > 50:
