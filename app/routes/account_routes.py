@@ -19,7 +19,7 @@ def account_delete():
         return handle_route_action(account.delete, delete=True)
     except ValueError as value_error:
         print(value_error.args)
-        return "", HTTPStatus.BAD_REQUEST
+        return { "error": value_error.args[1] }, HTTPStatus.BAD_REQUEST
     except Exception as error:
         print(f"Exception in account_routes.account_delete() : {type(error).__name__} - {error}")
         return "", HTTPStatus.INTERNAL_SERVER_ERROR
