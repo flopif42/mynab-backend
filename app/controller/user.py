@@ -56,8 +56,7 @@ def login(request_params):
 #
 def signup(request_params):
     try:
-        user = UserSignUpParams(request_params)
-        # print("All good:", user.dict())
+        user = UserSignUpParams(**request_params)
     except Exception as e:
         print("Validation failed:", e)
         return 2
