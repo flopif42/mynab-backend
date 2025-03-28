@@ -30,7 +30,7 @@ def account_create():
               example: Checking
             account_type:
               type: number
-              description: The type of account (1: on-budget, 2: off-budget)
+              description: The type of account (1\: on-budget, 2\: off-budget)
               example: 1
           required:
             - account_name
