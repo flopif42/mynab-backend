@@ -9,7 +9,7 @@ from app.sql_manager import SqlManager
 about_bp = Blueprint('about', __name__)
 
 @about_bp.route('/about', methods=['GET'])
-@swag_from('docs/about.yml')
+@swag_from('../docs/about.yml')
 def about():
     db_version = 'N/A'
     db_status = "Running"
