@@ -23,7 +23,7 @@ def create(id_user, request_params):
         if request_params['account_name'].strip() in (None, ''):
             raise ValueError("Account name can't be empty.")
         request_params['account_name'] = request_params['account_name'].strip()
-        if len(request_params['account_name'] > 50:
+        if len(request_params['account_name']) > 50:
             raise ValueError("Account name can't be more than 50 characters.")
         if request_params['account_type'] is None or int(request_params['account_type']) not in (1, 2):
             raise ValueError("Account type must be 1 or 2.")
