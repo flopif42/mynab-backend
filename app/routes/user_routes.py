@@ -163,6 +163,8 @@ def user_profile():
         examples:
           application/json:
             first_name: Scrooge
+            last_name: McDuck
+            email_address: scrooge@mail.com
       401:
         description: No user is logged in
       500:
