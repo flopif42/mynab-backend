@@ -57,7 +57,7 @@ def login(request_params):
 #
 def signup(request_params):
     try:
-        user = UserSignUpParams(**request_params)
+        user_params = UserSignUpParams(**request_params)
     except Exception as e:
         print("Validation failed:", e)
         raise ValueError(e)
@@ -65,10 +65,10 @@ def signup(request_params):
     try:
         query = "insert into USER (FIRST_NAME, LAST_NAME, EMAIL_ADDRESS, PASSPHRASE_MD5) values (%s, %s, %s, %s)"
         values = (
-            request_params['first_name'],
-            request_params['last_name'],
-            request_params['email_address'],
-            request_params['passphrase_md5']
+            user_params.first_name,
+            user_params.last_name,
+            user_params.email_address,
+            user_params.passphrase_md5
         )
         id_user = SqlManager.execute_query(query, values, commit=True)
 
