@@ -60,7 +60,7 @@ def signup(request_params):
         user = UserSignUpParams(**request_params)
     except Exception as e:
         print("Validation failed:", e)
-        return 2
+        raise ValueError(e)
 
     try:
         query = "insert into USER (FIRST_NAME, LAST_NAME, EMAIL_ADDRESS, PASSPHRASE_MD5) values (%s, %s, %s, %s)"
