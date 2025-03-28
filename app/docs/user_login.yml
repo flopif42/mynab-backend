@@ -1,7 +1,8 @@
+Logs the user in the app.
+---
 post:
   tags:
     - User1
-  summary: Logs the user in the app.
   consumes:
     - application/json
   parameters:
