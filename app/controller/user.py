@@ -77,11 +77,14 @@ def signup(request_params):
         print(f"Exception in signup() : {type(error)} - {type(error).__name__} - {error}")
         raise error
         
-# This function checks the database to see if an email address is available to use to sign up
-# return values: 1 The email address is available
-#                0 The email address is already used
-#               -1 There was an error in the query
 def is_available(email_address):
+    """
+    This function checks the database to see if an email address is available to use to sign up.
+    
+    Return values:
+        1 : The email address is available
+        0 : The email address is not available
+    """
     try:
         query = "select 1 from USER where EMAIL_ADDRESS = (%s)"
         result = SqlManager.execute_query(query, (email_address,), fetch=True)

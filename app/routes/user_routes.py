@@ -141,8 +141,7 @@ def check_email_available():
         email_address = request.args.get("email_address")
         if not email_address:
             raise ValueError
-        body_response = { "available" : user.is_available(email_address) }
-        return body_response, HTTPStatus.OK
+        return { "available" : user.is_available(email_address) }, HTTPStatus.OK
     except ValueError:
         return "", HTTPStatus.BAD_REQUEST
     except Exception as e:
