@@ -151,6 +151,23 @@ def check_email_available():
 
 @user_bp.route('/user/profile', methods=['GET'])
 def user_profile():
+    """
+    Gets information about a the logged in user.
+    ---
+    tags:
+      - User
+
+    responses:
+      200:
+        description: Information about the user
+        examples:
+          application/json:
+            first_name: Scrooge
+      401:
+        description: No user is logged in
+      500:
+        description: Internal server error
+    """
     try:
         return handle_route_action(user.get_profile)
     except Exception as e:
