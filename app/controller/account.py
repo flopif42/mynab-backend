@@ -18,17 +18,20 @@ def fetch_all(id_user, unused):
         raise
 
 def create(id_user, request_params):
+    acc_name = request_params['account_name']
+    acc_type = request_params['account_type']
+    if acc_name is None:
+        raise ValueError("Account name can't be empty.")
+    acc_name = acc_name.strip()
+    if acc_name == '':
+        raise ValueError("Account name can't be empty.")
+    if len(acc_name) > 50:
+        raise ValueError("Account name can't be more than 50 characters.")
+    if acc_type is None or int(acc_type) not in (1, 2):
+        raise ValueError("Account type must be 1 or 2.")
     try:
-        
-        if request_params['account_name'].strip() in (None, ''):
-            raise ValueError("Account name can't be empty.")
-        request_params['account_name'] = request_params['account_name'].strip()
-        if len(request_params['account_name']) > 50:
-            raise ValueError("Account name can't be more than 50 characters.")
-        if request_params['account_type'] is None or int(request_params['account_type']) not in (1, 2):
-            raise ValueError("Account type must be 1 or 2.")
         query = "insert into ACCOUNT (ID_USER, ACCOUNT_NAME, ACCOUNT_TYPE) values (%s, %s, %s)"
-        db.execute_query(query, (id_user, request_params['account_name'], request_params['account_type']), commit=True)
+        db.execute_query(query, (id_user, acc_name, acc_type), commit=True)
     except Exception as error:
         print(f"Exception in account.create() : {type(error)} - {type(error).__name__} - {error}")
         raise error
