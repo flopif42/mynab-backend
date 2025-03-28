@@ -9,6 +9,8 @@ account_bp = Blueprint('account', __name__)
 @swag_from('../docs/account/account_create.yml')
 def account_create():
     try:
+        if not request.is_json or 'account_name' not in request.json or 'account_type' not in request.json:
+            raise ValueError
         return handle_route_action(account.create, create=True)
     except ValueError:
         return "", HTTPStatus.BAD_REQUEST
