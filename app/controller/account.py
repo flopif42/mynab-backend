@@ -1,5 +1,8 @@
 from app.sql_manager import SqlManager as db
 
+class AccountOperationError(Exception):
+    pass
+
 def fetch_all(id_user, unused):
     try:
         query = (
@@ -22,14 +25,14 @@ def create(id_user, request_params):
     acc_type = request_params['account_type']
 
     if acc_name is None:
-        raise ValueError("Account name can't be empty.")
+        raise AccountOperationError("Account name can't be empty.")
     acc_name = acc_name.strip()
     if acc_name == '':
-        raise ValueError("Account name can't be empty.")
+        raise AccountOperationError("Account name can't be empty.")
     if len(acc_name) > 50:
-        raise ValueError("Account name can't be more than 50 characters.")
+        raise AccountOperationError("Account name can't be more than 50 characters.")
     if acc_type is None or int(acc_type) not in (1, 2):
-        raise ValueError("Account type must be 1 or 2.")
+        raise AccountOperationError("Account type must be 1 or 2.")
     try:
         query = "insert into ACCOUNT (ID_USER, ACCOUNT_NAME, ACCOUNT_TYPE) values (%s, %s, %s)"
         db.execute_query(query, (id_user, acc_name, acc_type), commit=True)

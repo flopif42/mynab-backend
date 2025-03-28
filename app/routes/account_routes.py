@@ -2,7 +2,7 @@ from flask import Blueprint, request
 from flasgger import swag_from
 from http import HTTPStatus
 from app.routes.handler import handle_route_action
-from app.controller import account
+from app.controller import account, AccountOperationError
 
 account_bp = Blueprint('account', __name__)
 
@@ -17,9 +17,8 @@ def account_delete():
         if not request.is_json or 'id_account' not in request.json:
             raise ValueError(400, "The parameter ID account is required.")
         return handle_route_action(account.delete, delete=True)
-    except ValueError as value_error:
-        print(value_error.args)
-        return { "error": value_error.args[1] }, value_error.args[0]
+    except AccountOperationError as error:
+        return { "error": error.args[1] }, error.args[0]
     except Exception as error:
         print(f"Exception in account_routes.account_delete() : {type(error).__name__} - {error}")
         return "", HTTPStatus.INTERNAL_SERVER_ERROR
