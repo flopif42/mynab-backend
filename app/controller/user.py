@@ -1,6 +1,6 @@
 import mysql.connector
 from app.sql_manager import SqlManager
-from pydantic import BaseModel, EmailStr
+from pydantic import BaseModel, EmailStr, field_validator
     
 # This class is used to validate data
 class UserSignUpParams(BaseModel):
