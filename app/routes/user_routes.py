@@ -70,7 +70,7 @@ def sign_up():
 #            request.json['first_name'] = None
 #        if 'last_name' not in request.json or request.json['last_name'] is None or len(request.json['last_name']) == 0:
 #            request.json['last_name'] = None
-         ret = user.signup(request.json)
+        ret = user.signup(request.json)
         if ret == 0: # OK
             return "", HTTPStatus.CREATED
         if ret == 1: # duplicate email_address
