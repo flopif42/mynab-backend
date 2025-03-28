@@ -7,41 +7,8 @@ from app.jwt_manager import JwtManager
 user_bp = Blueprint('user', __name__)
 
 @user_bp.route('/user/login', methods=['POST'])
+@swag_from('../docs/user.yml')
 def user_login():
-    """
-    Logs the user in the app.
-    ---
-    tags:
-      - User
-    consumes:
-      - application/json
-    parameters:
-      - in: body
-        name: body
-        required: true
-        schema:
-          type: object
-          properties:
-            email_address:
-              type: string
-              description: The email address used as the login name
-              example: scrooge@mail.com
-            passphrase_md5:
-              type: string
-              description: MD5 encoded password
-              example: abcdef1234567890abcdef1234567890
-          required:
-            - email_address
-            - passphrase_md5
-
-    responses:
-      200:
-        description: User successfully logged in
-      401:
-        description: Wrong credentials
-      500:
-        description: Internal server error
-    """
     try:
         id_user = user.login(request.json)
         if not id_user:
