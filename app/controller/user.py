@@ -49,20 +49,16 @@ def login(request_params):
         print(f"Exception in login() : {err}")
         raise
 
-# This function checks the validity of sign up parameters and if all is ok, creates the user in the database.
-# Return values:
-#   0 : parameters are valid and the user has been created
-#   1 : the user could not be created because the submitted email address is already used
-#   2 : the user could not be created because some of the parameters are invalid
-#
 def signup(request_params):
+    """
+    This function checks the validity of sign up parameters and if all is ok, creates the user in the database.
+    
+    Exceptions:
+        ValueError : if some of the parameters are invalid
+        IntegrityError : the submitted email address is already used
+    """
     try:
         user_params = UserSignUpParams(**request_params)
-    except Exception as e:
-        print("Validation failed:", e)
-        raise ValueError(e)
-
-    try:
         query = "insert into USER (FIRST_NAME, LAST_NAME, EMAIL_ADDRESS, PASSPHRASE_MD5) values (%s, %s, %s, %s)"
         values = (
             user_params.first_name,
@@ -71,14 +67,14 @@ def signup(request_params):
             user_params.passphrase_md5
         )
         id_user = SqlManager.execute_query(query, values, commit=True)
-
-        # ID_CATEGORY 0 is a technical value for Income.
         SqlManager.execute_query("insert into PARENT_CATEGORY (ID_PARENT_CATEGORY, ID_USER, PARENT_CATEGORY_NAME) values (0, (%s), '(system)')", (id_user,), commit=True)
         SqlManager.execute_query("insert into CATEGORY (ID_CATEGORY, ID_USER, ID_PARENT_CATEGORY, CATEGORY_NAME) values (0, (%s), 0, 'Income')", (id_user,), commit=True)
-        return 0
-    except mysql.connector.IntegrityError:
+    except ValueError as e:
+        print("Validation failed:", e)
+        raise e
+    except mysql.connector.IntegrityError as e:
         print(f"Could not create user : email address already used")
-        return 1
+        raise e
     except Exception as error:
         print(f"Exception in signup() exception : {type(error)} - {type(error).__name__} - {error}")
         raise error

@@ -66,10 +66,6 @@ def sign_up():
     try:
         if not request.is_json or 'email_address' not in request.json or 'passphrase_md5' not in request.json:
             raise ValueError
-#        if 'first_name' not in request.json or request.json['first_name'] is None or len(request.json['first_name']) == 0:
-#            request.json['first_name'] = None
-#        if 'last_name' not in request.json or request.json['last_name'] is None or len(request.json['last_name']) == 0:
-#            request.json['last_name'] = None
         ret = user.signup(request.json)
         if ret == 0: # OK
             return "", HTTPStatus.CREATED
