@@ -1,15 +1,13 @@
 /user/login:
   post:
-    operationId: login_user
     tags:
       - User
-    summary:
-      Logs the user in the app.
+    summary: Logs the user in the app.
     consumes:
       - application/json
     parameters:
       - in: body
-        name: body
+        name: credentials
         required: true
         schema:
           type: object
@@ -25,7 +23,6 @@
           required:
             - email_address
             - passphrase_md5
-    
     responses:
       200:
         description: User successfully logged in
