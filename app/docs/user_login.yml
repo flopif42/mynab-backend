@@ -1,5 +1,6 @@
-Logs the user in the app.
+Logs the user into the app.
 ---
+operationId: login_user
 tags:
   - User1
 consumes:
