@@ -8,7 +8,7 @@ from app.jwt_manager import JwtManager
 user_bp = Blueprint('user', __name__)
 
 @user_bp.route('/user/login', methods=['POST'])
-@swag_from('../docs/user.yml', endpoint='/user/login', methods=['POST'])
+@swag_from('../docs/user_login.yml')
 def user_login():
     try:
         id_user = user.login(request.json)
