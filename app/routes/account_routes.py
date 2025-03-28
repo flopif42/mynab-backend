@@ -2,7 +2,8 @@ from flask import Blueprint, request
 from flasgger import swag_from
 from http import HTTPStatus
 from app.routes.handler import handle_route_action
-from app.controller import account, AccountOperationError
+from app.controller import account
+from app.controller.account import AccountOperationError
 
 account_bp = Blueprint('account', __name__)
 
