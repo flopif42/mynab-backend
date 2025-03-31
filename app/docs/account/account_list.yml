@@ -36,7 +36,7 @@ responses:
   200:
     description: A list of accounts with the following information
     schema:
-      $ref: '#/definitions/AccountList'
+      $ref: '#/definitions/Account'
     examples:
       application/json:
         id: 987654
