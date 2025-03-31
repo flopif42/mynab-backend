@@ -1,12 +1,6 @@
 Returns an array of all accounts with information.
 ---
 definitions:
-  AccountList:
-    type: object
-    properties:
-      type: array
-      items:
-        $ref: "#/definitions/Account"
   Account:
     type: object
     properties:
@@ -14,14 +8,6 @@ definitions:
         type: integer
       name:
         type: string
-      type:
-        type: integer
-      status:
-        type: integer
-      balance:
-        type: integer
-      can_be_deleted:
-        type: boolean
 
 tags:
   - Account
@@ -29,7 +15,16 @@ responses:
   200:
     description: A list of accounts with the following information
     schema:
-      $ref: "#/definitions/AccountList"
+      $ref: "#/definitions/Account"
+    examples:
+      example1:
+        value:
+          id: 987654321
+          name: Checking
+      example2:
+        value:
+          id: 5847F
+          name: Savings
   401:
     description: No user is logged in
   500:
