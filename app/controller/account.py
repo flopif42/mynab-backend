@@ -4,6 +4,9 @@ class AccountOperationError(Exception):
     pass
 
 def set_status(id_user, request_params):
+    """
+    This function is used to set the status to an account to the new value. 1 = open, 0 = closed
+    """
     id_account = request_params['id_account']
     account_status = request_params['account_status']
     try:
