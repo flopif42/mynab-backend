@@ -13,7 +13,7 @@ def set_status():
     print('a')
     try:
         print('b')
-        print(request)
+        print(request.is_json)
         if not request.is_json or 'id_account' not in request.json or 'account_status' not in request.json:
             raise AccountOperationError(400, "Missing parameters.")
         print('c')
