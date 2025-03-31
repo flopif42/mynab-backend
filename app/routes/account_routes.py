@@ -17,7 +17,7 @@ def set_status():
             raise AccountOperationError(HTTPStatus.BAD_REQUEST, "Missing parameters : id_account.")
         if 'account_status' not in request.json:
             raise AccountOperationError(HTTPStatus.BAD_REQUEST, "Missing parameters : account_status.")
-        return handle_route_action(account.set_status)
+        return handle_route_action(account.set_status, update=True)
     except AccountOperationError as error:
         return { "error": error.args[1] }, error.args[0]
     except Exception as error:

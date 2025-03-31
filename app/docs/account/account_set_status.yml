@@ -23,8 +23,8 @@ parameters:
         - id_account
         - account_status
 responses:
-  200:
-    description: Account was successfully updated
+  204:
+    description: Account status was successfully updated
   400:
     description: Missing required parameter or incorrect parameter
   401:

@@ -2,7 +2,7 @@ from flask import Flask, request, jsonify
 from app.jwt_manager import JwtManager
 from http import HTTPStatus
 
-def handle_route_action(action, create=False, delete=False):
+def handle_route_action(action, create=False, delete=False, update=False):
     if not JwtManager.check_token_valid(request):
         return "", HTTPStatus.UNAUTHORIZED
     try:
@@ -12,7 +12,7 @@ def handle_route_action(action, create=False, delete=False):
         responseStatus = HTTPStatus.OK
         if create:
             responseStatus = HTTPStatus.CREATED
-        if delete:
+        if delete or update:
             responseStatus = HTTPStatus.NO_CONTENT
         return responseBody, responseStatus
     except Exception as error:
