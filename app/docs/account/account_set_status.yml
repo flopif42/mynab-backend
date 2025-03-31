@@ -17,7 +17,7 @@ parameters:
           example: 9876541
         account_status:
           type: number
-          description: The new status of the account.
+          description: "The new account status (1 : Open, 0 : Closed)"
           example: 1
       required:
         - id_account
