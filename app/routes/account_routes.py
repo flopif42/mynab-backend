@@ -11,7 +11,7 @@ account_bp = Blueprint('account', __name__)
 @swag_from('../docs/account/account_set_status.yml')
 def set_status():
     try:
-        return handle_route_action(account.toggle_status)
+        return handle_route_action(account.set_status)
     except AccountOperationError as error:
         return { "error": error.args[1] }, error.args[0]
     except Exception as error:

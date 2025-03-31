@@ -1,4 +1,4 @@
-Sets the status of an account. The statuses are 1 = open, 2= closed.
+Sets the status of an account. The statuses are 1 = open, 2 = closed.
 ---
 tags:
   - Account

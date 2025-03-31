@@ -3,7 +3,7 @@ from app.sql_manager import SqlManager as db
 class AccountOperationError(Exception):
     pass
 
-def set_account_status(id_user, request_params):
+def set_status(id_user, request_params):
     id_account = request_params['id_account']
     account_status = request_params['account_status']
     try:
@@ -26,7 +26,7 @@ def set_account_status(id_user, request_params):
     except ValueError:
         raise AccountOperationError(400, "Invalid parameters.")
     except Exception as error:
-        print(f"Exception in account.set_account_status() : {type(error)} - {type(error).__name__} - {error}")
+        print(f"Exception in account.set_status() : {type(error)} - {type(error).__name__} - {error}")
         raise error
 
 def is_valid(id_account, id_user=None):
