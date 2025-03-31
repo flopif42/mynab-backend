@@ -1,10 +1,21 @@
 Returns an array of all accounts with information.
 ---
+components:
+  schemas:
+    account:
+      properties:
+        id_account:
+          type: integer
+        name_account:
+          type: string
+
 tags:
   - Account
 responses:
   "200":
     description: A list of accounts with the following information
+    schema:
+      $ref: "#/components/schemas/account"
     examples:
       rgb: ['red', 'green', 'blue']
   "401":
