@@ -2,28 +2,30 @@ Example endpoint returning a list of colors by palette
 In this example the specification is taken from external YAML file
 ---
 tags:
-  - Account
-parameters:
-  - name: palette
-    in: path
-    type: string
-    enum: ['all', 'rgb', 'cmyk']
-    required: true
-    default: all
+  - AccountList
 definitions:
   Palette:
     type: object
     properties:
-      palette_name:
+      accounts:
         type: array
         items:
-          $ref: '#/definitions/Color'
-  Color:
-    type: string
+          $ref: '#/definitions/Account'
+  Account:
+    type: object
+    properties:
+      id:
+        type: integer
+        description: The account number
+      name:
+        type: string
+        description: The account name
 responses:
   200:
     description: A list of colors (may be filtered by palette)
     schema:
-      $ref: '#/definitions/Palette'
+      $ref: '#/definitions/AccountList'
     examples:
-      rgb: ['red', 'green', 'blue']
+      application/json:
+        id: 987654
+        name: My checking account
