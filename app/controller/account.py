@@ -107,7 +107,7 @@ def delete(id_user, request_params):
         if not is_empty(id_account):
             raise AccountOperationError(409, "This account has transactions. Delete the transactions first.")
         query = "delete from ACCOUNT where ID_ACCOUNT = (%s) and ID_USER = (%s)"
-        db.execute_query(query, (request_params['id_account'], id_user), commit=True)
+        db.execute_query(query, (id_account, id_user), commit=True)
     except Exception as error:
         print(f"Exception in account.delete() : {type(error)} - {type(error).__name__} - {error}")
         raise error
