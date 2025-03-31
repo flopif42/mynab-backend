@@ -3,17 +3,18 @@ Returns an array of all accounts.
 tags:
   - Account
 responses:
-  200:
+  "200":
     description: Information about the accounts
-    examples:
+    content:
       application/json:
-        id: 9876541
-        name: My checking account
-        type: 1
-        status: 1
-        balance: 100000
-        can_be_deleted: 0
-  401:
+        schema:
+          type: object
+            properties:
+              id:
+              type: number
+              description: The account number
+              example: 9876541
+  "401":
     description: No user is logged in
-  500:
+  "500":
     description: Internal server error
