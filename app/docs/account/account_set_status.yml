@@ -20,6 +20,7 @@ parameters:
           description: The new status of the account.
           example: 1
       required:
+        - id_account
         - account_status
 responses:
   200:
