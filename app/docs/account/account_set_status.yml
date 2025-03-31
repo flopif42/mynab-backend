@@ -33,5 +33,3 @@ responses:
     description: Account doesn't belong to the logged in user
   404:
     description: Account doesn't exist
-  500:
-    description: Internal server error

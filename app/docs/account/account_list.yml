@@ -38,6 +38,3 @@ responses:
         can_be_deleted: 0,
         status: 1,
         type: 1
-  500:
-    description: Internal server error
-

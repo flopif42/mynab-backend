@@ -12,5 +12,3 @@ responses:
         email_address: scrooge@mail.com
   401:
     description: No user is logged in
-  500:
-    description: Internal server error

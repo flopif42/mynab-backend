@@ -26,5 +26,3 @@ responses:
         id: 523
         name: Amazon
         can_be_deleted: 1
-  500:
-    description: Internal server error

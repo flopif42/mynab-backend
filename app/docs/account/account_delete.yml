@@ -30,5 +30,3 @@ responses:
     description: Account doesn't exist
   409:
     description: Account could not be deleted because it contains transactions. All transactions must be deleted first.
-  500:
-    description: Internal server error

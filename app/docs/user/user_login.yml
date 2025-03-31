@@ -27,5 +27,3 @@ responses:
     description: User successfully logged in
   401:
     description: Wrong credentials
-  500:
-    description: Internal server error

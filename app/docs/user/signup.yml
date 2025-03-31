@@ -37,5 +37,3 @@ responses:
     description: Missing required parameters or incorrect parameters
   409:
     description: Could not create the user because the email address is already used
-  500:
-    description: Internal server error

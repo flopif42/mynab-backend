@@ -29,5 +29,3 @@ responses:
     description: Missing required parameters or incorrect parameters
   401:
     description: No user is logged in
-  500:
-    description: Internal server error

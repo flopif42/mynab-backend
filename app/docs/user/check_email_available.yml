@@ -16,5 +16,3 @@ responses:
         available: true
   400:
     description: Missing or invalid email parameter
-  500:
-    description: Internal server error
