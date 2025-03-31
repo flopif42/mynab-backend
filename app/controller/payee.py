@@ -7,7 +7,7 @@ def create(id_user, request_params):
     payee_name = payee_name.strip()
     if payee_name == '':
         raise ValueError("Payee name can't be empty.")
-    if len(acc_name) > 70:
+    if len(payee_name) > 70:
         raise ValueError("Payee name can't be more than 70 characters.")
     try:
         query = "insert into PAYEE (ID_USER, PAYEE_NAME) values (%s, %s)"
