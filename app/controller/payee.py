@@ -37,15 +37,6 @@ def delete(id_user, request_params):
         print(f"Exception in payee.delete() : {type(error)} - {type(error).__name__} - {error}")
         raise error
 
-
-def delete(id_user, request_params):
-    try:
-        query = "delete from PAYEE where ID_PAYEE = (%s) and ID_USER = (%s)"
-        db.execute_query(query, (request_params['id_payee'], id_user), commit=True)
-    except Exception as err:
-        print(f"Could not delete the payee : {err}")
-        raise
-
 def fetch_all(id_user, unused):
     try:
         query = (
