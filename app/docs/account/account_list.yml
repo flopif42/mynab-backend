@@ -12,7 +12,7 @@ responses:
         type: 1
         status: 1
         balance: 100000
-        can_be_deleted:0
+        can_be_deleted: 0
   401:
     description: No user is logged in
   500:
