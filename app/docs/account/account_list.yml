@@ -1,13 +1,28 @@
 Returns an array of all accounts with information.
 ---
 definitions:
+  AccountList:
+    type: object
+    properties:
+      x:
+        type: array
+        items:
+          $ref: "#/definitions/Account"
   Account:
     type: object
     properties:
-      id_account:
+      id:
         type: integer
-      name_account:
+      name:
         type: string
+      type:
+        type: integer
+      status:
+        type: integer
+      balance:
+        type: integer
+      can_be_deleted:
+        type: boolean
 
 tags:
   - Account
@@ -15,7 +30,7 @@ responses:
   200:
     description: A list of accounts with the following information
     schema:
-      $ref: "#/definitions/Account"
+      $ref: "#/definitions/AccountList"
     examples:
       rgb: ['red', 'green', 'blue']
   401:
