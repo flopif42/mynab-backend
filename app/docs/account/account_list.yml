@@ -3,13 +3,6 @@ Returns an array of all accounts with information.
 tags:
   - Account
 definitions:
-  AccountList:
-    type: object
-    properties:
-      accounts:
-        type: array
-        items:
-          $ref: '#/definitions/Account'
   Account:
     type: object
     properties:
@@ -45,10 +38,3 @@ responses:
         can_be_deleted: 0,
         status: 1,
         type: 1
-      application/json:
-        id: 45618
-        name: My savings account
-        balance: 1000000,
-        can_be_deleted: 0,
-        status: 1,
-        type: 2
