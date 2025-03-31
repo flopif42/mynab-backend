@@ -5,27 +5,8 @@ tags:
 responses:
   "200":
     description: A list of accounts with the following information
-    schema:
-      $ref: ''
     examples:
-      [
-        {
-          "balance": "134184",
-          "can_be_deleted": 0,
-          "id": 356841,
-          "name": "My checking account",
-          "status": 1,
-          "type": 1
-        },
-        {
-          "balance": "1200000",
-          "can_be_deleted": 0,
-          "id": 4987,
-          "name": "My savings account",
-          "status": 1,
-          "type": 2
-        }
-      ]
+      rgb: ['red', 'green', 'blue']
   "401":
     description: No user is logged in
   "500":
