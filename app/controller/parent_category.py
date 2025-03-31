@@ -1,5 +1,5 @@
 import json
-from app.sql_manager import SqlManager
+from app.sql_manager import SqlManager as db
 
 # Create a parent category
 def create(id_user, request_params):
@@ -10,7 +10,7 @@ def create(id_user, request_params):
             "from PARENT_CATEGORY "
             "where ID_USER = (%s)"
         )
-        SqlManager.execute_query(query, (id_user, request_params['parent_category_name'], id_user), commit=True)
+        db.execute_query(query, (id_user, request_params['parent_category_name'], id_user), commit=True)
     except Exception as err:
         print(f"Could not create the parent category : {err}")
         raise
@@ -18,7 +18,7 @@ def create(id_user, request_params):
 def delete(id_user, request_params):
     try:
         query = "delete from PARENT_CATEGORY where ID_PARENT_CATEGORY = (%s) and ID_USER = (%s)"
-        SqlManager.execute_query(query, (request_params['id_parent'], id_user), commit=True)
+        db.execute_query(query, (request_params['id_parent'], id_user), commit=True)
     except Exception as err:
         print(f"Could not delete the parent category : {err}")
         raise
@@ -31,7 +31,7 @@ def set_position(id_user, request_params):
     if id_parent_category == 0 or new_position == 1:
         return
 
-    parent_positions = SqlManager.execute_query("select ID_PARENT_CATEGORY, PARENT_CATEGORY_POSITION from PARENT_CATEGORY where ID_USER = (%s)", (id_user,), fetch=True)
+    parent_positions = db.execute_query("select ID_PARENT_CATEGORY, PARENT_CATEGORY_POSITION from PARENT_CATEGORY where ID_USER = (%s)", (id_user,), fetch=True)
     nb_parent_categories = len(parent_positions)
     sorted_list = sorted(parent_positions, key=lambda tup: tup[1])
     new_list = []
@@ -42,4 +42,4 @@ def set_position(id_user, request_params):
             new_list.append(parent_category)
     new_list.insert(new_position-1, saved)
     for i in range(nb_parent_categories):
-        SqlManager.execute_query("update PARENT_CATEGORY set PARENT_CATEGORY_POSITION=(%s) where ID_PARENT_CATEGORY=(%s)", (i+1, new_list[i][0]), commit=True)
+        db.execute_query("update PARENT_CATEGORY set PARENT_CATEGORY_POSITION=(%s) where ID_PARENT_CATEGORY=(%s)", (i+1, new_list[i][0]), commit=True)
