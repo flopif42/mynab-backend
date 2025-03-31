@@ -25,7 +25,7 @@ def payee_create():
 def payee_delete():
     try:
         if not request.is_json or 'id_payee' not in request.json:
-            raise PayeeOperationError(400, "The parameter ID payee is required.")
+            raise PayeeOperationError(HTTPStatus.BAD_REQUEST, "The parameter ID payee is required.")
         return handle_route_action(payee.delete, delete=True)
     except ValueError:
         return "", HTTPStatus.BAD_REQUEST

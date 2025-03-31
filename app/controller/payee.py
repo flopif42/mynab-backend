@@ -1,4 +1,5 @@
 from app.sql_manager import SqlManager as db
+from http import HTTPStatus
 
 class PayeeOperationError(Exception):
     pass
@@ -23,14 +24,14 @@ def delete(id_user, request_params):
     id_payee = request_params['id_payee']
     try:
         if id_payee is None or not str(id_payee).strip():
-            raise PayeeOperationError(400, "ID payee can't be empty.")
+            raise PayeeOperationError(HTTPStatus.BAD_REQUEST, "ID payee can't be empty.")
         id_payee = int(id_payee)
         if not is_valid(id_payee):
-            raise PayeeOperationError(404, "This payee doesn't exist.")
+            raise PayeeOperationError(HTTPStatus.NOT_FOUND, "This payee doesn't exist.")
         if not is_valid(id_payee, id_user):
-            raise PayeeOperationError(403, "This payee doesn't belong to this user.")
+            raise PayeeOperationError(HTTPStatus.FORBIDDEN, "This payee doesn't belong to this user.")
         if not is_deletable(id_payee):
-            raise PayeeOperationError(409, "This payee has transactions. Delete the transactions first.")
+            raise PayeeOperationError(HTTPStatus.CONFLICT, "This payee has transactions. Delete the transactions first.")
         query = "delete from PAYEE where ID_PAYEE = (%s) and ID_USER = (%s)"
         db.execute_query(query, (id_payee, id_user), commit=True)
     except Exception as error:

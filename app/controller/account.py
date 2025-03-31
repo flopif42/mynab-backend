@@ -1,4 +1,5 @@
 from app.sql_manager import SqlManager as db
+from http import HTTPStatus
 
 class AccountOperationError(Exception):
     pass
@@ -11,21 +12,21 @@ def set_status(id_user, request_params):
     account_status = request_params['account_status']
     try:
         if id_account is None or not str(id_account).strip():
-            raise AccountOperationError(400, "ID account can't be empty.")
+            raise AccountOperationError(HTTPStatus.BAD_REQUEST, "ID account can't be empty.")
         id_account = int(id_account)
         if not is_valid(id_account):
-            raise AccountOperationError(404, "This account doesn't exist.")
+            raise AccountOperationError(HTTPStatus.NOT_FOUND, "This account doesn't exist.")
         if not is_valid(id_account, id_user):
-            raise AccountOperationError(403, "This account doesn't belong to this user.")
+            raise AccountOperationError(HTTPStatus.FORBIDDEN, "This account doesn't belong to this user.")
         if account_status is None:
-            raise AccountOperationError(400, "Account status can't be empty.")
+            raise AccountOperationError(HTTPStatus.BAD_REQUEST, "Account status can't be empty.")
         account_status = int(account_status)
         if account_status not in (0, 1):
-            raise AccountOperationError(400, "Invalid account status value.")
+            raise AccountOperationError(HTTPStatus.BAD_REQUEST, "Invalid account status value.")
         query = "update ACCOUNT set ACCOUNT_STATUS = (%s) where ID_ACCOUNT = (%s) and ID_USER = (%s)"
         db.execute_query(query, (account_status, id_account, id_user), commit=True)
     except ValueError:
-        raise AccountOperationError(400, "Invalid parameters.")
+        raise AccountOperationError(HTTPStatus.BAD_REQUEST, "Invalid parameters.")
     except Exception as error:
         print(f"Exception in account.set_status() : {type(error)} - {type(error).__name__} - {error}")
         raise error
@@ -98,14 +99,14 @@ def delete(id_user, request_params):
     id_account = request_params['id_account']
     try:
         if id_account is None or not str(id_account).strip():
-            raise AccountOperationError(400, "ID account can't be empty.")
+            raise AccountOperationError(HTTPStatus.BAD_REQUEST, "ID account can't be empty.")
         id_account = int(id_account)
         if not is_valid(id_account):
-            raise AccountOperationError(404, "This account doesn't exist.")
+            raise AccountOperationError(HTTPStatus.NOT_FOUND, "This account doesn't exist.")
         if not is_valid(id_account, id_user):
-            raise AccountOperationError(403, "This account doesn't belong to this user.")
+            raise AccountOperationError(HTTPStatus.FORBIDDEN, "This account doesn't belong to this user.")
         if not is_empty(id_account):
-            raise AccountOperationError(409, "This account has transactions. Delete the transactions first.")
+            raise AccountOperationError(HTTPStatus.CONFLICT, "This account has transactions. Delete the transactions first.")
         query = "delete from ACCOUNT where ID_ACCOUNT = (%s) and ID_USER = (%s)"
         db.execute_query(query, (id_account, id_user), commit=True)
     except Exception as error:

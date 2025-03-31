@@ -12,11 +12,11 @@ account_bp = Blueprint('account', __name__)
 def set_status():
     try:
         if not request.is_json:
-            raise AccountOperationError(400, "Missing parameters.")
+            raise AccountOperationError(HTTPStatus.BAD_REQUEST, "Missing parameters.")
         if 'id_account' not in request.json:
-            raise AccountOperationError(400, "Missing parameters : id_account.")
+            raise AccountOperationError(HTTPStatus.BAD_REQUEST, "Missing parameters : id_account.")
         if 'account_status' not in request.json:
-            raise AccountOperationError(400, "Missing parameters : account_status.")
+            raise AccountOperationError(HTTPStatus.BAD_REQUEST, "Missing parameters : account_status.")
         return handle_route_action(account.set_status)
     except AccountOperationError as error:
         return { "error": error.args[1] }, error.args[0]
@@ -34,7 +34,7 @@ def account_list():
 def account_delete():
     try:
         if not request.is_json or 'id_account' not in request.json:
-            raise AccountOperationError(400, "The parameter ID account is required.")
+            raise AccountOperationError(HTTPStatus.BAD_REQUEST, "The parameter ID account is required.")
         return handle_route_action(account.delete, delete=True)
     except ValueError:
         return "", HTTPStatus.BAD_REQUEST
