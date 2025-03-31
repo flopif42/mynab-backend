@@ -4,7 +4,7 @@ definitions:
   AccountList:
     type: object
     properties:
-      x:
+      account:
         type: array
         items:
           $ref: "#/definitions/Account"
@@ -31,8 +31,6 @@ responses:
     description: A list of accounts with the following information
     schema:
       $ref: "#/definitions/AccountList"
-    examples:
-      rgb: ['red', 'green', 'blue']
   401:
     description: No user is logged in
   500:
