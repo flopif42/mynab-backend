@@ -10,8 +10,6 @@ definitions:
       name:
         type: string
         description: The account name
-        
-        
 
 tags:
   - Account
@@ -20,6 +18,8 @@ responses:
     description: A list of accounts with the following information
     schema:
       $ref: "#/definitions/Account"
+    examples:
+      account: { 987654, "Checking" }
   401:
     description: No user is logged in
   500:
