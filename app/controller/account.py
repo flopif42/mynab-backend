@@ -14,8 +14,6 @@ def set_status(id_user, request_params):
             raise AccountOperationError(404, "This account doesn't exist.")
         if not is_valid(id_account, id_user):
             raise AccountOperationError(403, "This account doesn't belong to this user.")
-        if not is_empty(id_account):
-            raise AccountOperationError(409, "This account has transactions. Delete the transactions first.")
         if account_status is None:
             raise AccountOperationError(400, "Account status can't be empty.")
         account_status = int(account_status)
