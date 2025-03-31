@@ -9,11 +9,11 @@ responses:
       application/json:
         schema:
           type: object
-            properties:
-              id:
-              type: number
-              description: The account number
-              example: 9876541
+          properties:
+            id:
+            type: number
+            description: The account number
+            example: 9876541
   "401":
     description: No user is logged in
   "500":
