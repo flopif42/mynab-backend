@@ -25,8 +25,9 @@ def set_status():
         return "", HTTPStatus.INTERNAL_SERVER_ERROR
 
 @account_bp.route('/account/list', methods=['GET'])
+@swag_from('../docs/account/account_list.yml')
 def account_list():
-    return handle_route_action(account.fetch_all)
+    return handle_route_action(account.list)
 
 @account_bp.route('/account/delete', methods=['DELETE'])
 @swag_from('../docs/account/account_delete.yml')

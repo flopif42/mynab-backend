@@ -41,8 +41,7 @@ def is_valid(id_account, id_user=None):
         query += 'and ID_USER = (%s)'
         values += (id_user,)
     result = db.execute_query(query, values, fetch=True)
-    nb_rows = len(result)
-    return bool(nb_rows)
+    return bool(len(result))
 
 def is_empty(id_account):
     """
@@ -56,11 +55,9 @@ def is_empty(id_account):
             where acc.ID_ACCOUNT = %s
             '''
     result = db.execute_query(query, (id_account, ), fetch=True)
-    nb_rows = len(result)
-    # print(f"The account {id_account} has {nb_rows} rows.")
-    return not bool(nb_rows)
+    return not bool(len(result))
 
-def fetch_all(id_user, unused):
+def list(id_user, unused):
     try:
         query = (
             "select acc.ID_ACCOUNT as id, ACCOUNT_NAME as name, ACCOUNT_TYPE as type, ACCOUNT_STATUS as status, "
