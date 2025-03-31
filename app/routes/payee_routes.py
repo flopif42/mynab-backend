@@ -1,4 +1,5 @@
 from flask import Blueprint
+from flasgger import swag_from
 from app.routes.handler import handle_route_action
 from app.controller import payee
 
