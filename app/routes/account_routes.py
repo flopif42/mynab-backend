@@ -19,6 +19,7 @@ def set_status():
         print('c')
         return handle_route_action(account.set_status)
     except AccountOperationError as error:
+        print('d')
         return { "error": error.args[1] }, error.args[0]
     except Exception as error:
         print(f"Exception in account_routes.set_status() : {type(error).__name__} - {error}")
