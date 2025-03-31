@@ -11,6 +11,8 @@ account_bp = Blueprint('account', __name__)
 @swag_from('../docs/account/account_set_status.yml')
 def set_status():
     try:
+        if not request.is_json or 'id_account' not in request.json or 'account_status' not in request.json:
+            raise AccountOperationError(400, "The parameter ID account is required.")
         return handle_route_action(account.set_status)
     except AccountOperationError as error:
         return { "error": error.args[1] }, error.args[0]
