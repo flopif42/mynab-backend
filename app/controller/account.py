@@ -3,13 +3,22 @@ from app.sql_manager import SqlManager as db
 class AccountOperationError(Exception):
     pass
 
-def toggle_status(id_user, request_params):
+def set_account_status(id_user, request_params):
+    account_status = request_params['account_status']
+
+    if account_status is None:
+        raise AccountOperationError(400, "Account can't be empty status value.")
     try:
-        query = "update ACCOUNT set ACCOUNT_STATUS = (ACCOUNT_STATUS + 1) %2 where ID_ACCOUNT = (%s) and ID_USER = (%s)"
-        db.execute_query(query, (request_params['id_account'], id_user), commit=True)
-    except Exception as err:
-        print(f"Could not open/close the account : {err}")
-        raise
+        account_status = int(account_status)
+        if account_status not in (0, 1):
+            raise AccountOperationError(400, "Invalid account status value.")
+        query = "update ACCOUNT set ACCOUNT_STATUS = (%s) where ID_ACCOUNT = (%s) and ID_USER = (%s)"
+        db.execute_query(query, (account_status, request_params['id_account'], id_user), commit=True)
+    except ValueError:
+        raise AccountOperationError(400, "Account status must be an integer.")
+    except Exception as error:
+        print(f"Exception in account.set_account_status() : {type(error)} - {type(error).__name__} - {error}")
+        raise error
 
 def is_valid(id_account, id_user=None):
     """
@@ -38,7 +47,7 @@ def is_empty(id_account):
             '''
     result = db.execute_query(query, (id_account, ), fetch=True)
     nb_rows = len(result)
-    print(f"The account {id_account} has {nb_rows} rows.")
+    # print(f"The account {id_account} has {nb_rows} rows.")
     return not bool(nb_rows)
 
 def fetch_all(id_user, unused):

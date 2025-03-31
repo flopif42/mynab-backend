@@ -7,6 +7,10 @@ from app.controller.account import AccountOperationError
 
 account_bp = Blueprint('account', __name__)
 
+@account_bp.route('/account/toggle_status', methods=['POST'])
+def account_toggle_status():
+    return handle_route_action(account.toggle_status)
+
 @account_bp.route('/account/list', methods=['GET'])
 def account_list():
     return handle_route_action(account.fetch_all)
@@ -25,10 +29,6 @@ def account_delete():
     except Exception as error:
         print(f"Exception in account_routes.account_delete() : {type(error).__name__} - {error}")
         return "", HTTPStatus.INTERNAL_SERVER_ERROR
-
-@account_bp.route('/account/toggle_status', methods=['POST'])
-def account_toggle_status():
-    return handle_route_action(account.toggle_status)
 
 @account_bp.route('/account/create', methods=['POST'])
 @swag_from('../docs/account/account_create.yml')
