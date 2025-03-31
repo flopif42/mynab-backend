@@ -1,13 +1,20 @@
 from app.sql_manager import SqlManager as db
 
 def create(id_user, request_params):
+    payee_name = request_params['payee_name']
+    if payee_name is None:
+        raise ValueError("Payee name can't be empty.")
+    payee_name = payee_name.strip()
+    if payee_name == '':
+        raise ValueError("Payee name can't be empty.")
+    if len(acc_name) > 70:
+        raise ValueError("Payee name can't be more than 70 characters.")
     try:
-        query = "INSERT INTO PAYEE (ID_USER, PAYEE_NAME) VALUES (%s, %s)"
-        values = (id_user, request_params['payee_name'])
-        db.execute_query(query, values, commit=True)
-    except Exception as err:
-        print(f"Could not create the payee : {err}")
-        raise
+        query = "insert into PAYEE (ID_USER, PAYEE_NAME) values (%s, %s)"
+        db.execute_query(query, (id_user, request_params['payee_name']), commit=True)
+    except Exception as error:
+        print(f"Exception in payee.create() : {type(error)} - {type(error).__name__} - {error}")
+        raise error
 
 def delete(id_user, request_params):
     try:

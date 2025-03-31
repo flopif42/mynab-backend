@@ -13,18 +13,13 @@ parameters:
       properties:
         payee_name:
           type: string
-          description: The account name
-          example: Checking
-        account_type:
-          type: number
-          description: "The type of account (1: on-budget, 2: off-budget)"
-          example: 1
+          description: The name of the payee
+          example: Amazon
       required:
-        - account_name
-        - account_type
+        - payee_name
 responses:
   201:
-    description: Account was created successfully
+    description: Payee was created successfully
   400:
     description: Missing required parameters or incorrect parameters
   401:
