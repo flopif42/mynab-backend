@@ -20,6 +20,19 @@ definitions:
       name:
         type: string
         description: The account name
+      balance:
+        type: integer
+        description: The account balance in cents
+      can_be_deleted:
+        type: integer
+        description: A boolean indicating if the account can be deleted
+      status:
+        type: integer
+        description: "The account status (1 : Open, 0 : Closed)"
+      type_account:
+        type: integer
+        description: "The type of account (1 : On-budget, 2 : Off-budget)"
+      
 responses:
   200:
     description: A list of colors (may be filtered by palette)
@@ -29,3 +42,14 @@ responses:
       application/json:
         id: 987654
         name: My checking account
+        balance: 134184,
+        can_be_deleted: 0,
+        status: 1,
+        type: 1
+      application/json:
+        id: 4561F
+        name: My savings account
+        balance: 1000000,
+        can_be_deleted: 0,
+        status: 1,
+        type: 2
