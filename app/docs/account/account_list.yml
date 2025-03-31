@@ -2,9 +2,9 @@ Example endpoint returning a list of colors by palette
 In this example the specification is taken from external YAML file
 ---
 tags:
-  - AccountList
+  - Account
 definitions:
-  Palette:
+  AccountList:
     type: object
     properties:
       accounts:
