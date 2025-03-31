@@ -7,9 +7,16 @@ from app.controller.account import AccountOperationError
 
 account_bp = Blueprint('account', __name__)
 
-@account_bp.route('/account/toggle_status', methods=['POST'])
-def account_toggle_status():
-    return handle_route_action(account.toggle_status)
+@account_bp.route('/account/set_status', methods=['PUT'])
+@swag_from('../docs/account/account_set_status.yml')
+def set_status():
+    try:
+        return handle_route_action(account.toggle_status)
+    except AccountOperationError as error:
+        return { "error": error.args[1] }, error.args[0]
+    except Exception as error:
+        print(f"Exception in account_routes.set_status() : {type(error).__name__} - {error}")
+        return "", HTTPStatus.INTERNAL_SERVER_ERROR
 
 @account_bp.route('/account/list', methods=['GET'])
 def account_list():

@@ -1,0 +1,36 @@
+Sets the status of an account. The statuses are 1 = open, 2= closed.
+---
+tags:
+  - Account
+consumes:
+  - application/json
+parameters:
+  - in: body
+    name: body
+    required: true
+    schema:
+      type: object
+      properties:
+        id_account:
+          type: number
+          description: The account number.
+          example: 9876541
+        account_status:
+          type: number
+          description: The new status of the account.
+          example: 1
+      required:
+        - account_status
+responses:
+  200:
+    description: Account was successfully updated
+  400:
+    description: Missing required parameter or incorrect parameter
+  401:
+    description: No user is logged in
+  403:
+    description: Account doesn't belong to the logged in user
+  404:
+    description: Account doesn't exist
+  500:
+    description: Internal server error
