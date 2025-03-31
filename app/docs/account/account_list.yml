@@ -1,4 +1,4 @@
-Returns an array of all accounts with information.
+Returns an array of all accounts with various information.
 ---
 tags:
   - Account
@@ -21,7 +21,7 @@ definitions:
       status:
         type: integer
         description: "The account status (1 : Open, 0 : Closed)"
-      type_account:
+      type:
         type: integer
         description: "The type of account (1 : On-budget, 2 : Off-budget)"
       

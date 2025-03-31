@@ -59,15 +59,15 @@ def is_empty(id_account):
 
 def list(id_user, unused):
     try:
-        query = (
-            "select acc.ID_ACCOUNT as id, ACCOUNT_NAME as name, ACCOUNT_TYPE as type, ACCOUNT_STATUS as status, "
-            "ifnull(sum(txn.TRANSACTION_AMOUNT * txn.TRANSACTION_FLOW), 0) as balance, "
-            "case when count(txn.ID_TRANSACTION) > 0 then 0 else 1 end as can_be_deleted "
-            "from ACCOUNT acc "
-            "left join TRANSACTION txn on txn.ID_ACCOUNT = acc.ID_ACCOUNT "
-            "where acc.ID_USER = %s "
-            "group by acc.ID_ACCOUNT"
-        )
+        query = '''
+                select acc.ID_ACCOUNT as id, ACCOUNT_NAME as name, ACCOUNT_TYPE as type, ACCOUNT_STATUS as status, 
+                ifnull(sum(txn.TRANSACTION_AMOUNT * txn.TRANSACTION_FLOW), 0) as balance, 
+                case when count(txn.ID_TRANSACTION) > 0 then 0 else 1 end as can_be_deleted 
+                from ACCOUNT acc 
+                left join TRANSACTION txn on txn.ID_ACCOUNT = acc.ID_ACCOUNT 
+                where acc.ID_USER = %s 
+                group by acc.ID_ACCOUNT
+                '''
         result = db.execute_query(query, (id_user,), fetch=True, dictionary=True)
         return result
     except Exception as err:
