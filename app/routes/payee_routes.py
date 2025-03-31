@@ -19,7 +19,7 @@ def payee_create():
         print(f"Exception in payee_routes.payee_create() : {type(error)} - {type(error).__name__} - {error}")
         return "", HTTPStatus.INTERNAL_SERVER_ERROR
 
-@payee_bp.route('/payee/delete', methods=['POST'])
+@payee_bp.route('/payee/delete', methods=['DELETE'])
 @swag_from('../docs/payee/payee_delete.yml')
 def payee_delete():
     return handle_route_action(payee.delete)
