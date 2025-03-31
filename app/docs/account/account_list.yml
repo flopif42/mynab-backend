@@ -5,44 +5,27 @@ tags:
 responses:
   "200":
     description: A list of accounts with the following information
-    content:
-      application/json:
-        schema:
-          type: array
-          items:
-            type: object
-            properties:
-              id:
-                type: integer
-                description: The account number
-              name:
-                type: string
-                description: The name of the account
-              type:
-                type: integer
-                description: "The type of account (1 : On-budget, 2 : Off-budget)"
-              status:
-                type: integer
-                description: "The account status (1 : Open, 0 : Closed)"
-              balance:
-                type: integer
-                description: The account balance in cents
-              can_be_deleted:
-                type: boolean
-                description: A boolean indicating if the account can be deleted
-          example:
-            - id: 9876541
-              name: "My checking account"
-              type: 1
-              status: 1
-              balance: 50000
-              can_be_deleted: false
-            - id: 1234567
-              name: "My savings account"
-              type: 2
-              status: 1
-              balance: 150000
-              can_be_deleted: true
+    schema:
+      $ref: ''
+    examples:
+      [
+        {
+          "balance": "134184",
+          "can_be_deleted": 0,
+          "id": 356841,
+          "name": "My checking account",
+          "status": 1,
+          "type": 1
+        },
+        {
+          "balance": "1200000",
+          "can_be_deleted": 0,
+          "id": 4987,
+          "name": "My savings account",
+          "status": 1,
+          "type": 2
+        }
+      ]
   "401":
     description: No user is logged in
   "500":
