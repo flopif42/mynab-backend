@@ -11,19 +11,14 @@ account_bp = Blueprint('account', __name__)
 @swag_from('../docs/account/account_set_status.yml')
 def set_status():
     try:
-        print('b')
         if not request.is_json:
             raise AccountOperationError(400, "Missing parameters.")
-        print('c')
         if 'id_account' not in request.json:
             raise AccountOperationError(400, "Missing parameters : id_account.")
-        print('d')
         if 'account_status' not in request.json:
             raise AccountOperationError(400, "Missing parameters : account_status.")
-        print('e')
         return handle_route_action(account.set_status)
     except AccountOperationError as error:
-        print('f')
         return { "error": error.args[1] }, error.args[0]
     except Exception as error:
         print(f"Exception in account_routes.set_status() : {type(error).__name__} - {error}")
