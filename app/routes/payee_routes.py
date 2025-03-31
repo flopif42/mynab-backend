@@ -3,6 +3,7 @@ from flasgger import swag_from
 from http import HTTPStatus
 from app.routes.handler import handle_route_action
 from app.controller import payee
+from app.controller.payee import PayeeOperationError
 
 payee_bp = Blueprint('payee', __name__)
 
@@ -22,7 +23,17 @@ def payee_create():
 @payee_bp.route('/payee/delete', methods=['DELETE'])
 @swag_from('../docs/payee/payee_delete.yml')
 def payee_delete():
-    return handle_route_action(payee.delete)
+    try:
+        if not request.is_json or 'id_payee' not in request.json:
+            raise PayeeOperationError(400, "The parameter ID payee is required.")
+        return handle_route_action(payee.delete, delete=True)
+    except ValueError:
+        return "", HTTPStatus.BAD_REQUEST
+    except PayeeOperationError as error:
+        return { "error": error.args[1] }, error.args[0]
+    except Exception as error:
+        print(f"Exception in payee_routes.payee_delete() : {type(error).__name__} - {error}")
+        return "", HTTPStatus.INTERNAL_SERVER_ERROR
 
 @payee_bp.route('/payee/list', methods=['GET'])
 def payee_list():
