@@ -6,8 +6,12 @@ definitions:
     properties:
       id:
         type: integer
+        description: The account number
       name:
         type: string
+        description: The account name
+        
+        
 
 tags:
   - Account
@@ -16,15 +20,6 @@ responses:
     description: A list of accounts with the following information
     schema:
       $ref: "#/definitions/Account"
-    examples:
-      example1:
-        value:
-          id: 987654321
-          name: Checking
-      example2:
-        value:
-          id: 5847F
-          name: Savings
   401:
     description: No user is logged in
   500:
