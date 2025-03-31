@@ -37,16 +37,16 @@ def delete(id_user, request_params):
         print(f"Exception in payee.delete() : {type(error)} - {type(error).__name__} - {error}")
         raise error
 
-def fetch_all(id_user, unused):
+def list(id_user, unused):
     try:
-        query = (
-            "select p.ID_PAYEE as id, p.PAYEE_NAME as name, "
-            "case when count(txn.ID_TRANSACTION) > 0 then 0 else 1 end as can_be_deleted "
-            "from PAYEE p left join TRANSACTION txn on txn.ID_PAYEE = p.ID_PAYEE "
-            "where p.ID_USER = %s "
-            "group by p.ID_PAYEE"
-        )
-        result = db.execute_query(query, (str(id_user),), fetch=True, dictionary=True)
+        query = '''
+                select p.ID_PAYEE as id, p.PAYEE_NAME as name, 
+                case when count(txn.ID_TRANSACTION) > 0 then 0 else 1 end as can_be_deleted 
+                from PAYEE p left join TRANSACTION txn on txn.ID_PAYEE = p.ID_PAYEE 
+                where p.ID_USER = %s 
+                group by p.ID_PAYEE
+                '''
+        result = db.execute_query(query, (id_user,), fetch=True, dictionary=True)
         return result
     except Exception as err:
         print(f"Could not fetch payees : {err}")

@@ -1,0 +1,28 @@
+Returns an array of all payees with various information.
+---
+tags:
+  - Payee
+definitions:
+  Payee:
+    type: object
+    properties:
+      id:
+        type: integer
+        description: The payee number
+      name:
+        type: string
+        description: The payee name
+      can_be_deleted:
+        type: integer
+        description: A boolean indicating if the payee can be deleted
+      
+responses:
+  200:
+    description: A list of payees with the following information
+    schema:
+      $ref: '#/definitions/Payee'
+    examples:
+      application/json:
+        id: 523
+        name: Amazon
+        can_be_deleted: 1

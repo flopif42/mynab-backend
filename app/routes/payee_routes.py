@@ -36,5 +36,6 @@ def payee_delete():
         return "", HTTPStatus.INTERNAL_SERVER_ERROR
 
 @payee_bp.route('/payee/list', methods=['GET'])
+@swag_from('../docs/payee/payee_list.yml')
 def payee_list():
-    return handle_route_action(payee.fetch_all)
+    return handle_route_action(payee.list)
