@@ -13,29 +13,36 @@ responses:
             type: object
             properties:
               id:
-                type: number
+                type: integer
                 description: The account number
-                example: 9876541
               name:
                 type: string
                 description: The name of the account
-                example: My checking account
               type:
-                type: number
+                type: integer
                 description: "The type of account (1 : On-budget, 2 : Off-budget)"
-                example: 1
               status:
-                type: number
+                type: integer
                 description: "The account status (1 : Open, 0 : Closed)"
-                example: 1
               balance:
-                type: number
+                type: integer
                 description: The account balance in cents
-                example: 50000
               can_be_deleted:
-                type: number
+                type: boolean
                 description: A boolean indicating if the account can be deleted
-                example: 0
+          example:
+            - id: 9876541
+              name: "My checking account"
+              type: 1
+              status: 1
+              balance: 50000
+              can_be_deleted: false
+            - id: 1234567
+              name: "My savings account"
+              type: 2
+              status: 1
+              balance: 150000
+              can_be_deleted: true
   "401":
     description: No user is logged in
   "500":
