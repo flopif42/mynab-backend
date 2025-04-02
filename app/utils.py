@@ -6,7 +6,7 @@ def validate_not_empty(request, parameter_name):
     error_message = f"Parameter {parameter_name} can't be empty."
     if not request.is_json or parameter_name not in request.json:
         raise OperationError(HTTPStatus.BAD_REQUEST, error_message)
-    parameter = request_params[parameter_name]
+    parameter = request.json[parameter_name]
     if parameter is None:
         raise OperationError(HTTPStatus.BAD_REQUEST, error_message)
     parameter = parameter.strip()
