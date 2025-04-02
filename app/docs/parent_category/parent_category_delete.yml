@@ -24,8 +24,6 @@ responses:
     description: Missing required parameter or incorrect parameter
   401:
     description: No user is logged in
-  403:
-    description: Parent category doesn't belong to the logged in user
   404:
     description: Parent category doesn't exist
   409:
