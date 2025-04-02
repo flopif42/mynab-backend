@@ -4,14 +4,14 @@ from app.controller import transaction
 
 transaction_bp = Blueprint('transaction', __name__)
 
-@transaction_bp.route('/transaction/list', methods=['POST'])
+@transaction_bp.route('/transaction/list', methods=['GET'])
 def transaction_list():
-    return handle_route_action(transaction.fetch_all)
+    return handle_route_action(transaction.list)
 
 @transaction_bp.route('/transaction/create', methods=['POST'])
 def transaction_create():
-    return handle_route_action(transaction.create, create=True)
+    return handle_route_action(transaction.create, mode='create')
 
-@transaction_bp.route('/transaction/delete', methods=['POST'])
+@transaction_bp.route('/transaction/delete', methods=['DELETE'])
 def transaction_delete():
-    return handle_route_action(transaction.delete)
+    return handle_route_action(transaction.delete, mode='delete')
