@@ -57,6 +57,7 @@ class JwtManager:
                 return True
             return False
         except Exception as err:
+            print(f"Exception in check_token_valid() : {type(error).__name__} - {error}")
             return False
     
     @classmethod
