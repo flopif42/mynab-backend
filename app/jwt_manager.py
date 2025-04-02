@@ -50,8 +50,8 @@ class JwtManager:
             payload = cls.get_payload(request)
             token_exp_time = payload['expirationTime']
             current_time = int(time.time())
-            formatted_exp_time = time.strftime('%d/%m/%Y %H:%M:%S', time.localime(token_exp_time))
-            formatted_cur_time = time.strftime('%d/%m/%Y %H:%M:%S', time.localime(current_time))
+            formatted_exp_time = time.strftime('%d/%m/%Y %H:%M:%S', time.localtime(token_exp_time))
+            formatted_cur_time = time.strftime('%d/%m/%Y %H:%M:%S', time.localtime(current_time))
             print(f"Access Token expiration time : {formatted_exp_time}, current time : {formatted_cur_time}")
             if token_exp_time >= current_time:
                 return True
