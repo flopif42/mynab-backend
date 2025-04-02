@@ -1,5 +1,6 @@
 import json
 from app.sql_manager import SqlManager as db
+from http import HTTPStatus
 
 class CategoryOperationError(Exception):
     pass
