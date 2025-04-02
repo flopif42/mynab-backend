@@ -3,7 +3,6 @@ from flasgger import swag_from
 from http import HTTPStatus
 from app.routes.handler import handle_route_action
 from app.controller import child_category, parent_category
-from app.controller.parent_category import CategoryOperationError
 
 category_bp = Blueprint('category', __name__)
 
@@ -24,30 +23,12 @@ def category_delete():
 @category_bp.route('/category/create_parent', methods=['POST'])
 @swag_from('../docs/parent_category/parent_category_create.yml')
 def parent_category_create():
-    try:
-        if not request.is_json or 'parent_category_name' not in request.json:
-            raise ValueError
-        return handle_route_action(parent_category.create, create=True)
-    except ValueError:
-        return "", HTTPStatus.BAD_REQUEST
-    except Exception as error:
-        print(f"Exception in payee_routes.payee_create() : {type(error)} - {type(error).__name__} - {error}")
-        return "", HTTPStatus.INTERNAL_SERVER_ERROR
+    return handle_route_action(parent_category.create, mode='create')
 
 @category_bp.route('/category/delete_parent', methods=['DELETE'])
 @swag_from('../docs/parent_category/parent_category_delete.yml')
 def parent_category_delete():
-    try:
-        if not request.is_json or 'id_parent' not in request.json:
-            raise CategoryOperationError(HTTPStatus.BAD_REQUEST, "The parameter ID parent is required.")
-        return handle_route_action(parent_category.delete, delete=True)
-    except ValueError:
-        return "", HTTPStatus.BAD_REQUEST
-    except CategoryOperationError as error:
-        return { "error": error.args[1] }, error.args[0]
-    except Exception as error:
-        print(f"Exception in payee_routes.payee_delete() : {type(error).__name__} - {error}")
-        return "", HTTPStatus.INTERNAL_SERVER_ERROR
+    return handle_route_action(parent_category.delete, mode='delete')
 
 @category_bp.route('/category/move_parent', methods=['POST'])
 def parent_category_move():

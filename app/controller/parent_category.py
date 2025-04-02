@@ -1,21 +1,16 @@
 import json
-from app.sql_manager import SqlManager as db
 from http import HTTPStatus
-
-class CategoryOperationError(Exception):
-    pass
+from flask import request
+from app.sql_manager import SqlManager as db
+from app.exceptions import OperationError
+from app.utils import validate_not_empty
 
 # Create a parent category
-def create(id_user, request_params):
-    parent_category_name = request_params['parent_category_name']
-    if parent_category_name is None:
-        raise ValueError("Parent category name can't be empty.")
-    parent_category_name = parent_category_name.strip()
-    if parent_category_name == '':
-        raise ValueError("Parent category name can't be empty.")
-    if len(parent_category_name) > 50:
-        raise ValueError("Parent category name can't be more than 50 characters.")
+def create(id_user, request):
     try:
+        parent_category_name = validate_not_empty(request, 'parent_category_name')
+        if len(parent_category_name) > 50:
+            raise OperationError(HTTPStatus.BAD_REQUEST, "Parent category name can't be more than 50 characters.")
         query = '''
                 insert into PARENT_CATEGORY 
                 select (%s) as ID_USER, max(ID_PARENT_CATEGORY)+1 as ID_PARENT_CATEGORY, (%s) as PARENT_CATEGORY_NAME, max(PARENT_CATEGORY_POSITION)+1 as position 
@@ -28,19 +23,19 @@ def create(id_user, request_params):
         raise error
 
 def delete(id_user, request_params):
-    id_parent = request_params['id_parent']
     try:
-        if id_parent is None or not str(id_parent).strip():
-            raise CategoryOperationError(HTTPStatus.BAD_REQUEST, "ID parent can't be empty.")
+        id_parent = validate_not_empty(request, 'id_parent')
         id_parent = int(id_parent)
         if not is_valid(id_parent, id_user):
-            raise CategoryOperationError(HTTPStatus.NOT_FOUND, "This parent category doesn't exist.")
+            raise OperationError(HTTPStatus.NOT_FOUND, "This parent category doesn't exist.")
         if not is_deletable(id_parent, id_user):
-            raise CategoryOperationError(HTTPStatus.CONFLICT, "This parent category has subcategories.")
+            raise OperationError(HTTPStatus.CONFLICT, "This parent category has subcategories.")
         if id_parent == 0:
-            raise CategoryOperationError(HTTPStatus.BAD_REQUEST, "ID parent can't 0.")
+            raise OperationError(HTTPStatus.BAD_REQUEST, "ID parent can't 0.")
         query = "delete from PARENT_CATEGORY where ID_PARENT_CATEGORY = (%s) and ID_USER = (%s)"
         db.execute_query(query, (id_parent, id_user), commit=True)
+    except ValueError:
+        raise OperationError(HTTPStatus.BAD_REQUEST, "Invalid ID parent.")
     except Exception as error:
         print(f"Exception in parent_category.delete() : {type(error)} - {type(error).__name__} - {error}")
         raise error
