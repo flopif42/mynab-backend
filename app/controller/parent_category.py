@@ -80,11 +80,11 @@ def is_deletable(id_parent, id_user):
     """
     query = '''
             select ID_CATEGORY
-            from PARENT_CATEGORY pcat
+            from PARENT_CATEGORY p_cat
             inner join CATEGORY cat
               on cat.ID_PARENT_CATEGORY = p_cat.ID_PARENT_CATEGORY
               and cat.ID_USER = p_cat.ID_USER 
-            where pcat.PARENT_CATEGORY = %s and p_cat.ID_USER = %s
+            where p_cat.ID_PARENT_CATEGORY = %s and p_cat.ID_USER = %s
             '''
     result = db.execute_query(query, (id_parent, id_user), fetch=True)
     return not bool(len(result))
