@@ -2,7 +2,7 @@ from http import HTTPStatus
 from flask import request
 import datetime as dt
 from app.sql_manager import SqlManager as db
-from app.controller import payee, account, child_category, parent_category, transfer
+from app.controller import payee, account, category, parent_category, transfer
 
 def fetch_all(id_user, request):
     try:
