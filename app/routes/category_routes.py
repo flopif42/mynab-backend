@@ -7,15 +7,15 @@ from app.controller import category
 category_bp = Blueprint('category', __name__)
 
 @category_bp.route('/category/list', methods=['GET'])
-@swag_from('../docs/category/category_create.yml')
 def category_list():
     return handle_route_action(category.fetch_all)
 
 @category_bp.route('/category/create', methods=['POST'])
-@swag_from('../docs/category/category_delete.yml')
+@swag_from('../docs/category/category_create.yml')
 def category_create():
     return handle_route_action(category.create, mode='create')
 
 @category_bp.route('/category/delete', methods=['DELETE'])
+@swag_from('../docs/category/category_delete.yml')
 def category_delete():
     return handle_route_action(category.delete, mode='delete')
