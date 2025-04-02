@@ -4,7 +4,7 @@ import app.controller.parent_category as pc
 from app.exceptions import OperationError
 from app.utils import validate_not_empty
 
-def fetch_all(id_user, unused):
+def list(id_user, request):
     try:
         query = """
                 select par.ID_PARENT_CATEGORY as id, PARENT_CATEGORY_NAME as name, PARENT_CATEGORY_POSITION as position, 
