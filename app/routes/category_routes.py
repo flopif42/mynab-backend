@@ -7,6 +7,7 @@ from app.controller import category
 category_bp = Blueprint('category', __name__)
 
 @category_bp.route('/category/list', methods=['GET'])
+@swag_from('../docs/category/category_list.yml')
 def category_list():
     return handle_route_action(category.list)
 
