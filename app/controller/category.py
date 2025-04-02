@@ -1,6 +1,7 @@
-import json
 from app.sql_manager import SqlManager
-import app.controller.parent_category
+import app.controller.parent_category pas pc
+from app.exceptions import OperationError
+from app.utils import validate_not_empty
 
 def fetch_all(id_user, unused):
     try:
@@ -33,18 +34,26 @@ def fetch_all(id_user, unused):
         raise
 
 # Create a category and attach it to an existing parent category
-def create(id_user, request_params):
+def create(id_user, request):
+    id_parent = validate_not_empty(request, 'id_parent')
+    id_parent = int(id_parent)
+    if not pc.is_valid(id_parent, id_user):
+        raise OperationError(HTTPStatus.NOT_FOUND, "This parent category doesn't exist.")
+    if id_parent == 0:
+        raise OperationError(HTTPStatus.BAD_REQUEST, "ID parent can't 0.")
+    category_name = validate_not_empty(request, 'category_name')
+    if len(category_name) > 50:
+        raise OperationError(HTTPStatus.BAD_REQUEST, "Category name can't be more than 50 characters.")
     try:
-        query = (
-            "insert into CATEGORY "
-            "select (%s) as ID_USER, max(ID_CATEGORY)+1 as ID_CATEGORY, (%s) as ID_PARENT_CATEGORY, (%s) as CATEGORY_NAME "
-            "from CATEGORY "
-            "where ID_USER = (%s) "
-        )
-        SqlManager.execute_query(query, (id_user, request_params['id_parent'], request_params['category_name'], id_user), commit=True)
-    except Exception as err:
-        print(f"Could not create the category : {err}")
-        raise
+        query = '''
+                insert into CATEGORY 
+                select (%s) as ID_USER, max(ID_CATEGORY)+1 as ID_CATEGORY, (%s) as ID_PARENT_CATEGORY, (%s) as CATEGORY_NAME 
+                from CATEGORY 
+                where ID_USER = (%s) 
+                '''
+        SqlManager.execute_query(query, (id_user, id_parent, category_name, id_user), commit=True)
+    except ValueError:
+        raise OperationError(HTTPStatus.BAD_REQUEST, "Invalid ID parent.")
 
 def delete(id_user, request_params):
     try:

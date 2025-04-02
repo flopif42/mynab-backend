@@ -2,7 +2,7 @@ from flask import Blueprint, request
 from flasgger import swag_from
 from http import HTTPStatus
 from app.routes.handler import handle_route_action
-from app.controller import child_category, parent_category
+from app.controller import parent_category
 
 parent_category_bp = Blueprint('parent_category', __name__)
 
