@@ -7,20 +7,15 @@ from app.utils import validate_not_empty
 
 # Create a parent category
 def create(id_user, request):
-    try:
-        parent_category_name = validate_not_empty(request, 'parent_category_name')
-        if len(parent_category_name) > 50:
-            raise OperationError(HTTPStatus.BAD_REQUEST, "Parent category name can't be more than 50 characters.")
-        query = '''
-                insert into PARENT_CATEGORY 
-                select (%s) as ID_USER, max(ID_PARENT_CATEGORY)+1 as ID_PARENT_CATEGORY, (%s) as PARENT_CATEGORY_NAME, max(PARENT_CATEGORY_POSITION)+1 as position 
-                from PARENT_CATEGORY 
-                where ID_USER = (%s)
-                '''
-        db.execute_query(query, (id_user, parent_category_name, id_user), commit=True)
-    except Exception as error:
-        print(f"Exception in parent_category.create() : {type(error)} - {type(error).__name__} - {error}")
-        raise error
+    parent_category_name = validate_not_empty(request, 'parent_category_name')
+    if len(parent_category_name) > 50:
+        raise OperationError(HTTPStatus.BAD_REQUEST, "Parent category name can't be more than 50 characters.")
+    query = '''
+            insert into PARENT_CATEGORY 
+            select (%s) as ID_USER, max(ID_PARENT_CATEGORY)+1 as ID_PARENT_CATEGORY, (%s) as PARENT_CATEGORY_NAME, max(PARENT_CATEGORY_POSITION)+1 as position 
+            from PARENT_CATEGORY where ID_USER = (%s)
+            '''
+    db.execute_query(query, (id_user, parent_category_name, id_user), commit=True)
 
 def delete(id_user, request_params):
     try:
@@ -36,9 +31,6 @@ def delete(id_user, request_params):
         db.execute_query(query, (id_parent, id_user), commit=True)
     except ValueError:
         raise OperationError(HTTPStatus.BAD_REQUEST, "Invalid ID parent.")
-    except Exception as error:
-        print(f"Exception in parent_category.delete() : {type(error)} - {type(error).__name__} - {error}")
-        raise error
 
 def set_position(id_user, request_params):
     id_parent_category = request_params['id_parent_category']
