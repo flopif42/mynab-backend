@@ -37,6 +37,8 @@ def delete(id_user, request_params):
             raise CategoryOperationError(HTTPStatus.NOT_FOUND, "This parent category doesn't exist.")
         if not is_deletable(id_parent, id_user):
             raise CategoryOperationError(HTTPStatus.CONFLICT, "This parent category has subcategories.")
+        if id_parent == 0:
+            raise CategoryOperationError(HTTPStatus.BAD_REQUEST, "ID parent can't 0.")
         query = "delete from PARENT_CATEGORY where ID_PARENT_CATEGORY = (%s) and ID_USER = (%s)"
         db.execute_query(query, (id_parent, id_user), commit=True)
     except Exception as error:
