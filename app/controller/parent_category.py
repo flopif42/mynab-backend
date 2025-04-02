@@ -3,17 +3,25 @@ from app.sql_manager import SqlManager as db
 
 # Create a parent category
 def create(id_user, request_params):
+    parent_category_name = request_params['parent_category_name']
+    if parent_category_name is None:
+        raise ValueError("Parent category name can't be empty.")
+    parent_category_name = parent_category_name.strip()
+    if parent_category_name == '':
+        raise ValueError("Parent category name can't be empty.")
+    if len(parent_category_name) > 50:
+        raise ValueError("Parent category name can't be more than 50 characters.")
     try:
-        query = (
-            "insert into PARENT_CATEGORY "
-            "select (%s) as ID_USER, max(ID_PARENT_CATEGORY)+1 as ID_PARENT_CATEGORY, (%s) as PARENT_CATEGORY_NAME, max(PARENT_CATEGORY_POSITION)+1 as position "
-            "from PARENT_CATEGORY "
-            "where ID_USER = (%s)"
-        )
-        db.execute_query(query, (id_user, request_params['parent_category_name'], id_user), commit=True)
-    except Exception as err:
-        print(f"Could not create the parent category : {err}")
-        raise
+        query = '''
+                insert into PARENT_CATEGORY 
+                select (%s) as ID_USER, max(ID_PARENT_CATEGORY)+1 as ID_PARENT_CATEGORY, (%s) as PARENT_CATEGORY_NAME, max(PARENT_CATEGORY_POSITION)+1 as position 
+                from PARENT_CATEGORY 
+                where ID_USER = (%s)
+                '''
+        db.execute_query(query, (id_user, parent_category_name, id_user), commit=True)
+    except Exception as error:
+        print(f"Exception in payee.create() : {type(error)} - {type(error).__name__} - {error}")
+        raise error
 
 def delete(id_user, request_params):
     try:

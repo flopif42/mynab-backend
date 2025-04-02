@@ -1,0 +1,33 @@
+Deletes a payee.
+---
+tags:
+  - Payee
+consumes:
+  - application/json
+parameters:
+  - in: body
+    name: body
+    required: true
+    schema:
+      type: object
+      properties:
+        id_payee:
+          type: number
+          description: The payee number
+          example: 856
+      required:
+        - id_payee
+responses:
+  204:
+    description: Payee was successfully deleted
+  400:
+    description: Missing required parameter or incorrect parameter
+  401:
+    description: No user is logged in
+  403:
+    description: Payee doesn't belong to the logged in user
+  404:
+    description: Payee doesn't exist
+  409:
+    description: Payee could not be deleted because it has transactions. All transactions must be deleted first.
+  

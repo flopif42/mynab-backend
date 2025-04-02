@@ -19,8 +19,17 @@ def category_delete():
 
 # Parent categories routes
 @category_bp.route('/category/create_parent', methods=['POST'])
+@swag_from('../docs/parent_category/parent_category_create.yml')
 def parent_category_create():
-    return handle_route_action(parent_category.create, create=True)
+    try:
+        if not request.is_json or 'parent_category_name' not in request.json:
+            raise ValueError
+        return handle_route_action(parent_category.create, create=True)
+    except ValueError:
+        return "", HTTPStatus.BAD_REQUEST
+    except Exception as error:
+        print(f"Exception in payee_routes.payee_create() : {type(error)} - {type(error).__name__} - {error}")
+        return "", HTTPStatus.INTERNAL_SERVER_ERROR
 
 @category_bp.route('/category/delete_parent', methods=['POST'])
 def parent_category_delete():
