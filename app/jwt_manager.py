@@ -56,7 +56,7 @@ class JwtManager:
             if token_exp_time >= current_time:
                 return True
             return False
-        except Exception as err:
+        except Exception as error:
             print(f"Exception in check_token_valid() : {type(error).__name__} - {error}")
             return False
     
