@@ -6,7 +6,6 @@ from app.controller import child_category, parent_category
 
 category_bp = Blueprint('category', __name__)
 
-# Child categories routes
 @category_bp.route('/category/list', methods=['GET'])
 def category_list():
     return handle_route_action(child_category.fetch_all)
@@ -18,18 +17,3 @@ def category_create():
 @category_bp.route('/category/delete', methods=['POST'])
 def category_delete():
     return handle_route_action(child_category.delete)
-
-# Parent categories routes
-@category_bp.route('/category/create_parent', methods=['POST'])
-@swag_from('../docs/parent_category/parent_category_create.yml')
-def parent_category_create():
-    return handle_route_action(parent_category.create, mode='create')
-
-@category_bp.route('/category/delete_parent', methods=['DELETE'])
-@swag_from('../docs/parent_category/parent_category_delete.yml')
-def parent_category_delete():
-    return handle_route_action(parent_category.delete, mode='delete')
-
-@category_bp.route('/category/move_parent', methods=['POST'])
-def parent_category_move():
-    return handle_route_action(parent_category.set_position)
