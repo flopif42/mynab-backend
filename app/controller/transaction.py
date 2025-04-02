@@ -1,8 +1,10 @@
+from http import HTTPStatus
+from flask import request
 import datetime as dt
 from app.sql_manager import SqlManager as db
 from app.controller import payee, account, child_category, parent_category, transfer
 
-def fetch_all(id_user, request_params):
+def fetch_all(id_user, request):
     try:
         query = """
                 select acc.ACCOUNT_NAME as account, 
@@ -29,9 +31,9 @@ def fetch_all(id_user, request_params):
                 where txn.ID_USER = (%s)
                 """
         values = (id_user, )
-        if request_params and request_params.get("id_account"):
+        if request.is_json and request.json.get("id_account"):
             query += "and txn.ID_ACCOUNT = (%s) "
-            values += (request_params["id_account"],)
+            values += (request.json.get("id_account"),)
         return db.execute_query(query, values, fetch=True, dictionary=True)
     except Exception as err:
         print(f"Could not fetch transactions : {err}")

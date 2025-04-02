@@ -1,4 +1,3 @@
-import json
 from http import HTTPStatus
 from flask import request
 from app.sql_manager import SqlManager as db
