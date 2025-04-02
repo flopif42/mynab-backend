@@ -9,7 +9,7 @@ def validate_not_empty(request, parameter_name):
     parameter = request.json[parameter_name]
     if parameter is None:
         raise OperationError(HTTPStatus.BAD_REQUEST, error_message)
-    parameter = parameter.strip()
+    parameter = str(parameter).strip()
     if parameter == '':
         raise OperationError(HTTPStatus.BAD_REQUEST, error_message)
     return parameter
