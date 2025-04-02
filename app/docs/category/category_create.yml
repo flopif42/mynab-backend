@@ -1,0 +1,31 @@
+Adds a new category to a parent category.
+---
+tags:
+  - Category
+consumes:
+  - application/json
+parameters:
+  - in: body
+    name: body
+    required: true
+    schema:
+      type: object
+      properties:
+        id_parent:
+          type: number
+          description: The ID of the parent category to attach this to
+          example: 58
+        category_name:
+          type: string
+          description: The name of the category
+          example: Electricity bill
+      required:
+        - category_name
+        - id_parent
+responses:
+  201:
+    description: Category was created successfully
+  400:
+    description: Missing required parameters or incorrect parameters
+  401:
+    description: No user is logged in
