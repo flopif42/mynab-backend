@@ -1,7 +1,7 @@
-Deletes a payee.
+Deletes a parent category.
 ---
 tags:
-  - Payee
+  - Category
 consumes:
   - application/json
 parameters:
@@ -11,23 +11,23 @@ parameters:
     schema:
       type: object
       properties:
-        id_payee:
+        id_parent:
           type: number
-          description: The payee number
+          description: The parent category ID number
           example: 856
       required:
-        - id_payee
+        - id_parent
 responses:
   204:
-    description: Payee was successfully deleted
+    description: Parent category was successfully deleted
   400:
     description: Missing required parameter or incorrect parameter
   401:
     description: No user is logged in
   403:
-    description: Payee doesn't belong to the logged in user
+    description: Parent category doesn't belong to the logged in user
   404:
-    description: Payee doesn't exist
+    description: Parent category doesn't exist
   409:
-    description: Payee could not be deleted because it has transactions. All transactions must be deleted first.
+    description: Parent category could not be deleted because it has categories attached. All categories must be deleted first.
   

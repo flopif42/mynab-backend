@@ -33,9 +33,20 @@ def parent_category_create():
         print(f"Exception in payee_routes.payee_create() : {type(error)} - {type(error).__name__} - {error}")
         return "", HTTPStatus.INTERNAL_SERVER_ERROR
 
-@category_bp.route('/category/delete_parent', methods=['POST'])
+@category_bp.route('/category/delete_parent', methods=['DELETE'])
+@swag_from('../docs/parent_category/parent_category_delete.yml')
 def parent_category_delete():
-    return handle_route_action(parent_category.delete, delete=True)
+    try:
+        if not request.is_json or 'id_parent' not in request.json:
+            raise CategoryOperationError(HTTPStatus.BAD_REQUEST, "The parameter ID parent is required.")
+        return handle_route_action(parent_category.delete, delete=True)
+    except ValueError:
+        return "", HTTPStatus.BAD_REQUEST
+    except CategoryOperationError as error:
+        return { "error": error.args[1] }, error.args[0]
+    except Exception as error:
+        print(f"Exception in payee_routes.payee_delete() : {type(error).__name__} - {error}")
+        return "", HTTPStatus.INTERNAL_SERVER_ERROR
 
 @category_bp.route('/category/move_parent', methods=['POST'])
 def parent_category_move():
