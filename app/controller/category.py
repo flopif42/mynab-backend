@@ -56,12 +56,42 @@ def create(id_user, request):
     except ValueError:
         raise OperationError(HTTPStatus.BAD_REQUEST, "Invalid ID parent.")
 
-def delete(id_user, request_params):
+def delete(id_user, request):
     try:
+        id_category = validate_not_empty(request, 'id_category')
+        id_category = int(id_category)
+        if not is_valid(id_category, id_user):
+            raise OperationError(HTTPStatus.NOT_FOUND, "This category doesn't exist.")
+        if not is_deletable(id_category, id_user):
+            raise OperationError(HTTPStatus.CONFLICT, "This category has transactions.")
+        if id_category == 0:
+            raise OperationError(HTTPStatus.BAD_REQUEST, "ID category can't 0.")
         query = "delete from BUDGET_LINE where ID_USER = (%s) and ID_CATEGORY = (%s) and ID_CATEGORY <> 0"
-        SqlManager.execute_query(query, (id_user, request_params['id_category'],), commit=True)
+        db.execute_query(query, (id_user, id_category), commit=True)
         query = "delete from CATEGORY where ID_USER = (%s) and ID_CATEGORY = (%s) and ID_CATEGORY <> 0"
-        SqlManager.execute_query(query, (id_user, request_params['id_category'],), commit=True)
-    except Exception as err:
-        print(f"Could not delete the category : {err}")
-        raise
+        db.execute_query(query, (id_user, id_category), commit=True)
+    except ValueError:
+        raise OperationError(HTTPStatus.BAD_REQUEST, "Invalid ID category.")
+
+def is_valid(id_category, id_user):
+    """
+    This function is used to check the existence of id_category in the table for this user.
+    """
+    query = 'select ID_CATEGORY from CATEGORY where ID_CATEGORY = %s and ID_USER = (%s)'
+    result = db.execute_query(query, (id_category, id_user), fetch=True)
+    return bool(len(result))
+
+def is_deletable(id_category, id_user):
+    """
+    This function is used to check if the category is free of transactions.
+    """
+    query = '''
+            select ID_TRANSACTION as nb_txn
+            from CATEGORY cat
+            inner join TRANSACTION txn
+              on txn.ID_CATEGORY = cat.ID_CATEGORY
+              and txn.ID_USER = cat.ID_USER
+            where cat.ID_CATEGORY = %s and cat.ID_USER = %s
+            '''
+    result = db.execute_query(query, (id_category, id_user), fetch=True)
+    return not bool(len(result))
