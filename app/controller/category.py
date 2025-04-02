@@ -1,5 +1,5 @@
 from app.sql_manager import SqlManager
-import app.controller.parent_category pas pc
+import app.controller.parent_category as pc
 from app.exceptions import OperationError
 from app.utils import validate_not_empty
 
