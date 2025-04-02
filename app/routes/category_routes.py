@@ -3,6 +3,7 @@ from flasgger import swag_from
 from http import HTTPStatus
 from app.routes.handler import handle_route_action
 from app.controller import child_category, parent_category
+from app.controller.parent_category import CategoryOperationError
 
 category_bp = Blueprint('category', __name__)
 
