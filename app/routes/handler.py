@@ -27,4 +27,4 @@ def handle_route_action(action, mode='default'):
         except Exception as error:
             print(f"Exception in handle_route_action() : {type(error).__name__} - {error}")
             mode = 'server_error'
-    return response_body, success_response_status[mode]
+    return response_body, response_status[mode]
