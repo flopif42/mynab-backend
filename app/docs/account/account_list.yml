@@ -34,7 +34,9 @@ responses:
       application/json:
         id: 987654
         name: My checking account
-        balance: 134184,
-        can_be_deleted: 0,
-        status: 1,
+        balance: 134184
+        can_be_deleted: 0
+        status: 1
         type: 1
+  401:
+    description: No user is logged in

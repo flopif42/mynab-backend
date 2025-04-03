@@ -1,0 +1,61 @@
+Adds a new parent category.
+---
+tags:
+  - Transaction
+definitions:
+  Transaction:
+    type: object
+    properties:
+      id:
+        type: integer
+        description: The transaction number
+      account:
+        type: string
+        description: The account name to which this transaction is attached
+      payee:
+        type: string
+        description: The payee name to which this transaction is attached
+      amount:
+        type: integer
+        description: The transaction amount in cents
+      flow:
+        type: string
+        description: The flow of the transaction (possible values are Inflow and Outflow)
+      category:
+        type: string
+        description: The name of the category for this transaction
+      date:
+        type: string
+        description: The date of the transaction in the format DD/MM/YYYY
+      memo:
+        type: string
+        description: An optional memo for the transaction
+parameters:
+  - in: path
+    name: id_account
+    schema:
+      type: integer
+      required: false
+      description: The ID account for which the transactions are attached to
+
+responses:
+  200:
+    description: A list of accounts with the following information
+    schema:
+      $ref: '#/definitions/Transaction'
+    examples:
+      application/json:
+        id: 31  
+        account: Cash
+        amount: 130
+        category: Breakfast
+        date: 14/03/2025
+        flow: Outflow
+        memo: Pain au chocolat
+        payee: French bakery
+  400:
+    description: Incorrect parameter
+  401:
+    description: No user is logged in
+  404:
+    description: This ID account doesn't exist

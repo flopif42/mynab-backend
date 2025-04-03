@@ -36,21 +36,20 @@ def list(id_user, request):
 
 # Create a category and attach it to an existing parent category
 def create(id_user, request):
-    id_parent = validate_not_empty(request, 'id_parent')
-    id_parent = int(id_parent)
-    if not pc.is_valid(id_parent, id_user):
-        raise OperationError(HTTPStatus.NOT_FOUND, "This parent category doesn't exist.")
-    if id_parent == 0:
-        raise OperationError(HTTPStatus.BAD_REQUEST, "ID parent can't 0.")
-    category_name = validate_not_empty(request, 'category_name')
-    if len(category_name) > 50:
-        raise OperationError(HTTPStatus.BAD_REQUEST, "Category name can't be more than 50 characters.")
     try:
+        id_parent = validate_not_empty(request, 'id_parent')
+        id_parent = int(id_parent)
+        if not pc.is_valid(id_parent, id_user):
+            raise OperationError(HTTPStatus.NOT_FOUND, "This parent category doesn't exist.")
+        if id_parent == 0:
+            raise OperationError(HTTPStatus.BAD_REQUEST, "ID parent can't 0.")
+        category_name = validate_not_empty(request, 'category_name')
+        if len(category_name) > 50:
+            raise OperationError(HTTPStatus.BAD_REQUEST, "Category name can't be more than 50 characters.")
         query = '''
                 insert into CATEGORY 
                 select (%s) as ID_USER, max(ID_CATEGORY)+1 as ID_CATEGORY, (%s) as ID_PARENT_CATEGORY, (%s) as CATEGORY_NAME 
-                from CATEGORY 
-                where ID_USER = (%s) 
+                from CATEGORY where ID_USER = (%s) 
                 '''
         db.execute_query(query, (id_user, id_parent, category_name, id_user), commit=True)
     except ValueError:
@@ -94,4 +93,4 @@ def is_deletable(id_category, id_user):
             where cat.ID_CATEGORY = %s and cat.ID_USER = %s
             '''
     result = db.execute_query(query, (id_category, id_user), fetch=True)
-    return not bool(len(result))
+    return not bool(len(result)) # True if no rows are returned from the query, otherwise False

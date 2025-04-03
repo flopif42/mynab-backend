@@ -5,6 +5,7 @@ from app.controller import transaction
 transaction_bp = Blueprint('transaction', __name__)
 
 @transaction_bp.route('/transaction/list', methods=['GET'])
+@swag_from('../docs/transaction/transaction_list.yml')
 def transaction_list():
     return handle_route_action(transaction.list)
 
