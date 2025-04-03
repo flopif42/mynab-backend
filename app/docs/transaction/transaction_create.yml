@@ -1,0 +1,53 @@
+Adds a new transaction.
+---
+tags:
+  - Transaction
+consumes:
+  - application/json
+parameters:
+  - in: body
+    name: body
+    required: true
+    schema:
+      type: object
+      properties:
+        id_account:
+          type: number
+          description: The ID of the account
+          example: 987654
+        amount:
+          type: number
+          description: The transaction amount in cents
+          example: 1500
+        flow:
+          type: number
+          description: "The flow of the transaction (-1 : Outflow, 1 : Inflow)"
+          example: -1
+        date:
+          type: string
+          description: The transaction date in DD/MM/YYYY format
+          example: 03/04/2025
+        id_category:
+          type: number
+          description: The ID of the category for this transaction
+          example: 987654
+        id_payee:
+          type: number
+          description: The ID of the payee
+          example: 58
+        memo:
+          type: string
+          description: An optional memo for the transaction
+          example: Subscription to Netflix
+      required:
+        - id_account
+        - amount
+        - flow
+        - date
+responses:
+  201:
+    description: Transaction was created successfully
+  400:
+    description: Missing required parameters or incorrect parameters
+  401:
+    description: No user is logged in

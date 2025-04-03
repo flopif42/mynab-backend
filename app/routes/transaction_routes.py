@@ -12,6 +12,7 @@ def transaction_list():
     return handle_route_action(transaction.list)
 
 @transaction_bp.route('/transaction/create', methods=['POST'])
+@swag_from('../docs/transaction/transaction_create.yml')
 def transaction_create():
     return handle_route_action(transaction.create, mode='create')
 

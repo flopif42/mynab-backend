@@ -66,7 +66,6 @@ def create(id_user, request):
             memo = validate_not_empty(request, 'memo')
         else:
             memo = None
-
         query = """
                 insert into TRANSACTION 
                 (ID_USER, ID_ACCOUNT, ID_PAYEE, ID_CATEGORY, TRANSACTION_FLOW, TRANSACTION_AMOUNT, TRANSACTION_DATE, TRANSACTION_MEMO) 
