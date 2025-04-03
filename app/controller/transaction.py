@@ -3,6 +3,7 @@ from flask import request
 import datetime as dt
 from app.sql_manager import SqlManager as db
 from app.controller import payee, account, category, parent_category, transfer
+from app.utils import validate_not_empty
 
 def list(id_user, request):
     try:
