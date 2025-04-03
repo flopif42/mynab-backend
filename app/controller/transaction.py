@@ -2,7 +2,9 @@ from http import HTTPStatus
 from flask import request
 import datetime as dt
 from app.sql_manager import SqlManager as db
-from app.controller import payee, account, category, parent_category, transfer
+# from app.controller import payee, account, category, parent_category, transfer
+import app.controller.account
+from app.exceptions import OperationError
 from app.utils import validate_not_empty
 
 def list(id_user, request):
@@ -32,10 +34,17 @@ def list(id_user, request):
                 where txn.ID_USER = (%s)
                 """
         values = (id_user, )
-        
-        # The following lines is to handle calls where id_account is specified
+        # The following code is to handle calls where id_account is specified
         if request and request.args.get('id_account'):
             id_account = int(validate_not_empty(request, 'id_account'))
+
+            if not account.is_valid(id_account):
+                raise OperationError(HTTPStatus.NOT_FOUND, "This account doesn't exist.")
+            if not account.is_valid(id_account, id_user):
+                raise OperationError(HTTPStatus.FORBIDDEN, "This account doesn't belong to this user.")
+
+
+
             query += "and txn.ID_ACCOUNT = (%s) "
             values += (id_account,)
         return db.execute_query(query, values, fetch=True, dictionary=True)
