@@ -3,6 +3,22 @@ Returns a list of all categories.
 tags:
   - Category
 definitions:
+  Category:
+    type: object
+    properties:
+      id:
+        type: integer
+        description: The category number
+      name:
+        type: string
+        description: The category name
+      id_parent:
+        type: integer
+        description: The ID of this category's parent
+      can_be_deleted:
+        type: integer
+        description: A boolean indicating if the category can be deleted
+
   ParentCategory:
     type: object
     properties:
@@ -18,6 +34,9 @@ definitions:
       position:
         type: integer
         description: An index corresponding to the parent category's position when displayed
+      child_categories:
+        type: array
+        items: '#/definitions/Category'
 
 responses:
   200:
