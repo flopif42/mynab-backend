@@ -79,7 +79,6 @@ def create(id_user, request):
     except IntegrityError:
         raise OperationError(HTTPStatus.BAD_REQUEST, "Some parameters are incorrect.")
 
-
 def delete(id_user, request_params):
     try:
         id_transaction = request_params["id_transaction"]
