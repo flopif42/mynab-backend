@@ -36,7 +36,8 @@ definitions:
         description: An index corresponding to the parent category's position when displayed
       child_categories:
         type: array
-        items: '#/definitions/Category'
+        items:
+          '#/definitions/Category'
 
 responses:
   200:
