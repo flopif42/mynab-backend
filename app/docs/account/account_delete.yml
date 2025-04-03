@@ -2,21 +2,13 @@ Deletes an account.
 ---
 tags:
   - Account
-consumes:
-  - application/json
 parameters:
-  - in: body
-    name: body
+  - name: body
+    in: query
     required: true
-    schema:
-      type: object
-      properties:
-        id_account:
-          type: number
-          description: The account number
-          example: 987654321
-      required:
-        - id_account
+    type: number
+    description: The ID account to delete
+
 responses:
   204:
     description: Account was successfully deleted
