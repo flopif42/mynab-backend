@@ -54,15 +54,15 @@ def create(id_user, request):
         amount = int(validate_not_empty(request, 'amount'))
         txn_date = mysql_format_date(validate_not_empty(request, 'date'))
 
-        if request.json['id_payee']:
+        if request.json.get('id_payee'):
             id_payee = int(validate_not_empty(request, 'id_payee'))
         else:
             id_payee = None
-        if request.json['id_category']:
+        if request.json.get('id_category'):
             id_category = int(validate_not_empty(request, 'id_category'))
         else:
             id_category = None
-        if request.json['memo']:
+        if request.json.get('memo'):
             memo = validate_not_empty(request, 'memo')
         else:
             memo = None
