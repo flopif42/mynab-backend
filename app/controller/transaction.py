@@ -31,13 +31,15 @@ def list(id_user, request):
                 where txn.ID_USER = (%s)
                 """
         values = (id_user, )
-        if request and request.args.get("id_account"):
+        
+        # The following lines is to handle calls where id_account is specified
+        if request and request.args.get('id_account'):
+            id_account = int(validate_not_empty(request, 'id_account'))
             query += "and txn.ID_ACCOUNT = (%s) "
-            values += (request.args.get("id_account"),)
+            values += (id_account,)
         return db.execute_query(query, values, fetch=True, dictionary=True)
-    except Exception as err:
-        print(f"Could not fetch transactions : {err}")
-        raise
+    except ValueError:
+        raise OperationError(HTTPStatus.BAD_REQUEST, "Invalid ID account.")
 
 def create(id_user, request_params):
     id_payee = request_params["id_payee"] if request_params.get("id_payee") else None
