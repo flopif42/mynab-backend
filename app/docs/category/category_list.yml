@@ -39,7 +39,7 @@ definitions:
         description: A boolean indicating if the category can be deleted
 responses:
   200:
-    description: A list of parent categories and their respective child categories
+    description: A list of parent categories with their respective child categories
     schema:
       $ref: '#/definitions/ParentCategory'
     examples:
@@ -48,5 +48,11 @@ responses:
         name: Food
         position: 5
         can_be_deleted: 0
+        child_categories:
+          id: 8
+          name: Groceries
+          id_parent: 4
+          can_be_deleted: 1
+
   401:
     description: No user is logged in
