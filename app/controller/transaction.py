@@ -3,7 +3,6 @@ from mysql.connector.errors import IntegrityError
 from flask import request
 import datetime as dt
 from app.sql_manager import SqlManager as db
-# from app.controller import payee, account, category, parent_category, transfer
 import app.controller.account as acc
 from app.exceptions import OperationError
 from app.utils import validate_not_empty

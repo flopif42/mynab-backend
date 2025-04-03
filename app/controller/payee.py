@@ -1,57 +1,39 @@
 from app.sql_manager import SqlManager as db
 from http import HTTPStatus
+from app.exceptions import OperationError
+from app.utils import validate_not_empty
 
-class PayeeOperationError(Exception):
-    pass
-
-def create(id_user, request_params):
-    payee_name = request_params['payee_name']
-    if payee_name is None:
-        raise ValueError("Payee name can't be empty.")
-    payee_name = payee_name.strip()
-    if payee_name == '':
-        raise ValueError("Payee name can't be empty.")
+def create(id_user, request):
+    payee_name = validate_not_empty(request, 'payee_name')
     if len(payee_name) > 70:
-        raise ValueError("Payee name can't be more than 70 characters.")
-    try:
-        query = "insert into PAYEE (ID_USER, PAYEE_NAME) values (%s, %s)"
-        db.execute_query(query, (id_user, payee_name), commit=True)
-    except Exception as error:
-        print(f"Exception in payee.create() : {type(error)} - {type(error).__name__} - {error}")
-        raise error
+        raise OperationError(HTTPStatus.BAD_REQUEST, "Payee name can't be more than 70 characters.")
+    query = "insert into PAYEE (ID_USER, PAYEE_NAME) values (%s, %s)"
+    db.execute_query(query, (id_user, payee_name), commit=True)
 
-def delete(id_user, request_params):
-    id_payee = request_params['id_payee']
+def delete(id_user, request):
     try:
-        if id_payee is None or not str(id_payee).strip():
-            raise PayeeOperationError(HTTPStatus.BAD_REQUEST, "ID payee can't be empty.")
-        id_payee = int(id_payee)
+        id_payee = int(validate_not_empty(request, 'id_payee'))
         if not is_valid(id_payee):
-            raise PayeeOperationError(HTTPStatus.NOT_FOUND, "This payee doesn't exist.")
+            raise OperationError(HTTPStatus.NOT_FOUND, "This payee doesn't exist.")
         if not is_valid(id_payee, id_user):
-            raise PayeeOperationError(HTTPStatus.FORBIDDEN, "This payee doesn't belong to this user.")
+            raise OperationError(HTTPStatus.FORBIDDEN, "This payee doesn't belong to this user.")
         if not is_deletable(id_payee):
-            raise PayeeOperationError(HTTPStatus.CONFLICT, "This payee has transactions. Delete the transactions first.")
+            raise OperationError(HTTPStatus.CONFLICT, "This payee has transactions. Delete the transactions first.")
         query = "delete from PAYEE where ID_PAYEE = (%s) and ID_USER = (%s)"
         db.execute_query(query, (id_payee, id_user), commit=True)
-    except Exception as error:
-        print(f"Exception in payee.delete() : {type(error)} - {type(error).__name__} - {error}")
-        raise error
+    except ValueError:
+        raise OperationError(HTTPStatus.BAD_REQUEST, "Invalid ID payee.")
 
-def list(id_user, unused):
-    try:
-        query = '''
-                select p.ID_PAYEE as id, p.PAYEE_NAME as name, 
-                case when count(txn.ID_TRANSACTION) > 0 then 0 else 1 end as can_be_deleted 
-                from PAYEE p left join TRANSACTION txn on txn.ID_PAYEE = p.ID_PAYEE 
-                where p.ID_USER = %s 
-                group by p.ID_PAYEE
-                '''
-        result = db.execute_query(query, (id_user,), fetch=True, dictionary=True)
-        return result
-    except Exception as err:
-        print(f"Could not fetch payees : {err}")
-        raise
+def list(id_user, request):
+    query = '''
+            select p.ID_PAYEE as id, p.PAYEE_NAME as name, 
+            case when count(txn.ID_TRANSACTION) > 0 then 0 else 1 end as can_be_deleted 
+            from PAYEE p left join TRANSACTION txn on txn.ID_PAYEE = p.ID_PAYEE 
+            where p.ID_USER = %s 
+            group by p.ID_PAYEE
+            '''
+    result = db.execute_query(query, (id_user,), fetch=True, dictionary=True)
+    return result
 
 def is_valid(id_payee, id_user=None):
     """

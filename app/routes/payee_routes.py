@@ -10,15 +10,7 @@ payee_bp = Blueprint('payee', __name__)
 @payee_bp.route('/payee/create', methods=['POST'])
 @swag_from('../docs/payee/payee_create.yml')
 def payee_create():
-    try:
-        if not request.is_json or 'payee_name' not in request.json:
-            raise ValueError
-        return handle_route_action(payee.create, create=True)
-    except ValueError:
-        return "", HTTPStatus.BAD_REQUEST
-    except Exception as error:
-        print(f"Exception in payee_routes.payee_create() : {type(error)} - {type(error).__name__} - {error}")
-        return "", HTTPStatus.INTERNAL_SERVER_ERROR
+    return handle_route_action(payee.create, mode='create')
 
 @payee_bp.route('/payee/delete', methods=['DELETE'])
 @swag_from('../docs/payee/payee_delete.yml')
@@ -26,7 +18,7 @@ def payee_delete():
     try:
         if not request.is_json or 'id_payee' not in request.json:
             raise PayeeOperationError(HTTPStatus.BAD_REQUEST, "The parameter ID payee is required.")
-        return handle_route_action(payee.delete, delete=True)
+        return handle_route_action(payee.delete, mode='delete')
     except ValueError:
         return "", HTTPStatus.BAD_REQUEST
     except PayeeOperationError as error:
