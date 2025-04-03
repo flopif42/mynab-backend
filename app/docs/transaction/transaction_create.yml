@@ -30,11 +30,11 @@ parameters:
         id_category:
           type: number
           description: The ID of the category for this transaction
-          example: 987654
+          example: 23
         id_payee:
           type: number
           description: The ID of the payee
-          example: 58
+          example: 581
         memo:
           type: string
           description: An optional memo for the transaction
