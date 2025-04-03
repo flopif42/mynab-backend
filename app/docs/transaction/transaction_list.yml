@@ -31,12 +31,11 @@ definitions:
         type: string
         description: An optional memo for the transaction
 parameters:
-  - in: path
+  - in: query
     name: id_account
-    schema:
-      type: integer
-      required: false
-      description: The ID account for which the transactions are attached to
+    type: integer
+    required: false
+    description: The ID account for which the transactions are attached to
 
 responses:
   200:
