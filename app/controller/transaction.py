@@ -47,8 +47,6 @@ def list(id_user, request):
         return db.execute_query(query, values, fetch=True, dictionary=True)
     except ValueError:
         raise OperationError(HTTPStatus.BAD_REQUEST, "Invalid ID account.")
-    except IntegrityError:
-        raise OperationError(HTTPStatus.BAD_REQUEST, "Some parameters are incorrect.")
 
 def create(id_user, request):
     try:
@@ -78,6 +76,9 @@ def create(id_user, request):
         return db.execute_query(query, values, commit=True)
     except ValueError:
         raise OperationError(HTTPStatus.BAD_REQUEST, "Invalid parameters.")
+    except IntegrityError:
+        raise OperationError(HTTPStatus.BAD_REQUEST, "Some parameters are incorrect.")
+
 
 def delete(id_user, request_params):
     try:
