@@ -49,10 +49,14 @@ responses:
         position: 5
         can_be_deleted: 0
         child_categories:
-          id: 8
-          name: Groceries
-          id_parent: 4
-          can_be_deleted: 1
+          - id: 8
+            name: Groceries
+            id_parent: 4
+            can_be_deleted: 1
+          - id: 9
+            name: Dining out
+            id_parent: 4
+            can_be_deleted: 1
 
   401:
     description: No user is logged in
