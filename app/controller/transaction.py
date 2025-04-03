@@ -55,15 +55,15 @@ def create(id_user, request):
         txn_date = mysql_format_date(validate_not_empty(request, 'date'))
 
         if request.json['id_payee']:
-            id_payee = int(validate_not_empty(request.json['id_payee']))
+            id_payee = int(validate_not_empty(request, 'id_payee'))
         else:
             id_payee = None
         if request.json['id_category']:
-            id_category = int(validate_not_empty(request.json['id_category']))
+            id_category = int(validate_not_empty(request, 'id_category'))
         else:
             id_category = None
         if request.json['memo']:
-            memo = validate_not_empty(request.json['memo'])
+            memo = validate_not_empty(request, 'memo')
         else:
             memo = None
 
