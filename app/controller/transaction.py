@@ -1,4 +1,5 @@
 from http import HTTPStatus
+from mysql.connector.errors import IntegrityError
 from flask import request
 import datetime as dt
 from app.sql_manager import SqlManager as db
@@ -46,6 +47,8 @@ def list(id_user, request):
         return db.execute_query(query, values, fetch=True, dictionary=True)
     except ValueError:
         raise OperationError(HTTPStatus.BAD_REQUEST, "Invalid ID account.")
+    except IntegrityError:
+        raise OperationError(HTTPStatus.BAD_REQUEST, "Some parameters are incorrect.")
 
 def create(id_user, request):
     try:
