@@ -15,10 +15,14 @@ parameters:
           type: number
           description: The ID of the account
           example: 987654
+        id_payee:
+          type: number
+          description: The ID of the payee
+          example: 581
         amount:
           type: number
           description: The transaction amount in cents
-          example: 1500
+          example: 1299
         flow:
           type: number
           description: "The flow of the transaction (-1 : Outflow, 1 : Inflow)"
@@ -31,16 +35,13 @@ parameters:
           type: number
           description: The ID of the category for this transaction
           example: 23
-        id_payee:
-          type: number
-          description: The ID of the payee
-          example: 581
         memo:
           type: string
           description: An optional memo for the transaction
           example: Subscription to Netflix
       required:
         - id_account
+        - id_payee
         - amount
         - flow
         - date
