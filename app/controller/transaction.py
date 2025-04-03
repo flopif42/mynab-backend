@@ -47,21 +47,35 @@ def list(id_user, request):
     except ValueError:
         raise OperationError(HTTPStatus.BAD_REQUEST, "Invalid ID account.")
 
-def create(id_user, request_params):
-    id_payee = request_params["id_payee"] if request_params.get("id_payee") else None
-    id_category = request_params["id_category"] if request_params.get("id_category") else None
+def create(id_user, request):
     try:
-        txn_date = mysql_format_date(request_params['date'])
+        id_account = int(validate_not_empty(request, 'id_account'))
+        flow = int(validate_not_empty(request, 'flow'))
+        amount = int(validate_not_empty(request, 'amount'))
+        txn_date = mysql_format_date(validate_not_empty(request, 'date'))
+
+        if request.json['id_payee']:
+            id_payee = int(validate_not_empty(request.json['id_payee']))
+        else:
+            id_payee = None
+        if request.json['id_category']:
+            id_category = int(validate_not_empty(request.json['id_category']))
+        else:
+            id_category = None
+        if request.json['memo']:
+            memo = validate_not_empty(request.json['memo'])
+        else:
+            memo = None
+
         query = """
                 insert into TRANSACTION 
-                (ID_USER, ID_ACCOUNT, ID_PAYEE, ID_CATEGORY, TRANSACTION_FLOW, TRANSACTION_AMOUNT, TRANSACTION_DATE, TRANSACTION_MEMO, IS_TRANSFER) 
+                (ID_USER, ID_ACCOUNT, ID_PAYEE, ID_CATEGORY, TRANSACTION_FLOW, TRANSACTION_AMOUNT, TRANSACTION_DATE, TRANSACTION_MEMO) 
                 VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)
                 """
-        values = (id_user, request_params['id_account'], id_payee, id_category, request_params['flow'], request_params['amount'], txn_date, request_params['memo'], request_params['is_transfer'])
+        values = (id_user, id_account, id_payee, id_category, flow, amount, txn_date, memo)
         return db.execute_query(query, values, commit=True)
-    except Exception as err:
-        print(f"Could not add the transaction : {err}")
-        raise
+    except ValueError:
+        raise OperationError(HTTPStatus.BAD_REQUEST, "Invalid parameters.")
 
 def delete(id_user, request_params):
     try:

@@ -9,18 +9,22 @@ def validate_not_empty(request, parameter_name):
     Return values : If the parameter is not empty, returns a stripped version of the parameter
     Exception : Raises OperationError with the 400 HTTP code if the parameter is empty
     """
-    error_message = f"Parameter {parameter_name} can't be empty."
-    if request.method == 'GET':
-        if not parameter_name in request.args:
+    try:
+        error_message = f"Parameter {parameter_name} can't be empty."
+        if request.method == 'GET':
+            if not parameter_name in request.args:
+                raise OperationError(HTTPStatus.BAD_REQUEST, error_message)
+            parameter = request.args.get(parameter_name)
+        else:
+            if not request.is_json or parameter_name not in request.json:
+                raise OperationError(HTTPStatus.BAD_REQUEST, error_message)
+            parameter = request.json[parameter_name]
+        if parameter is None:
             raise OperationError(HTTPStatus.BAD_REQUEST, error_message)
-        parameter = request.args.get(parameter_name)
-    else:
-        if not request.is_json or parameter_name not in request.json:
+        parameter = str(parameter).strip()
+        if parameter == '':
             raise OperationError(HTTPStatus.BAD_REQUEST, error_message)
-        parameter = request.json[parameter_name]
-    if parameter is None:
-        raise OperationError(HTTPStatus.BAD_REQUEST, error_message)
-    parameter = str(parameter).strip()
-    if parameter == '':
-        raise OperationError(HTTPStatus.BAD_REQUEST, error_message)
-    return parameter
+        return parameter
+    except Exception as error:
+        print(f"Exception in validate_not_empty() : {type(error).__name__} - {error} parameter_name = {parameter_name}")
+        raise error
