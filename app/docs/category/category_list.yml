@@ -2,30 +2,48 @@ Returns a list of all categories.
 ---
 tags:
   - Category
-consumes:
-  - application/json
-parameters:
-  - in: body
-    name: body
-    required: true
-    schema:
-      type: object
-      properties:
-        id_parent:
-          type: number
-          description: The ID of the parent category to attach this to
-          example: 58
-        category_name:
-          type: string
-          description: The name of the category
-          example: Electricity bill
-      required:
-        - category_name
-        - id_parent
+definitions:
+  ParentCategory:
+    type: object
+    properties:
+      id:
+        type: integer
+        description: The parent category number
+      name:
+        type: string
+        description: The parent category name
+      can_be_deleted:
+        type: integer
+        description: A boolean indicating if the parent category can be deleted
+      position:
+        type: integer
+        description: An index corresponding to the parent category's position when displayed
+
 responses:
-  201:
-    description: Category was created successfully
-  400:
-    description: Missing required parameters or incorrect parameters
+  200:
+    description: A list of parent categories and their respective child categories
+    schema:
+      $ref: '#/definitions/ParentCategory'
+    examples:
+      application/json:
+        id: 4
+        name: Food
+        position: 5
+        can_be_deleted: 0,
+        child_categories: [
+            {
+                id: 8
+                name: Groceries
+                id_parent: 4
+                can_be_deleted: 1
+                
+            },
+            {
+                id: 9
+                name: Restaurant
+                id_parent: 4
+                can_be_deleted: 0
+            }
+        ]
   401:
     description: No user is logged in
