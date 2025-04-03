@@ -29,21 +29,7 @@ responses:
         id: 4
         name: Food
         position: 5
-        can_be_deleted: 0,
-        child_categories: [
-            {
-                id: 8
-                name: Groceries
-                id_parent: 4
-                can_be_deleted: 1
-                
-            },
-            {
-                id: 9
-                name: Restaurant
-                id_parent: 4
-                can_be_deleted: 0
-            }
-        ]
+        can_be_deleted: 0
+        child_categories: x
   401:
     description: No user is logged in
