@@ -3,56 +3,25 @@ from flasgger import swag_from
 from http import HTTPStatus
 from app.routes.handler import handle_route_action
 from app.controller import account
-from app.controller.account import AccountOperationError
 
 account_bp = Blueprint('account', __name__)
-
-@account_bp.route('/account/set_status', methods=['PUT'])
-@swag_from('../docs/account/account_set_status.yml')
-def set_status():
-    try:
-        if not request.is_json:
-            raise AccountOperationError(HTTPStatus.BAD_REQUEST, "Missing parameters.")
-        if 'id_account' not in request.json:
-            raise AccountOperationError(HTTPStatus.BAD_REQUEST, "Missing parameters : id_account.")
-        if 'account_status' not in request.json:
-            raise AccountOperationError(HTTPStatus.BAD_REQUEST, "Missing parameters : account_status.")
-        return handle_route_action(account.set_status, update=True)
-    except AccountOperationError as error:
-        return { "error": error.args[1] }, error.args[0]
-    except Exception as error:
-        print(f"Exception in account_routes.set_status() : {type(error).__name__} - {error}")
-        return "", HTTPStatus.INTERNAL_SERVER_ERROR
 
 @account_bp.route('/account/list', methods=['GET'])
 @swag_from('../docs/account/account_list.yml')
 def account_list():
     return handle_route_action(account.list)
 
-@account_bp.route('/account/delete', methods=['DELETE'])
-@swag_from('../docs/account/account_delete.yml')
-def account_delete():
-    try:
-        if not request.is_json or 'id_account' not in request.json:
-            raise AccountOperationError(HTTPStatus.BAD_REQUEST, "The parameter ID account is required.")
-        return handle_route_action(account.delete, delete=True)
-    except ValueError:
-        return "", HTTPStatus.BAD_REQUEST
-    except AccountOperationError as error:
-        return { "error": error.args[1] }, error.args[0]
-    except Exception as error:
-        print(f"Exception in account_routes.account_delete() : {type(error).__name__} - {error}")
-        return "", HTTPStatus.INTERNAL_SERVER_ERROR
-
 @account_bp.route('/account/create', methods=['POST'])
 @swag_from('../docs/account/account_create.yml')
 def account_create():
-    try:
-        if not request.is_json or 'account_name' not in request.json or 'account_type' not in request.json:
-            raise ValueError
-        return handle_route_action(account.create, create=True)
-    except ValueError:
-        return "", HTTPStatus.BAD_REQUEST
-    except Exception as error:
-        print(f"Exception in account_routes.account_create() : {type(error)} - {type(error).__name__} - {error}")
-        return "", HTTPStatus.INTERNAL_SERVER_ERROR
+    return handle_route_action(account.create, mode='create')
+
+@account_bp.route('/account/delete', methods=['DELETE'])
+@swag_from('../docs/account/account_delete.yml')
+def account_delete():
+    return handle_route_action(account.delete, mode='delete')
+
+@account_bp.route('/account/set_status', methods=['PUT'])
+@swag_from('../docs/account/account_set_status.yml')
+def set_status():
+    return handle_route_action(account.set_status, mode='update')

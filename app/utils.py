@@ -11,7 +11,7 @@ def validate_not_empty(request, parameter_name):
     """
     try:
         error_message = f"Parameter {parameter_name} can't be empty."
-        if request.method == 'GET':
+        if request.method == 'GET' or request.method == 'DELETE':
             if not parameter_name in request.args:
                 raise OperationError(HTTPStatus.BAD_REQUEST, error_message)
             parameter = request.args.get(parameter_name)
