@@ -74,7 +74,6 @@ def create(id_user, request):
         print(f"Exception in transaction.create() : {type(error).__name__} - {error}")
         raise error
 
-
 def delete(id_user, request):
     try:
         id_transaction = int(validate_not_empty(request, 'id_transaction'))
@@ -103,7 +102,6 @@ def sql_create(id_user, id_account, id_payee, id_category, flow, amount, txn_dat
         print(f"Exception in transaction.sql_create() : {type(error).__name__} - {error}")
         raise error
 
-
 def is_transfer(id_transaction):
     query = "select IS_TRANSFER from TRANSACTION where ID_TRANSACTION = %s"
     result = db.execute_query(query, (id_transaction,), fetch=True)
@@ -126,7 +124,6 @@ def get_transfer_id(id_transaction):
 def mysql_format_date(date_string):
     return dt.datetime.strftime(dt.datetime.strptime(date_string, '%d/%m/%Y'), '%Y-%m-%d')
 
-# Helper functions
 def is_valid(id_transaction, id_user):
     """
     This function is used to check if the provided id_transaction exists and belongs to the right id_user.
