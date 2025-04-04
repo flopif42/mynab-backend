@@ -1,8 +1,9 @@
 import re
 import mysql.connector
-from app.sql_manager import SqlManager
+from app.sql_manager import SqlManager as db
 from pydantic import BaseModel, EmailStr, field_validator
 from typing import Optional
+from app.utils import validate_not_empty
     
 # This class is used to validate data
 class UserSignUpParams(BaseModel):
@@ -29,10 +30,24 @@ class UserSignUpParams(BaseModel):
             raise ValueError('Password must be a valid MD5 hash')
         return value
 
+def is_email_available(unused, email_address):
+    """
+    This function checks the database to see if the specified email address is available to use to sign up.
+    
+    Return values:
+        True : The email address is available
+        False : The email address is not available
+    """
+    try:
+        email_address = validate_not_empty(request, 'email_address')
+        query = "select 1 from USER where EMAIL_ADDRESS = (%s)"
+        result = db.execute_query(query, (email_address,), fetch=True)
+        return { 'available' : not len(result) }
+
 def get_profile(id_user, unused):
     try:
         query = "select FIRST_NAME as first_name, LAST_NAME as last_name, EMAIL_ADDRESS as email_address from USER where ID_USER = (%s)"
-        result = SqlManager.execute_query(query, (id_user,), fetch=True, dictionary=True)
+        result = db.execute_query(query, (id_user,), fetch=True, dictionary=True)
         return result[0]
     except Exception as error:
         print(f"Exception in get_profile() : {type(error)} - {type(error).__name__} - {error}")
@@ -41,7 +56,7 @@ def get_profile(id_user, unused):
 def login(request_params):
     try:
         query = "select ID_USER from USER where EMAIL_ADDRESS = (%s) and PASSPHRASE_MD5 = (%s)"
-        result = SqlManager.execute_query(query, (request_params['email_address'], request_params['passphrase_md5']), fetch=True)
+        result = db.execute_query(query, (request_params['email_address'], request_params['passphrase_md5']), fetch=True)
         id_user = result[0][0] if len(result) else None
         return id_user
     except Exception as error:
@@ -65,9 +80,9 @@ def signup(request_params):
             user_params.email_address,
             user_params.passphrase_md5
         )
-        id_user = SqlManager.execute_query(query, values, commit=True)
-        SqlManager.execute_query("insert into PARENT_CATEGORY (ID_PARENT_CATEGORY, ID_USER, PARENT_CATEGORY_NAME) values (0, (%s), '(system)')", (id_user,), commit=True)
-        SqlManager.execute_query("insert into CATEGORY (ID_CATEGORY, ID_USER, ID_PARENT_CATEGORY, CATEGORY_NAME) values (0, (%s), 0, 'Income')", (id_user,), commit=True)
+        id_user = db.execute_query(query, values, commit=True)
+        db.execute_query("insert into PARENT_CATEGORY (ID_PARENT_CATEGORY, ID_USER, PARENT_CATEGORY_NAME) values (0, (%s), '(system)')", (id_user,), commit=True)
+        db.execute_query("insert into CATEGORY (ID_CATEGORY, ID_USER, ID_PARENT_CATEGORY, CATEGORY_NAME) values (0, (%s), 0, 'Income')", (id_user,), commit=True)
     except ValueError as e:
         print("Validation failed:", e)
         raise e
@@ -75,25 +90,4 @@ def signup(request_params):
         raise RuntimeError("Could not create user : email address already used")
     except Exception as error:
         print(f"Exception in signup() : {type(error)} - {type(error).__name__} - {error}")
-        raise error
-        
-def is_email_available(email_address):
-    """
-    This function checks the database to see if the specified email address is available to use to sign up.
-    
-    Return values:
-        True : The email address is available
-        False : The email address is not available
-    """
-    try:
-        query = "select 1 from USER where EMAIL_ADDRESS = (%s)"
-        result = SqlManager.execute_query(query, (email_address,), fetch=True)
-        if len(result) == 0:
-            return True
-        elif len(result) == 1:
-            return False
-        else:
-            raise
-    except Exception as error:
-        print(f"Exception in is_available() : {type(error)} - {type(error).__name__} - {error}")
         raise error

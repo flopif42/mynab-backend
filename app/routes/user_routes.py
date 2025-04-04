@@ -39,16 +39,7 @@ def sign_up():
 @user_bp.route('/user/check_email_available', methods=['GET'])
 @swag_from('../docs/user/check_email_available.yml')
 def check_email_available():
-    try:
-        email_address = request.args.get("email_address")
-        if not email_address:
-            raise ValueError
-        return { "available" : user.is_available(email_address) }, HTTPStatus.OK
-    except ValueError:
-        return "", HTTPStatus.BAD_REQUEST
-    except Exception as error:
-        print(f"Exception in user_routes.check_email_available() : {type(error)} - {type(error).__name__} - {error}")
-        return "", HTTPStatus.INTERNAL_SERVER_ERROR
+    return handle_route_action(user.is_email_available, auth_required=False)
 
 @user_bp.route('/user/profile', methods=['GET'])
 @swag_from('../docs/user/user_profile.yml')
