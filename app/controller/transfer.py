@@ -46,6 +46,10 @@ def create(id_user, request):
         return db.execute_query(query, (id_user, id_txn_outflow, id_txn_inflow), commit=True)
     except ValueError:
         raise OperationError(HTTPStatus.BAD_REQUEST, "Invalid parameters.")
+    except Exception as error:
+        print(f"Exception in transfer.create() : {type(error).__name__} - {error}")
+        raise error
+
 
 def delete(id_user, id_transfer):
     try:
