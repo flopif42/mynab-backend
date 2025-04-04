@@ -70,6 +70,10 @@ def create(id_user, request):
         raise OperationError(HTTPStatus.BAD_REQUEST, "Invalid parameters.")
     except IntegrityError:
         raise OperationError(HTTPStatus.BAD_REQUEST, "Some parameters are incorrect.")
+    except Exception as error:
+        print(f"Exception in transaction.create() : {type(error).__name__} - {error}")
+        raise error
+
 
 def delete(id_user, request_params):
     try:
@@ -86,13 +90,18 @@ def delete(id_user, request_params):
 
 # Utilities functions
 def sql_create(id_user, id_account, id_payee, id_category, flow, amount, txn_date, memo, is_transfer=0):
-    query = """
-            insert into TRANSACTION 
-            (ID_USER, ID_ACCOUNT, ID_PAYEE, ID_CATEGORY, TRANSACTION_FLOW, TRANSACTION_AMOUNT, TRANSACTION_DATE, TRANSACTION_MEMO, IS_TRANSFER) 
-            VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)
-            """
-    values = (id_user, id_account, id_payee, id_category, flow, amount, txn_date, memo, is_transfer)
-    return db.execute_query(query, values, commit=True)
+    try:    
+        query = """
+                insert into TRANSACTION 
+                (ID_USER, ID_ACCOUNT, ID_PAYEE, ID_CATEGORY, TRANSACTION_FLOW, TRANSACTION_AMOUNT, TRANSACTION_DATE, TRANSACTION_MEMO, IS_TRANSFER) 
+                VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)
+                """
+        values = (id_user, id_account, id_payee, id_category, flow, amount, txn_date, memo, is_transfer)
+        return db.execute_query(query, values, commit=True)
+    except Exception as error:
+        print(f"Exception in transaction.sql_create() : {type(error).__name__} - {error}")
+        raise error
+
 
 def is_transfer(id_transaction):
     query = "select IS_TRANSFER from TRANSACTION where ID_TRANSACTION = %s"
