@@ -33,7 +33,7 @@ class UserSignUpParams(BaseModel):
             raise ValueError('Password must be a valid MD5 hash')
         return value
 
-def login(id_user_unused, request):
+def login(request):
     email_address = validate_not_empty(request, 'email_address')
     passphrase_md5 = validate_not_empty(request, 'passphrase_md5')
     query = "select ID_USER from USER where EMAIL_ADDRESS = (%s) and PASSPHRASE_MD5 = (%s)"
