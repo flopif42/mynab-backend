@@ -1,30 +1,29 @@
+from http import HTTPStatus
 from app.sql_manager import SqlManager
-from app.controller import account, transaction
+from app.controller import transaction
+import app.controller.account as account
+from app.exceptions import OperationError
+from app.utils import validate_not_empty
 
-def create(id_user, request_params):
-    # request_params contains the following :
-    # id_account_outflow, id_account_inflow, amount, date, memo
-    
-    id_account_outflow = request_params['id_account_outflow']
-    id_account_inflow = request_params['id_account_inflow']
-
-    # Make sure the id_accounts belong to the right user
-    query_check = "select 1 from ACCOUNT where ID_USER = (%s) and ID_ACCOUNT in ((%s),(%s))"
-    values = (id_user, id_account_outflow, id_account_inflow)
-    rows = SqlManager.execute_query(query_check, (id_user, id_account_outflow, id_account_inflow), fetch=True)
-    if len(rows) < 2:
-        print(f"Error : transfer incorrect : at least one off the accounts does not belong to the user.")
-        raise
-
-    # Make sure the id_accounts From and To are different
-    if id_account_outflow == id_account_inflow:
-        print(f"Error : Cannot make transfer between the same account.")
-        raise
+def create(id_user, request):
     try:
+        id_account_outflow = int(validate_not_empty(request, 'id_account_outflow'))
+        id_account_inflow = int(validate_not_empty(request, 'id_account_inflow'))
+        amount = int(validate_not_empty(request, 'amount'))
+        transfer_date = mysql_format_date(validate_not_empty(request, 'date'))
+
+        if not account.is_valid(id_account_outflow, id_user) or not account.is_valid(id_account_inflow, id_user):
+            raise OperationError(HTTPStatus.FORBIDDEN, "This account doesn't belong to this user.")
+        if id_account_outflow == id_account_inflow:
+            raise OperationError(HTTPStatus.BAD_REQUEST, "The from and to accounts must be different.")
+        if request.json.get('memo'):
+            memo = validate_not_empty(request, 'memo')
+        else:
+            memo = None
         insert_values = {
-            "amount": request_params['amount'],
-            "date": request_params['date'],
-            "memo": request_params['memo'],
+            "amount": amount,
+            "date": transfer_date,
+            "memo": memo,
             "is_transfer": 1
         }
 
@@ -39,30 +38,28 @@ def create(id_user, request_params):
         id_txn_inflow = transaction.create(id_user, insert_values)
 
         # 3. create transfer record
-        query = (
-            "insert into TRANSFER "
-            "(ID_USER, ID_TRANSACTION_OUTFLOW, ID_TRANSACTION_INFLOW ) "
-            "values (%s, %s, %s)"
-        )
-        result = SqlManager.execute_query(query, (id_user, id_txn_outflow, id_txn_inflow), commit=True)
-        return result
-    except Exception as err:
-        print(f"Could not create transfer : {err}")
-        raise
+        query = '''
+                insert into TRANSFER 
+                (ID_USER, ID_TRANSACTION_OUTFLOW, ID_TRANSACTION_INFLOW ) 
+                values (%s, %s, %s)
+                '''
+        return db.execute_query(query, (id_user, id_txn_outflow, id_txn_inflow), commit=True)
+    except ValueError:
+        raise OperationError(HTTPStatus.BAD_REQUEST, "Invalid ID account.")
 
 def delete(id_user, id_transfer):
     try:
         # Retrieve the transcation ids associated with the transfer
         query_retrieve = "select ID_TRANSACTION_OUTFLOW, ID_TRANSACTION_INFLOW from TRANSFER where ID_TRANSFER = (%s)"
-        result_retrieve = SqlManager.execute_query(query_retrieve, (id_transfer,), fetch=True)
+        result_retrieve = db.execute_query(query_retrieve, (id_transfer,), fetch=True)
 
         # delete the transfer
         query = "delete from TRANSFER where ID_USER = (%s) and ID_TRANSFER = (%s)"
-        result = SqlManager.execute_query(query, (id_user, id_transfer,), commit=True)
+        result = db.execute_query(query, (id_user, id_transfer,), commit=True)
 
         # delete the associated transactions
         query = "delete from TRANSACTION where ID_USER = (%s) and ID_TRANSACTION in ((%s), (%s))"
-        result = SqlManager.execute_query(query, (id_user,) + result_retrieve[0], commit=True)
+        result = db.execute_query(query, (id_user,) + result_retrieve[0], commit=True)
         return result
     except Exception as err:
         print(f"Could not delete transfer: {err}")

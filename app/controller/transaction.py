@@ -1,16 +1,15 @@
 from http import HTTPStatus
 from mysql.connector.errors import IntegrityError
-from flask import request
 import datetime as dt
 from app.sql_manager import SqlManager as db
-import app.controller.account as acc
+import app.controller.account as account
 from app.exceptions import OperationError
 from app.utils import validate_not_empty
 
 def list(id_user, request):
     try:
         query = """
-                select acc.ACCOUNT_NAME as account, 
+                select a.ACCOUNT_NAME as account, 
                     txn.ID_TRANSACTION as id, 
                     case 
                         when (txn.IS_TRANSFER=1 and txn.TRANSACTION_FLOW = -1) then concat('Transfer to: ', acc_trs_out.ACCOUNT_NAME) 
@@ -22,7 +21,7 @@ def list(id_user, request):
                     date_format(txn.TRANSACTION_DATE, '%d/%m/%Y') as date, 
                     txn.TRANSACTION_MEMO as memo 
                 from TRANSACTION txn 
-                    inner join ACCOUNT acc on acc.ID_ACCOUNT = txn.ID_ACCOUNT 
+                    inner join ACCOUNT a on a.ID_ACCOUNT = txn.ID_ACCOUNT 
                     left join PAYEE pay on pay.ID_PAYEE = txn.ID_PAYEE 
                     left join CATEGORY cat on txn.ID_USER = cat.ID_USER and txn.ID_CATEGORY = cat.ID_CATEGORY 
                     left join TRANSFER trs_out on trs_out.ID_TRANSACTION_OUTFLOW = txn.ID_TRANSACTION and txn.TRANSACTION_FLOW = -1 
@@ -37,9 +36,9 @@ def list(id_user, request):
         # The following code is to handle calls where id_account is specified
         if request and request.args.get('id_account'):
             id_account = int(validate_not_empty(request, 'id_account'))
-            if not acc.is_valid(id_account):
+            if not account.is_valid(id_account):
                 raise OperationError(HTTPStatus.NOT_FOUND, "This account doesn't exist.")
-            if not acc.is_valid(id_account, id_user):
+            if not account.is_valid(id_account, id_user):
                 raise OperationError(HTTPStatus.FORBIDDEN, "This account doesn't belong to this user.")
             query += "and txn.ID_ACCOUNT = (%s) "
             values += (id_account,)
