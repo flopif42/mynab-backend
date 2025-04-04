@@ -1,4 +1,5 @@
 import datetime as dt
+from mysql.connector.errors import IntegrityError
 from app.sql_manager import SqlManager as db
 from http import HTTPStatus
 from app.exceptions import OperationError
