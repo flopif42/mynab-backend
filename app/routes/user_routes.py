@@ -9,7 +9,7 @@ user_bp = Blueprint('user', __name__)
 @user_bp.route('/user/login', methods=['POST'])
 @swag_from('../docs/user/user_login.yml')
 def user_login():
-    return handle_route_action(user.login, auth_required=False)
+    return user.login()
 
 @user_bp.route('/user/sign-up', methods=['POST'])
 @swag_from('../docs/user/signup.yml')
