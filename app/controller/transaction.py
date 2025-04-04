@@ -2,7 +2,8 @@ from http import HTTPStatus
 from mysql.connector.errors import IntegrityError
 import datetime as dt
 from app.sql_manager import SqlManager as db
-import app.controller.account as account
+from app.controller import account
+from app.controller import transfer
 from app.exceptions import OperationError
 from app.utils import validate_not_empty
 
