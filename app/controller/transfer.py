@@ -45,7 +45,8 @@ def create(id_user, request):
                 (ID_USER, ID_TRANSACTION_OUTFLOW, ID_TRANSACTION_INFLOW ) 
                 values (%s, %s, %s)
                 '''
-        return db.execute_query(query, (id_user, id_txn_outflow, id_txn_inflow), commit=True)
+        db.execute_query(query, (id_user, id_txn_outflow, id_txn_inflow), commit=True)
+        return ''
     except ValueError:
         raise OperationError(HTTPStatus.BAD_REQUEST, "Invalid parameters.")
     except Exception as error:
