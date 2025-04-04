@@ -1,5 +1,5 @@
 from http import HTTPStatus
-from app.sql_manager import SqlManager
+from app.sql_manager import SqlManager as db
 from app.controller import transaction
 import app.controller.account as account
 from app.exceptions import OperationError
