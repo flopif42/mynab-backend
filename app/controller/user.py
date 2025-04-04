@@ -30,19 +30,6 @@ class UserSignUpParams(BaseModel):
             raise ValueError('Password must be a valid MD5 hash')
         return value
 
-def is_email_available(id_user, request):
-    """
-    This function checks the database to see if the specified email address is available to use to sign up.
-    
-    Return values:
-        True : The email address is available
-        False : The email address is not available
-    """
-    email_address = validate_not_empty(request, 'email_address')
-    query = "select 1 from USER where EMAIL_ADDRESS = (%s)"
-    result = db.execute_query(query, (email_address,), fetch=True)
-    return { 'available' : not len(result) }
-
 def get_profile(id_user, unused):
     try:
         query = "select FIRST_NAME as first_name, LAST_NAME as last_name, EMAIL_ADDRESS as email_address from USER where ID_USER = (%s)"
@@ -62,7 +49,7 @@ def login(request_params):
         print(f"Exception in login() : {type(error)} - {type(error).__name__} - {error}")
         raise error
 
-def signup(request_params):
+def signup(unused, request):
     """
     This function checks the validity of sign up parameters and if all is ok, creates the user in the database.
     
@@ -71,7 +58,7 @@ def signup(request_params):
         IntegrityError : the submitted email address is already used
     """
     try:
-        user_params = UserSignUpParams(**request_params)
+        user_params = UserSignUpParams(**request.json)
         query = "insert into USER (FIRST_NAME, LAST_NAME, EMAIL_ADDRESS, PASSPHRASE_MD5) values (%s, %s, %s, %s)"
         values = (
             user_params.first_name,
@@ -82,11 +69,20 @@ def signup(request_params):
         id_user = db.execute_query(query, values, commit=True)
         db.execute_query("insert into PARENT_CATEGORY (ID_PARENT_CATEGORY, ID_USER, PARENT_CATEGORY_NAME) values (0, (%s), '(system)')", (id_user,), commit=True)
         db.execute_query("insert into CATEGORY (ID_CATEGORY, ID_USER, ID_PARENT_CATEGORY, CATEGORY_NAME) values (0, (%s), 0, 'Income')", (id_user,), commit=True)
-    except ValueError as e:
-        print("Validation failed:", e)
-        raise e
+    except ValueError:
+        raise OperationError(HTTPStatus.BAD_REQUEST, "Invalid parameters.")
     except mysql.connector.IntegrityError:
-        raise RuntimeError("Could not create user : email address already used")
-    except Exception as error:
-        print(f"Exception in signup() : {type(error)} - {type(error).__name__} - {error}")
-        raise error
+        raise OperationError(HTTPStatus.CONFLICT, "Could not create user : email address already used.")
+
+def is_email_available(id_user, request):
+    """
+    This function checks the database to see if the specified email address is available to use to sign up.
+    
+    Return values:
+        True : The email address is available
+        False : The email address is not available
+    """
+    email_address = validate_not_empty(request, 'email_address')
+    query = "select 1 from USER where EMAIL_ADDRESS = (%s)"
+    result = db.execute_query(query, (email_address,), fetch=True)
+    return { 'available' : not len(result) }

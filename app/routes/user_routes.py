@@ -22,19 +22,7 @@ def user_login():
 @user_bp.route('/user/sign-up', methods=['POST'])
 @swag_from('../docs/user/signup.yml')
 def sign_up():
-    try:
-        if not request.is_json or 'email_address' not in request.json or 'passphrase_md5' not in request.json:
-            raise ValueError
-        user.signup(request.json)
-        return "", HTTPStatus.CREATED
-    except ValueError:
-        return "", HTTPStatus.BAD_REQUEST
-    except RuntimeError as integrity_error:
-        print(integrity_error)
-        return "", HTTPStatus.CONFLICT # 409
-    except Exception as error:
-        print(f"Exception in user_routes.sign_up() : {type(error)} - {type(error).__name__} - {error}")
-        return "", HTTPStatus.INTERNAL_SERVER_ERROR
+    return handle_route_action(user.signup, auth_required=False)
 
 @user_bp.route('/user/check_email_available', methods=['GET'])
 @swag_from('../docs/user/check_email_available.yml')
