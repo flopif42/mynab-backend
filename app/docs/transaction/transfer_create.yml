@@ -1,0 +1,45 @@
+Adds a new transfer.
+---
+tags:
+  - Transaction
+consumes:
+  - application/json
+parameters:
+  - in: body
+    name: body
+    required: true
+    schema:
+      type: object
+      properties:
+        id_account_outflow:
+          type: number
+          description: The ID of the outflow account (where the money goes out from)
+          example: 987654
+        id_account_inflow:
+          type: number
+          description: The ID of the inflow account (where the money goes into)
+          example: 123456
+        amount:
+          type: number
+          description: The transfer amount in cents
+          example: 20000
+        date:
+          type: string
+          description: The transfer date in DD/MM/YYYY format
+          example: 03/04/2025
+        memo:
+          type: string
+          description: An optional memo for the transfer
+          example: Wire to my Savings account
+      required:
+        - id_account_outflow
+        - id_account_inflow
+        - amount
+        - date
+responses:
+  201:
+    description: Transfer was created successfully
+  400:
+    description: Missing required parameters or incorrect parameters
+  401:
+    description: No user is logged in

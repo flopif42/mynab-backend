@@ -49,9 +49,6 @@ def create(id_user, request):
         return ''
     except ValueError:
         raise OperationError(HTTPStatus.BAD_REQUEST, "Invalid parameters.")
-    except Exception as error:
-        print(f"Exception in transfer.create() : {type(error).__name__} - {error}")
-        raise error
 
 # Utilities functions
 def delete(id_user, id_transfer):
