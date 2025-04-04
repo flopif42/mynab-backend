@@ -53,21 +53,16 @@ def create(id_user, request):
         print(f"Exception in transfer.create() : {type(error).__name__} - {error}")
         raise error
 
-
+# Utilities functions
 def delete(id_user, id_transfer):
-    try:
-        # Retrieve the transcation ids associated with the transfer
-        query_retrieve = "select ID_TRANSACTION_OUTFLOW, ID_TRANSACTION_INFLOW from TRANSFER where ID_TRANSFER = (%s)"
-        result_retrieve = db.execute_query(query_retrieve, (id_transfer,), fetch=True)
+    # Retrieve the transcation ids associated with the transfer
+    query_retrieve = "select ID_TRANSACTION_OUTFLOW, ID_TRANSACTION_INFLOW from TRANSFER where ID_TRANSFER = (%s)"
+    result_retrieve = db.execute_query(query_retrieve, (id_transfer,), fetch=True)
 
-        # delete the transfer
-        query = "delete from TRANSFER where ID_USER = (%s) and ID_TRANSFER = (%s)"
-        result = db.execute_query(query, (id_user, id_transfer,), commit=True)
+    # delete the row in the TRANSFER table
+    query = "delete from TRANSFER where ID_USER = (%s) and ID_TRANSFER = (%s)"
+    db.execute_query(query, (id_user, id_transfer,), commit=True)
 
-        # delete the associated transactions
-        query = "delete from TRANSACTION where ID_USER = (%s) and ID_TRANSACTION in ((%s), (%s))"
-        result = db.execute_query(query, (id_user,) + result_retrieve[0], commit=True)
-        return result
-    except Exception as err:
-        print(f"Could not delete transfer: {err}")
-        raise
+    # delete the associated rows in the TRANSACTION table
+    query = "delete from TRANSACTION where ID_USER = (%s) and ID_TRANSACTION in ((%s), (%s))"
+    db.execute_query(query, (id_user,) + result_retrieve[0], commit=True)
