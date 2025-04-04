@@ -1,9 +1,10 @@
 from http import HTTPStatus
 import re
+from typing import Optional
 import mysql.connector
 from app.sql_manager import SqlManager as db
+from app.jwt_manager import JwtManager
 from pydantic import BaseModel, EmailStr, field_validator
-from typing import Optional
 from app.utils import validate_not_empty
 from app.exceptions import OperationError
     

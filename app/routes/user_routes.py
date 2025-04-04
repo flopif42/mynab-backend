@@ -3,7 +3,6 @@ from flasgger import swag_from
 from http import HTTPStatus
 from app.routes.handler import handle_route_action
 from app.controller import user
-from app.jwt_manager import JwtManager
 
 user_bp = Blueprint('user', __name__)
 
