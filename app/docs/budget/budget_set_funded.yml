@@ -14,7 +14,7 @@ parameters:
         id_period:
           type: string
           description: The period in this format YYYY_MM
-          example: 2025_04
+          example: "2025_04"
         id_category:
           type: number
           description: The category ID number
