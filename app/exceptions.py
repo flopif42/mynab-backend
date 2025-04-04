@@ -2,12 +2,13 @@ class OperationError(Exception):
 	def __init__(self, http_status_code, error_message):
 		self.http_status_code = http_status_code
 		self.error_message = error_message
-		print(f'init called with {http_status_code} and {error_message}')
 
-	def get_status(self):
+	@property
+	def status(self):
 		return self.http_status_code
 
-	def get_message(self):
+	@property
+	def message(self):
 		return self.error_message
 
 	def __str__(self):
