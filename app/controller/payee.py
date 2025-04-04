@@ -3,6 +3,16 @@ from http import HTTPStatus
 from app.exceptions import OperationError
 from app.utils import validate_not_empty
 
+def list(id_user, request):
+    query = '''
+            select p.ID_PAYEE as id, p.PAYEE_NAME as name, 
+            case when count(txn.ID_TRANSACTION) > 0 then 0 else 1 end as can_be_deleted 
+            from PAYEE p left join TRANSACTION txn on txn.ID_PAYEE = p.ID_PAYEE 
+            where p.ID_USER = %s 
+            group by p.ID_PAYEE
+            '''
+    return db.execute_query(query, (id_user,), fetch=True, dictionary=True)
+
 def create(id_user, request):
     payee_name = validate_not_empty(request, 'payee_name')
     if len(payee_name) > 70:
@@ -24,17 +34,7 @@ def delete(id_user, request):
     except ValueError:
         raise OperationError(HTTPStatus.BAD_REQUEST, "Invalid ID payee.")
 
-def list(id_user, request):
-    query = '''
-            select p.ID_PAYEE as id, p.PAYEE_NAME as name, 
-            case when count(txn.ID_TRANSACTION) > 0 then 0 else 1 end as can_be_deleted 
-            from PAYEE p left join TRANSACTION txn on txn.ID_PAYEE = p.ID_PAYEE 
-            where p.ID_USER = %s 
-            group by p.ID_PAYEE
-            '''
-    result = db.execute_query(query, (id_user,), fetch=True, dictionary=True)
-    return result
-
+# Helper functions
 def is_valid(id_payee, id_user=None):
     """
     This function is used to check the existence of id_payee in the table. If id_user is provided,
