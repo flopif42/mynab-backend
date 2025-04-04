@@ -1,4 +1,4 @@
-Adds a new parent category.
+Returns a list of transactions
 ---
 tags:
   - Transaction

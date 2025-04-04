@@ -1,0 +1,36 @@
+Sets the funded amount for one category for one particular month.
+---
+tags:
+  - Budget
+consumes:
+  - application/json
+parameters:
+  - in: body
+    name: body
+    required: true
+    schema:
+      type: object
+      properties:
+        id_period:
+          type: string
+          description: The period in this format YYYY_MM
+          example: 2025_04
+        id_category:
+          type: number
+          description: The category ID number
+          example: 42
+        amount:
+          type: number
+          description: The amount in cents
+          example: 10000
+      required:
+        - id_period
+        - id_category
+        - amount
+responses:
+  204:
+    description: Funded amount status was successfully updated
+  400:
+    description: Missing required parameter or incorrect parameter
+  401:
+    description: No user is logged in

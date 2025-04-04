@@ -1,0 +1,9 @@
+Returns the budget.
+---
+tags:
+  - Budget
+responses:
+  200:
+    description: The budget by month and category
+  401:
+    description: No user is logged in
