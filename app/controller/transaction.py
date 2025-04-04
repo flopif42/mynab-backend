@@ -65,7 +65,7 @@ def create(id_user, request):
             memo = validate_not_empty(request, 'memo')
         else:
             memo = None
-       return sql_create(id_user, id_account, id_payee, id_category, flow, amount, txn_date, memo):
+       return sql_create(id_user, id_account, id_payee, id_category, flow, amount, txn_date, memo)
     except ValueError:
         raise OperationError(HTTPStatus.BAD_REQUEST, "Invalid parameters.")
     except IntegrityError:
