@@ -62,6 +62,7 @@ def set_status(id_user, request):
     except ValueError:
         raise OperationError(HTTPStatus.BAD_REQUEST, "Invalid parameters.")
 
+# Helper functions
 def is_valid(id_account, id_user=None):
     """
     This function is used to check the existence of id_account in the table. If id_user is provided,

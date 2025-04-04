@@ -14,8 +14,7 @@ def account_list():
 @account_bp.route('/account/create', methods=['POST'])
 @swag_from('../docs/account/account_create.yml')
 def account_create():
-    response = handle_route_action(account.create, mode='create')
-    return response
+    return handle_route_action(account.create, mode='create')
 
 @account_bp.route('/account/delete', methods=['DELETE'])
 @swag_from('../docs/account/account_delete.yml')
