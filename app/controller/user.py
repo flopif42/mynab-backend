@@ -32,15 +32,6 @@ class UserSignUpParams(BaseModel):
             raise ValueError('Password must be a valid MD5 hash')
         return value
 
-def get_profile(id_user, unused):
-    try:
-        query = "select FIRST_NAME as first_name, LAST_NAME as last_name, EMAIL_ADDRESS as email_address from USER where ID_USER = (%s)"
-        result = db.execute_query(query, (id_user,), fetch=True, dictionary=True)
-        return result[0]
-    except Exception as error:
-        print(f"Exception in get_profile() : {type(error)} - {type(error).__name__} - {error}")
-        raise error
-
 def login(request_params):
     try:
         query = "select ID_USER from USER where EMAIL_ADDRESS = (%s) and PASSPHRASE_MD5 = (%s)"
@@ -88,3 +79,8 @@ def is_email_available(id_user, request):
     query = "select 1 from USER where EMAIL_ADDRESS = (%s)"
     result = db.execute_query(query, (email_address,), fetch=True)
     return { 'available' : not len(result) }
+
+def get_profile(id_user, request):
+    query = "select FIRST_NAME as first_name, LAST_NAME as last_name, EMAIL_ADDRESS as email_address from USER where ID_USER = (%s)"
+    result = db.execute_query(query, (id_user,), fetch=True, dictionary=True)
+    return result[0]
