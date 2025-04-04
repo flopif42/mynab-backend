@@ -10,7 +10,7 @@ def create(id_user, request):
         id_account_outflow = int(validate_not_empty(request, 'id_account_outflow'))
         id_account_inflow = int(validate_not_empty(request, 'id_account_inflow'))
         amount = int(validate_not_empty(request, 'amount'))
-        transfer_date = mysql_format_date(validate_not_empty(request, 'date'))
+        transfer_date = transaction.mysql_format_date(validate_not_empty(request, 'date'))
 
         if not account.is_valid(id_account_outflow, id_user) or not account.is_valid(id_account_inflow, id_user):
             raise OperationError(HTTPStatus.FORBIDDEN, "This account doesn't belong to this user.")
