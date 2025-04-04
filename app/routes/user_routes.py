@@ -32,4 +32,4 @@ def check_email_available():
 @user_bp.route('/user/profile', methods=['GET'])
 @swag_from('../docs/user/user_profile.yml')
 def user_profile():
-    return handle_route_action(user.get_profile, auth_required=False)
+    return handle_route_action(user.get_profile)
