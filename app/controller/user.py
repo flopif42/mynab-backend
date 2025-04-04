@@ -4,6 +4,7 @@ from app.sql_manager import SqlManager as db
 from pydantic import BaseModel, EmailStr, field_validator
 from typing import Optional
 from app.utils import validate_not_empty
+from app.exceptions import OperationError
     
 # This class is used to validate data
 class UserSignUpParams(BaseModel):
