@@ -75,18 +75,19 @@ def create(id_user, request):
         raise error
 
 
-def delete(id_user, request_params):
+def delete(id_user, request):
     try:
-        id_transaction = request_params["id_transaction"]
+        id_transaction = int(validate_not_empty(request, 'id_transaction'))
+        if not is_valid(id_transaction, id_user):
+            raise ValueError
         if is_transfer(id_transaction):
             id_transfer = get_transfer_id(id_transaction)
             return transfer.delete(id_user, id_transfer)
         else:
             query = "delete from TRANSACTION where ID_USER = (%s) and ID_TRANSACTION = (%s)"
             return db.execute_query(query, (id_user, id_transaction,), commit=True)
-    except Exception as err:
-        print(f"Could not delete the transaction: {err}")
-        raise
+    except ValueError:
+        raise OperationError(HTTPStatus.BAD_REQUEST, "Invalid ID transaction.")
 
 # Utilities functions
 def sql_create(id_user, id_account, id_payee, id_category, flow, amount, txn_date, memo, is_transfer=0):
@@ -124,3 +125,12 @@ def get_transfer_id(id_transaction):
 
 def mysql_format_date(date_string):
     return dt.datetime.strftime(dt.datetime.strptime(date_string, '%d/%m/%Y'), '%Y-%m-%d')
+
+# Helper functions
+def is_valid(id_transaction, id_user):
+    """
+    This function is used to check if the provided id_transaction exists and belongs to the right id_user.
+    """
+    query = 'select ID_TRANSACTION from TRANSACTION where ID_TRANSACTION = %s and ID_USER = (%s)'
+    result = db.execute_query(query, (id_account, id_user), fetch=True)
+    return bool(len(result))

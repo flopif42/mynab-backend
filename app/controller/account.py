@@ -53,8 +53,6 @@ def set_status(id_user, request):
             raise OperationError(HTTPStatus.NOT_FOUND, "This account doesn't exist.")
         if not is_valid(id_account, id_user):
             raise OperationError(HTTPStatus.FORBIDDEN, "This account doesn't belong to this user.")
-        if not is_empty(id_account):
-            raise OperationError(HTTPStatus.CONFLICT, "This account has transactions. Delete the transactions first.")
         if account_status not in (0, 1):
             raise OperationError(HTTPStatus.BAD_REQUEST, "Invalid account status value.")
         query = "update ACCOUNT set ACCOUNT_STATUS = (%s) where ID_ACCOUNT = (%s) and ID_USER = (%s)"
