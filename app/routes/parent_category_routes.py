@@ -16,7 +16,3 @@ def parent_category_create():
 @swag_from('../docs/parent_category/parent_category_delete.yml')
 def parent_category_delete():
     return handle_route_action(parent_category.delete, mode='delete')
-
-@parent_category_bp.route('/category/move_parent', methods=['POST'])
-def parent_category_move():
-    return handle_route_action(parent_category.set_position)
