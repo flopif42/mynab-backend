@@ -91,7 +91,7 @@ def sql_create(id_user, id_account, id_payee, id_category, flow, amount, txn_dat
             (ID_USER, ID_ACCOUNT, ID_PAYEE, ID_CATEGORY, TRANSACTION_FLOW, TRANSACTION_AMOUNT, TRANSACTION_DATE, TRANSACTION_MEMO, IS_TRANSFER) 
             VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)
             """
-    values = (id_user, id_account, id_payee, id_category, flow, amount, txn_date, memo)
+    values = (id_user, id_account, id_payee, id_category, flow, amount, txn_date, memo, is_transfer)
     return db.execute_query(query, values, commit=True)
 
 def is_transfer(id_transaction):
