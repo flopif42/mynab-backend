@@ -38,11 +38,10 @@ def is_email_available(unused, email_address):
         True : The email address is available
         False : The email address is not available
     """
-    try:
-        email_address = validate_not_empty(request, 'email_address')
-        query = "select 1 from USER where EMAIL_ADDRESS = (%s)"
-        result = db.execute_query(query, (email_address,), fetch=True)
-        return { 'available' : not len(result) }
+    email_address = validate_not_empty(request, 'email_address')
+    query = "select 1 from USER where EMAIL_ADDRESS = (%s)"
+    result = db.execute_query(query, (email_address,), fetch=True)
+    return { 'available' : not len(result) }
 
 def get_profile(id_user, unused):
     try:
