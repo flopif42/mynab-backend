@@ -1,0 +1,18 @@
+Deletes a transaction.
+---
+tags:
+  - Transaction
+parameters:
+  - name: id_transaction
+    in: query
+    required: true
+    type: number
+    description: The ID transaction to delete
+
+responses:
+  204:
+    description: Transaction was successfully deleted
+  400:
+    description: Missing required parameter or incorrect parameter
+  401:
+    description: No user is logged in

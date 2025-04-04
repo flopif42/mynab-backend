@@ -17,5 +17,6 @@ def transaction_create():
     return handle_route_action(transaction.create, mode='create')
 
 @transaction_bp.route('/transaction/delete', methods=['DELETE'])
+@swag_from('../docs/transaction/transaction_delete.yml')
 def transaction_delete():
     return handle_route_action(transaction.delete, mode='delete')
