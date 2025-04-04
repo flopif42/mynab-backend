@@ -77,3 +77,5 @@ def set_funded(id_user, request):
         db.execute_query(query, values, commit=True)
     except ValueError:
         raise OperationError(HTTPStatus.BAD_REQUEST, "Invalid parameters.")
+    except IntegrityError:
+        raise OperationError(HTTPStatus.BAD_REQUEST, "Some parameters are incorrect.")
