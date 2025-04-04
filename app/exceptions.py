@@ -6,5 +6,5 @@ class OperationError(Exception):
 	def get_status(self):
 		return self.http_status_code
 
-	def get_message(self)
+	def get_message(self):
 		return self.error_message
