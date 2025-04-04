@@ -77,13 +77,13 @@ def signup(request_params):
         print(f"Exception in signup() : {type(error)} - {type(error).__name__} - {error}")
         raise error
         
-def is_available(email_address):
+def is_email_available(email_address):
     """
-    This function checks the database to see if an email address is available to use to sign up.
+    This function checks the database to see if the specified email address is available to use to sign up.
     
     Return values:
-        1 : The email address is available
-        0 : The email address is not available
+        True : The email address is available
+        False : The email address is not available
     """
     try:
         query = "select 1 from USER where EMAIL_ADDRESS = (%s)"

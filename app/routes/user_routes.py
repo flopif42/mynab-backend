@@ -53,8 +53,4 @@ def check_email_available():
 @user_bp.route('/user/profile', methods=['GET'])
 @swag_from('../docs/user/user_profile.yml')
 def user_profile():
-    try:
-        return handle_route_action(user.get_profile)
-    except Exception as error:
-        print(f"Exception in user_routes.user_profile() : {type(error)} - {type(error).__name__} - {error}")
-        return "", HTTPStatus.INTERNAL_SERVER_ERROR
+    return handle_route_action(user.get_profile)
