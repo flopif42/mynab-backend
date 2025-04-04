@@ -13,7 +13,7 @@ def create(id_user, request):
         transfer_date = transaction.mysql_format_date(validate_not_empty(request, 'date'))
 
         if not account.is_valid(id_account_outflow, id_user) or not account.is_valid(id_account_inflow, id_user):
-            raise OperationError(HTTPStatus.FORBIDDEN, "This account doesn't belong to this user.")
+            raise OperationError(HTTPStatus.FORBIDDEN, "This account id is invalid.")
         if id_account_outflow == id_account_inflow:
             raise OperationError(HTTPStatus.BAD_REQUEST, "The from and to accounts must be different.")
         if request.json.get('memo'):
