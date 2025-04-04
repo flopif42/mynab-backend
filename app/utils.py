@@ -26,5 +26,5 @@ def validate_not_empty(request, parameter_name):
             raise OperationError(HTTPStatus.BAD_REQUEST, error_message)
         return parameter
     except Exception as error:
-        # print(f"Exception in validate_not_empty() : {type(error).__name__} - {error} parameter_name = {parameter_name}")
+        print(f"Exception in validate_not_empty() : {type(error).__name__} - {error} parameter_name = {parameter_name}")
         raise error
