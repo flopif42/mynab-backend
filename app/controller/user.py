@@ -30,7 +30,7 @@ class UserSignUpParams(BaseModel):
             raise ValueError('Password must be a valid MD5 hash')
         return value
 
-def is_email_available(unused, email_address):
+def is_email_available(id_user, request):
     """
     This function checks the database to see if the specified email address is available to use to sign up.
     
