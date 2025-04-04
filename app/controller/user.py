@@ -33,15 +33,18 @@ class UserSignUpParams(BaseModel):
             raise ValueError('Password must be a valid MD5 hash')
         return value
 
-def login(request):
+def is_email_available(id_user_unused, request):
+    """
+    This function checks the database to see if the specified email address is available to use to sign up.
+    
+    Return values:
+        True : The email address is available
+        False : The email address is not available
+    """
     email_address = validate_not_empty(request, 'email_address')
-    passphrase_md5 = validate_not_empty(request, 'passphrase_md5')
-    query = "select ID_USER from USER where EMAIL_ADDRESS = (%s) and PASSPHRASE_MD5 = (%s)"
-    result = db.execute_query(query, (email_address, passphrase_md5), fetch=True)
-    id_user = result[0][0] if len(result) else None
-    if id_user is None:
-        return '', HTTPStatus.UNAUTHORIZED
-    return JwtManager.generate_access_token(id_user) # HTTP response with status code 200 and cookie set (no body)
+    query = "select 1 from USER where EMAIL_ADDRESS = (%s)"
+    result = db.execute_query(query, (email_address,), fetch=True)
+    return { 'available' : not len(result) }
 
 def signup(id_user_unused, request):
     """
@@ -68,18 +71,19 @@ def signup(id_user_unused, request):
     except mysql.connector.IntegrityError:
         raise OperationError(HTTPStatus.CONFLICT, "Could not create user : email address already used.")
 
-def is_email_available(id_user_unused, request):
-    """
-    This function checks the database to see if the specified email address is available to use to sign up.
-    
-    Return values:
-        True : The email address is available
-        False : The email address is not available
-    """
-    email_address = validate_not_empty(request, 'email_address')
-    query = "select 1 from USER where EMAIL_ADDRESS = (%s)"
-    result = db.execute_query(query, (email_address,), fetch=True)
-    return { 'available' : not len(result) }
+def login(request):
+    try:
+        email_address = validate_not_empty(request, 'email_address')
+        passphrase_md5 = validate_not_empty(request, 'passphrase_md5')
+        query = "select ID_USER from USER where EMAIL_ADDRESS = (%s) and PASSPHRASE_MD5 = (%s)"
+        result = db.execute_query(query, (email_address, passphrase_md5), fetch=True)
+        id_user = result[0][0] if len(result) else None
+        if id_user is None:
+            return '', HTTPStatus.UNAUTHORIZED
+        return JwtManager.generate_access_token(id_user) # HTTP response with status code 200 and cookie set (no body)
+    except Exception as error:
+        print(f"Exception in user.login() : {type(error).__name__} - {error}")
+        return '', HTTPStatus.INTERNAL_SERVER_ERROR
 
 def get_profile(id_user, request_unused):
     query = "select FIRST_NAME as first_name, LAST_NAME as last_name, EMAIL_ADDRESS as email_address from USER where ID_USER = (%s)"
