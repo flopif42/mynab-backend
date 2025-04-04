@@ -24,7 +24,9 @@ def create(id_user, request):
             "amount": amount,
             "txn_date": transfer_date,
             "memo": memo,
-            "is_transfer": 1
+            "is_transfer": 1,
+            "id_payee": None,
+            "id_category": None
         }
 
         # 1. create outflow transaction
