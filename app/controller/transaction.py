@@ -65,13 +65,7 @@ def create(id_user, request):
             memo = validate_not_empty(request, 'memo')
         else:
             memo = None
-        query = """
-                insert into TRANSACTION 
-                (ID_USER, ID_ACCOUNT, ID_PAYEE, ID_CATEGORY, TRANSACTION_FLOW, TRANSACTION_AMOUNT, TRANSACTION_DATE, TRANSACTION_MEMO) 
-                VALUES (%s, %s, %s, %s, %s, %s, %s, %s)
-                """
-        values = (id_user, id_account, id_payee, id_category, flow, amount, txn_date, memo)
-        return db.execute_query(query, values, commit=True)
+       return sql_create(id_user, id_account, id_payee, id_category, flow, amount, txn_date, memo):
     except ValueError:
         raise OperationError(HTTPStatus.BAD_REQUEST, "Invalid parameters.")
     except IntegrityError:
@@ -91,6 +85,15 @@ def delete(id_user, request_params):
         raise
 
 # Utilities functions
+def sql_create(id_user, id_account, id_payee, id_category, flow, amount, txn_date, memo):
+    query = """
+            insert into TRANSACTION 
+            (ID_USER, ID_ACCOUNT, ID_PAYEE, ID_CATEGORY, TRANSACTION_FLOW, TRANSACTION_AMOUNT, TRANSACTION_DATE, TRANSACTION_MEMO) 
+            VALUES (%s, %s, %s, %s, %s, %s, %s, %s)
+            """
+    values = (id_user, id_account, id_payee, id_category, flow, amount, txn_date, memo)
+    return db.execute_query(query, values, commit=True)
+
 def is_transfer(id_transaction):
     query = "select IS_TRANSFER from TRANSACTION where ID_TRANSACTION = %s"
     result = db.execute_query(query, (id_transaction,), fetch=True)

@@ -30,12 +30,12 @@ def create(id_user, request):
         # 1. create outflow transaction
         insert_values['id_account'] = id_account_outflow
         insert_values['flow'] = -1
-        id_txn_outflow = transaction.create(id_user, insert_values)
+        id_txn_outflow = transaction.sql_create(id_user, **insert_values)
 
         # 2. create inflow transaction
         insert_values['id_account'] = id_account_inflow
         insert_values['flow'] = 1
-        id_txn_inflow = transaction.create(id_user, insert_values)
+        id_txn_inflow = transaction.sql_create(id_user, **insert_values)
 
         # 3. create transfer record
         query = '''
