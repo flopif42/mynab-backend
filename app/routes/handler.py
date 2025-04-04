@@ -24,7 +24,7 @@ def handle_route_action(action, mode='default', auth_required=True):
         return response_body, response_status[mode]
     except OperationError as error:
         print(f"OperationError in handle_route_action() : {type(error).__name__} - {error}")
-        print(error.get_message())
+        print(error.get_status())
         return { "error": error.get_status() }, error.get_message()
     except Exception as error:
         print(f"Exception in handle_route_action() : {type(error).__name__} - {error}")
