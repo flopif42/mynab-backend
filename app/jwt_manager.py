@@ -39,10 +39,13 @@ class JwtManager:
             return payload
         except AttributeError:
             print(f"Error : Access Token cookie not found.")
+            raise
         except DecodeError:
             print(f"Error : Could not decode payload from Access Token.")
+            raise
         except Exception as err:
             print(f"Could not retrieve payload from Access Token. Exception : {err}")
+            raise
 
     @classmethod
     def check_token_valid(cls, request):
