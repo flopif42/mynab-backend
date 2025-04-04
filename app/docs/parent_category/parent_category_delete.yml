@@ -5,18 +5,11 @@ tags:
 consumes:
   - application/json
 parameters:
-  - in: body
-    name: body
+  - name: id_parent
+    in: query
     required: true
-    schema:
-      type: object
-      properties:
-        id_parent:
-          type: number
-          description: The parent category ID number
-          example: 856
-      required:
-        - id_parent
+    description: The ID of the parent category to delete
+
 responses:
   204:
     description: Parent category was successfully deleted
