@@ -22,7 +22,7 @@ def create(id_user, request):
             memo = None
         insert_values = {
             "amount": amount,
-            "date": transfer_date,
+            "txn_date": transfer_date,
             "memo": memo,
             "is_transfer": 1
         }
