@@ -132,5 +132,5 @@ def is_valid(id_transaction, id_user):
     This function is used to check if the provided id_transaction exists and belongs to the right id_user.
     """
     query = 'select ID_TRANSACTION from TRANSACTION where ID_TRANSACTION = %s and ID_USER = (%s)'
-    result = db.execute_query(query, (id_account, id_user), fetch=True)
+    result = db.execute_query(query, (id_transaction, id_user), fetch=True)
     return bool(len(result))
