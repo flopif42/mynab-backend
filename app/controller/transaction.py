@@ -67,10 +67,8 @@ def create(id_user, request):
         else:
             memo = None
         return sql_create(id_user, id_account, id_payee, id_category, flow, amount, txn_date, memo)
-    except ValueError:
+    except (ValueError, IntegrityError):
         raise OperationError(HTTPStatus.BAD_REQUEST, "Invalid parameters.")
-    except IntegrityError:
-        raise OperationError(HTTPStatus.BAD_REQUEST, "Some parameters are incorrect.")
     except Exception as error:
         print(f"Exception in transaction.create() : {type(error).__name__} - {error}")
         raise error
