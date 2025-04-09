@@ -20,6 +20,12 @@ def handle_route_action(action, mode='fetch', auth_required=True):
         if result:
             response_body = jsonify(result)
         return response_body, response_status[mode]
+    except AccountNotExistError error:
+        return { "error": error }, HTTPStatus.NOT_FOUND
+    except AccountWrongOwnerError error:
+        return { "error": error }, HTTPStatus.FORBIDDEN
+    except AccountNotEmptyError error:
+        return { "error": error }, HTTPStatus.CONFLICT
     except OperationError as error:
         return { "error": error.message }, error.status
     except Exception as error:

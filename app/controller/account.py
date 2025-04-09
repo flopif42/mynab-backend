@@ -32,11 +32,11 @@ def delete(id_user, request):
     try:
         id_account = int(validate_not_empty(request, 'id_account'))
         if not is_valid(id_account):
-            raise OperationError(HTTPStatus.NOT_FOUND, "This account doesn't exist.")
+            raise AccountNotExistError
         if not is_valid(id_account, id_user):
-            raise OperationError(HTTPStatus.FORBIDDEN, "This account doesn't belong to this user.")
+            raise AccountWrongOwnerError
         if not is_empty(id_account):
-            raise OperationError(HTTPStatus.CONFLICT, "This account has transactions. Delete the transactions first.")
+            raise AccountNotEmptyError
         query = "delete from ACCOUNT where ID_ACCOUNT = (%s) and ID_USER = (%s)"
         db.execute_query(query, (id_account, id_user), commit=True)
     except ValueError:
