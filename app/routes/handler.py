@@ -8,6 +8,7 @@ response_status = {
     'create': HTTPStatus.CREATED,
     'delete': HTTPStatus.NO_CONTENT,
     'update': HTTPStatus.NO_CONTENT,
+    'AccountInvalidParametersError': HTTPStatus.BAD_REQUEST,
     'AccountNotFoundError': HTTPStatus.NOT_FOUND,
     'AccountPermissionError': HTTPStatus.FORBIDDEN,
     'AccountNotEmptyError': HTTPStatus.CONFLICT

@@ -17,6 +17,10 @@ class OperationError(Exception):
 class AccountOperationError(Exception):
 	pass
 
+class AccountInvalidParametersError(AccountOperationError):
+	def __init__(self, error_message):
+		self.error_message = error_message
+
 class AccountNotFoundError(AccountOperationError):
 	def __init__(self):
 		self.error_message = "This account doesn't exist."
