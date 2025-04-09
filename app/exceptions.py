@@ -14,14 +14,17 @@ class OperationError(Exception):
 	def __str__(self):
 		return f'Status code : {self.http_status_code}, Message : {self.error_message}'
 
-class AccountNotExistError(Exception):
-	def __str__(self):
-		return "This account doesn't exist."
+class AccountOperationError(Exception):
+	pass
 
-class AccountWrongOwnerError(Exception):
-	def __str__(self):
-		return "This account doesn't belong to this user."
+class AccountNotExistError(AccountOperationError):
+	def __init__(self):
+		self.error_message = "This account doesn't exist."
 
-class AccountNotEmptyError(Exception):
-	def __str__(self):
-		return "This account has transactions."
+class AccountWrongOwnerError(AccountOperationError):
+	def __init__(self):
+		self.error_message = "This account doesn't belong to this user."
+
+class AccountNotEmptyError(AccountOperationError):
+	def __init__(self):
+		self.error_message = "This account has transactions."

@@ -1,13 +1,14 @@
+from http import HTTPStatus
 from flask import Flask, request, jsonify
 from app.jwt_manager import JwtManager
-from http import HTTPStatus
-from app.exceptions import OperationError, AccountNotExistError, AccountWrongOwnerError, AccountNotEmptyError
+import app.exceptions as ex
 
 response_status = {
     'fetch': HTTPStatus.OK,
     'create': HTTPStatus.CREATED,
     'delete': HTTPStatus.NO_CONTENT,
-    'update': HTTPStatus.NO_CONTENT
+    'update': HTTPStatus.NO_CONTENT,
+    'AccountNotExistError': HTTPStatus.NOT_FOUND
 }
 
 def handle_route_action(action, mode='fetch', auth_required=True):
@@ -20,13 +21,9 @@ def handle_route_action(action, mode='fetch', auth_required=True):
         if result:
             response_body = jsonify(result)
         return response_body, response_status[mode]
-    except AccountNotExistError as error:
-        return { "error": type(error).__name__ }, HTTPStatus.NOT_FOUND
-    except AccountWrongOwnerError as error:
-        return { "error": error }, HTTPStatus.FORBIDDEN
-    except AccountNotEmptyError as error:
-        return { "error": error }, HTTPStatus.CONFLICT
-    except OperationError as error:
+    except ex.AccountOperationError as error:
+        return { "error": error.error_message }, response_status[type(error).__name__]
+    except ex.OperationError as error:
         return { "error": error.message }, error.status
     except Exception as error:
         print(f"Exception in handle_route_action() : {type(error).__name__} - {error}")
