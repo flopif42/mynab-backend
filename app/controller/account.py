@@ -32,9 +32,9 @@ def delete(id_user, request):
     try:
         id_account = int(validate_not_empty(request, 'id_account'))
         if not is_valid(id_account):
-            raise AccountNotExistError
+            raise AccountNotFoundError
         if not is_valid(id_account, id_user):
-            raise AccountWrongOwnerError
+            raise AccountPermissionError
         if not is_empty(id_account):
             raise AccountNotEmptyError
         query = "delete from ACCOUNT where ID_ACCOUNT = (%s) and ID_USER = (%s)"

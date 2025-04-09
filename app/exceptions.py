@@ -17,11 +17,11 @@ class OperationError(Exception):
 class AccountOperationError(Exception):
 	pass
 
-class AccountNotExistError(AccountOperationError):
+class AccountNotFoundError(AccountOperationError):
 	def __init__(self):
 		self.error_message = "This account doesn't exist."
 
-class AccountWrongOwnerError(AccountOperationError):
+class AccountPermissionError(AccountOperationError):
 	def __init__(self):
 		self.error_message = "This account doesn't belong to this user."
 

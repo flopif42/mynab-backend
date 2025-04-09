@@ -8,7 +8,9 @@ response_status = {
     'create': HTTPStatus.CREATED,
     'delete': HTTPStatus.NO_CONTENT,
     'update': HTTPStatus.NO_CONTENT,
-    'AccountNotExistError': HTTPStatus.NOT_FOUND
+    'AccountNotFoundError': HTTPStatus.NOT_FOUND,
+    'AccountPermissionError': HTTPStatus.FORBIDDEN,
+    'AccountNotEmptyError': HTTPStatus.CONFLICT
 }
 
 def handle_route_action(action, mode='fetch', auth_required=True):
