@@ -1,5 +1,5 @@
 from app.sql_manager import SqlManager as db
-from app.exceptions import AccountNotFoundError, AccountPermissionError, AccountNotEmptyError, AccountInvalidParametersError
+from app.exceptions import InvalidParametersError, AccountNotFoundError, AccountPermissionError, AccountNotEmptyError
 from app.utils import validate_not_empty
 
 def list(id_user, request):
@@ -19,13 +19,13 @@ def create(id_user, request):
         account_name = validate_not_empty(request, 'account_name')
         account_type = int(validate_not_empty(request, 'account_type'))
         if len(account_name) > 50:
-            raise AccountInvalidParametersError("Account name can't be more than 50 characters.")
+            raise InvalidParametersError("Account name can't be more than 50 characters.")
         if account_type not in (1, 2):
-            raise AccountInvalidParametersError("Account type must be 1 or 2.")
+            raise InvalidParametersError("Account type must be 1 or 2.")
         query = "insert into ACCOUNT (ID_USER, ACCOUNT_NAME, ACCOUNT_TYPE) values (%s, %s, %s)"
         db.execute_query(query, (id_user, account_name, account_type), commit=True)
     except ValueError:
-        raise AccountInvalidParametersError("Invalid account type value.")
+        raise InvalidParametersError("Invalid account type value.")
 
 def delete(id_user, request):
     try:
@@ -39,7 +39,7 @@ def delete(id_user, request):
         query = "delete from ACCOUNT where ID_ACCOUNT = (%s) and ID_USER = (%s)"
         db.execute_query(query, (id_account, id_user), commit=True)
     except ValueError:
-        raise AccountInvalidParametersError("Invalid ID account.")
+        raise InvalidParametersError("Invalid ID account.")
 
 def set_status(id_user, request):
     """
@@ -53,11 +53,11 @@ def set_status(id_user, request):
         if not is_valid(id_account, id_user):
             raise AccountPermissionError
         if account_status not in (0, 1):
-            raise AccountInvalidParametersError("Invalid account status value.")
+            raise InvalidParametersError("Invalid account status value.")
         query = "update ACCOUNT set ACCOUNT_STATUS = (%s) where ID_ACCOUNT = (%s) and ID_USER = (%s)"
         db.execute_query(query, (account_status, id_account, id_user), commit=True)
     except ValueError:
-        raise AccountInvalidParametersError("Invalid parameters.")
+        raise InvalidParametersError
 
 # Helper functions
 def is_valid(id_account, id_user=None):

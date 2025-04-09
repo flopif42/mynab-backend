@@ -22,7 +22,7 @@ def handle_route_action(action, mode='fetch', auth_required=True):
         result = action(id_user, request)
         response_body = jsonify(result) if result else ''
         return response_body, response_status[mode]
-    except ex.AccountOperationError as error:
+    except ex.MyOperationError as error:
         return { "error": error.error_message }, response_status[type(error).__name__]
     except ex.OperationError as error:
         return { "error": error.message }, error.status

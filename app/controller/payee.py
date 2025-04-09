@@ -1,6 +1,5 @@
 from app.sql_manager import SqlManager as db
-from http import HTTPStatus
-from app.exceptions import OperationError
+from app.exceptions import InvalidParametersError
 from app.utils import validate_not_empty
 
 def list(id_user, request):
@@ -16,7 +15,7 @@ def list(id_user, request):
 def create(id_user, request):
     payee_name = validate_not_empty(request, 'payee_name')
     if len(payee_name) > 70:
-        raise OperationError(HTTPStatus.BAD_REQUEST, "Payee name can't be more than 70 characters.")
+        raise InvalidParametersError("Payee name can't be more than 70 characters.")
     query = "insert into PAYEE (ID_USER, PAYEE_NAME) values (%s, %s)"
     db.execute_query(query, (id_user, payee_name), commit=True)
 
@@ -24,15 +23,15 @@ def delete(id_user, request):
     try:
         id_payee = int(validate_not_empty(request, 'id_payee'))
         if not is_valid(id_payee):
-            raise OperationError(HTTPStatus.NOT_FOUND, "This payee doesn't exist.")
+            raise XXXXXXXXXXXXXXXX(HTTPStatus.NOT_FOUND, "This payee doesn't exist.")
         if not is_valid(id_payee, id_user):
-            raise OperationError(HTTPStatus.FORBIDDEN, "This payee doesn't belong to this user.")
+            raise XXXXXXXXXXXXXXXX(HTTPStatus.FORBIDDEN, "This payee doesn't belong to this user.")
         if not is_deletable(id_payee):
-            raise OperationError(HTTPStatus.CONFLICT, "This payee has transactions. Delete the transactions first.")
+            raise XXXXXXXXXXXXXXXX(HTTPStatus.CONFLICT, "This payee has transactions. Delete the transactions first.")
         query = "delete from PAYEE where ID_PAYEE = (%s) and ID_USER = (%s)"
         db.execute_query(query, (id_payee, id_user), commit=True)
     except ValueError:
-        raise OperationError(HTTPStatus.BAD_REQUEST, "Invalid ID payee.")
+        raise InvalidParametersError("Invalid ID payee.")
 
 # Helper functions
 def is_valid(id_payee, id_user=None):
