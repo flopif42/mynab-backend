@@ -50,7 +50,7 @@ class CategoryNotEmptyError(MyOperationError):
 		self.error_message = "This category has transactions."
 
 # delete this after refactoring is done
-class OperationError(Exception):
+class xOperationError(Exception):
 	def __init__(self, http_status_code, error_message):
 		self.http_status_code = http_status_code
 		self.error_message = error_message
