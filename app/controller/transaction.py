@@ -1,10 +1,9 @@
-from http import HTTPStatus
 from mysql.connector.errors import IntegrityError
 import datetime as dt
 from app.sql_manager import SqlManager as db
 from app.controller import account
 from app.controller import transfer
-from app.exceptions import OperationError
+from app.exceptions import InvalidParametersError, AccountNotFoundError
 from app.utils import validate_not_empty
 
 def list(id_user, request):
@@ -38,14 +37,14 @@ def list(id_user, request):
         if request and request.args.get('id_account'):
             id_account = int(validate_not_empty(request, 'id_account'))
             if not account.is_valid(id_account):
-                raise OperationError(HTTPStatus.NOT_FOUND, "This account doesn't exist.")
+                raise AccountNotFoundError
             if not account.is_valid(id_account, id_user):
-                raise OperationError(HTTPStatus.FORBIDDEN, "This account doesn't belong to this user.")
+                raise AccountPermissionError
             query += "and txn.ID_ACCOUNT = (%s) "
             values += (id_account,)
         return db.execute_query(query, values, fetch=True, dictionary=True)
     except ValueError:
-        raise OperationError(HTTPStatus.BAD_REQUEST, "Invalid ID account.")
+        raise InvalidParametersError("Invalid ID account.")
 
 def create(id_user, request):
     try:
@@ -68,10 +67,7 @@ def create(id_user, request):
             memo = None
         return sql_create(id_user, id_account, id_payee, id_category, flow, amount, txn_date, memo)
     except (ValueError, IntegrityError):
-        raise OperationError(HTTPStatus.BAD_REQUEST, "Invalid parameters.")
-    except Exception as error:
-        print(f"Exception in transaction.create() : {type(error).__name__} - {error}")
-        raise error
+        raise InvalidParametersError
 
 def delete(id_user, request):
     try:
@@ -85,28 +81,23 @@ def delete(id_user, request):
             query = "delete from TRANSACTION where ID_USER = (%s) and ID_TRANSACTION = (%s)"
             return db.execute_query(query, (id_user, id_transaction,), commit=True)
     except ValueError:
-        raise OperationError(HTTPStatus.BAD_REQUEST, "Invalid ID transaction.")
+        raise InvalidParametersError
 
 # Utilities functions
 def sql_create(id_user, id_account, id_payee, id_category, flow, amount, txn_date, memo, is_transfer=0):
-    try:    
-        query = """
-                insert into TRANSACTION 
-                (ID_USER, ID_ACCOUNT, ID_PAYEE, ID_CATEGORY, TRANSACTION_FLOW, TRANSACTION_AMOUNT, TRANSACTION_DATE, TRANSACTION_MEMO, IS_TRANSFER) 
-                VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)
-                """
-        values = (id_user, id_account, id_payee, id_category, flow, amount, txn_date, memo, is_transfer)
-        return db.execute_query(query, values, commit=True)
-    except Exception as error:
-        print(f"Exception in transaction.sql_create() : {type(error).__name__} - {error}")
-        raise error
+    query = """
+            insert into TRANSACTION 
+            (ID_USER, ID_ACCOUNT, ID_PAYEE, ID_CATEGORY, TRANSACTION_FLOW, TRANSACTION_AMOUNT, TRANSACTION_DATE, TRANSACTION_MEMO, IS_TRANSFER) 
+            VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)
+            """
+    values = (id_user, id_account, id_payee, id_category, flow, amount, txn_date, memo, is_transfer)
+    return db.execute_query(query, values, commit=True)
 
 def is_transfer(id_transaction):
     query = "select IS_TRANSFER from TRANSACTION where ID_TRANSACTION = %s"
     result = db.execute_query(query, (id_transaction,), fetch=True)
     print(result)
     if len(result) == 0:
-        print(f"Could not find transaction with id : {id_transaction}")
         raise ValueError
     if result[0][0] == 1:
         return True
@@ -117,7 +108,6 @@ def get_transfer_id(id_transaction):
     query = "select ID_TRANSFER from TRANSFER where ID_TRANSACTION_OUTFLOW = %s or ID_TRANSACTION_INFLOW = %s"
     result = db.execute_query(query, (id_transaction, id_transaction), fetch=True)
     if len(result) == 0:
-        print(f"Could not find transaction with id : {id_transaction}")
         raise ValueError
     return result[0][0]
 
