@@ -1,8 +1,7 @@
-from http import HTTPStatus
 from app.sql_manager import SqlManager as db
 from app.controller import transaction
 import app.controller.account as account
-from app.exceptions import OperationError
+from app.exceptions import InvalidParametersError
 from app.utils import validate_not_empty
 
 def create(id_user, request):
@@ -13,9 +12,9 @@ def create(id_user, request):
         transfer_date = transaction.mysql_format_date(validate_not_empty(request, 'date'))
 
         if not account.is_valid(id_account_outflow, id_user) or not account.is_valid(id_account_inflow, id_user):
-            raise OperationError(HTTPStatus.FORBIDDEN, "This account id is invalid.")
+            raise AccountPermissionError
         if id_account_outflow == id_account_inflow:
-            raise OperationError(HTTPStatus.BAD_REQUEST, "The from and to accounts must be different.")
+            raise InvalidParametersError("The from and to accounts must be different.")
         if request.json.get('memo'):
             memo = validate_not_empty(request, 'memo')
         else:
@@ -48,7 +47,7 @@ def create(id_user, request):
         db.execute_query(query, (id_user, id_txn_outflow, id_txn_inflow), commit=True)
         return ''
     except ValueError:
-        raise OperationError(HTTPStatus.BAD_REQUEST, "Invalid parameters.")
+        raise InvalidParametersError
 
 # Utilities functions
 def delete(id_user, id_transfer):
