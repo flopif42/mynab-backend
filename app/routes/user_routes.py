@@ -19,7 +19,7 @@ def sign_up():
 @user_bp.route('/user/login', methods=['POST'])
 @swag_from('../docs/user/user_login.yml')
 def user_login():
-    return handle_route_action(user.login, auth_required=False)
+    return handle_route_action(user.login, mode='login', auth_required=False)
 
 @user_bp.route('/user/profile', methods=['GET'])
 @swag_from('../docs/user/user_profile.yml')

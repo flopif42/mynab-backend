@@ -33,6 +33,8 @@ def handle_route_action(action, mode='fetch', auth_required=True):
     try:
         id_user = JwtManager.get_id_user_from_token(request) if auth_required else None
         result = action(id_user, request)
+        if mode == 'login':
+            return result
         response_body = jsonify(result) if result else ''
         return response_body, get_status_code(mode)
     except ex.MyOperationError as error:
