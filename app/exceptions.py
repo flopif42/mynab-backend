@@ -30,3 +30,20 @@ class PayeePermissionError(MyOperationError):
 class PayeeNotEmptyError(MyOperationError):
 	def __init__(self):
 		self.error_message = "This payee has transactions."
+
+# delete this after refactoring is done
+class OperationError(Exception):
+	def __init__(self, http_status_code, error_message):
+		self.http_status_code = http_status_code
+		self.error_message = error_message
+
+	@property
+	def status(self):
+		return self.http_status_code
+
+	@property
+	def message(self):
+		return self.error_message
+
+	def __str__(self):
+		return f'Status code : {self.http_status_code}, Message : {self.error_message}'
