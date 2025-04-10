@@ -1,7 +1,7 @@
 from app.sql_manager import SqlManager as db
 from app.controller import transaction
 import app.controller.account as account
-from app.exceptions import InvalidParametersError
+from app.exceptions import InvalidParametersError, AccountPermissionError
 from app.utils import validate_not_empty
 
 def create(id_user, request):
