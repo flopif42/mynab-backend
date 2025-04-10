@@ -39,8 +39,6 @@ def handle_route_action(action, mode='fetch', auth_required=True):
         return response_body, get_status_code(mode)
     except ex.MyOperationError as error:
         return { "error": error.error_message }, get_status_code(type(error).__name__)
-    except ex.OperationError as error:
-        return { "error": error.message }, error.status
     except Exception as error:
         print(f"Exception in handle_route_action() : {type(error).__name__} - {error}")
         return '', HTTPStatus.INTERNAL_SERVER_ERROR
