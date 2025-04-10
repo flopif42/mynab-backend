@@ -1,8 +1,7 @@
 import datetime as dt
 from mysql.connector.errors import IntegrityError
 from app.sql_manager import SqlManager as db
-from http import HTTPStatus
-from app.exceptions import OperationError
+from app.exceptions import InvalidParametersError
 from app.utils import validate_not_empty
 
 def list(id_user, request_unused):
@@ -64,7 +63,7 @@ def set_funded(id_user, request):
 
         period = dt.datetime.strptime(id_period + "_01", '%Y_%m_%d')
         if amount < 0:
-            raise OperationError(HTTPStatus.BAD_REQUEST, "Amount must be a positive integer.")
+            raise InvalidParametersError("Amount must be a positive integer.")
         if amount == 0:
             query = "delete from BUDGET_LINE where ID_USER = (%s) and ID_CATEGORY = (%s) and BUDGET_LINE_YEAR = (%s) and BUDGET_LINE_MONTH = (%s)"
             values = (id_user, id_category, period.year, period.month)
@@ -76,7 +75,5 @@ def set_funded(id_user, request):
                     """
             values = (id_user, id_category, period.year, period.month, amount, amount)
         db.execute_query(query, values, commit=True)
-    except ValueError:
-        raise OperationError(HTTPStatus.BAD_REQUEST, "Invalid parameters.")
-    except IntegrityError:
-        raise OperationError(HTTPStatus.BAD_REQUEST, "Some parameters are incorrect.")
+    except (ValueError, IntegrityError):
+        raise InvalidParametersError
