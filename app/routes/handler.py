@@ -11,12 +11,7 @@ response_status = {
     'UserInvalidCredentialsError': HTTPStatus.UNAUTHORIZED,
     ('AccountNotFoundError', 'PayeeNotFoundError', 'ParentCategoryNotFoundError', 'CategoryNotFoundError'): HTTPStatus.NOT_FOUND,
     ('AccountPermissionError', 'PayeePermissionError'): HTTPStatus.FORBIDDEN,
-    (
-        'AccountNotEmptyError',
-        'PayeeNotEmptyError',
-        'ParentCategoryNotEmptyError',
-        'CategoryNotEmptyError',
-        'UserMailAdressUnavailableError' ): HTTPStatus.CONFLICT
+    ('AccountNotEmptyError', 'PayeeNotEmptyError', 'ParentCategoryNotEmptyError', 'CategoryNotEmptyError', 'UserMailAdressUnavailableError'): HTTPStatus.CONFLICT
 }
 
 def get_status_code(mode):
