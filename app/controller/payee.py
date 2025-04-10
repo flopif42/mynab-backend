@@ -1,5 +1,5 @@
 from app.sql_manager import SqlManager as db
-from app.exceptions import InvalidParametersError
+from app.exceptions import InvalidParametersError, PayeeNotFoundError, PayeePermissionError, PayeeNotEmptyError
 from app.utils import validate_not_empty
 
 def list(id_user, request):
@@ -23,11 +23,11 @@ def delete(id_user, request):
     try:
         id_payee = int(validate_not_empty(request, 'id_payee'))
         if not is_valid(id_payee):
-            raise XXXXXXXXXXXXXXXX(HTTPStatus.NOT_FOUND, "This payee doesn't exist.")
+            raise PayeeNotFoundError
         if not is_valid(id_payee, id_user):
-            raise XXXXXXXXXXXXXXXX(HTTPStatus.FORBIDDEN, "This payee doesn't belong to this user.")
+            raise PayeePermissionError
         if not is_deletable(id_payee):
-            raise XXXXXXXXXXXXXXXX(HTTPStatus.CONFLICT, "This payee has transactions. Delete the transactions first.")
+            raise PayeeNotEmptyError
         query = "delete from PAYEE where ID_PAYEE = (%s) and ID_USER = (%s)"
         db.execute_query(query, (id_payee, id_user), commit=True)
     except ValueError:
