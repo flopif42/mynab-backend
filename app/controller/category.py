@@ -1,8 +1,7 @@
-from http import HTTPStatus
 from app.sql_manager import SqlManager as db
-from app.exceptions import OperationError
+from app.exceptions import InvalidParametersError, ParentCategoryNotFoundError, CategoryNotFoundError, CategoryNotEmptyError
 from app.utils import validate_not_empty
-import app.controller.parent_category as pc
+import app.controller.parent_category as parent_category
 
 def list(id_user, request):
     try:
@@ -30,22 +29,19 @@ def list(id_user, request):
             for category in categories:
                 parent_category['child_categories'].append(category)
         return parent_categories
-    except Exception as err:
-        print(f"Could not fetch categories : {err}")
-        raise
 
 # Create a category and attach it to an existing parent category
 def create(id_user, request):
     try:
         id_parent = validate_not_empty(request, 'id_parent')
         id_parent = int(id_parent)
-        if not pc.is_valid(id_parent, id_user):
-            raise OperationError(HTTPStatus.NOT_FOUND, "This parent category doesn't exist.")
+        if not parent_category.is_valid(id_parent, id_user):
+            raise ParentCategoryNotFoundError
         if id_parent == 0:
-            raise OperationError(HTTPStatus.BAD_REQUEST, "ID parent can't 0.")
+            raise InvalidParametersError("ID parent can't 0.")
         category_name = validate_not_empty(request, 'category_name')
         if len(category_name) > 50:
-            raise OperationError(HTTPStatus.BAD_REQUEST, "Category name can't be more than 50 characters.")
+            raise InvalidParametersError("Category name can't be more than 50 characters.")
         query = '''
                 insert into CATEGORY 
                 select (%s) as ID_USER, max(ID_CATEGORY)+1 as ID_CATEGORY, (%s) as ID_PARENT_CATEGORY, (%s) as CATEGORY_NAME 
@@ -53,24 +49,24 @@ def create(id_user, request):
                 '''
         db.execute_query(query, (id_user, id_parent, category_name, id_user), commit=True)
     except ValueError:
-        raise OperationError(HTTPStatus.BAD_REQUEST, "Invalid ID parent.")
+        raise InvalidParametersError("Invalid ID parent.")
 
 def delete(id_user, request):
     try:
         id_category = validate_not_empty(request, 'id_category')
         id_category = int(id_category)
         if not is_valid(id_category, id_user):
-            raise OperationError(HTTPStatus.NOT_FOUND, "This category doesn't exist.")
+            raise CategoryNotFoundError
         if not is_deletable(id_category, id_user):
-            raise OperationError(HTTPStatus.CONFLICT, "This category has transactions.")
+            raise CategoryNotEmptyError
         if id_category == 0:
-            raise OperationError(HTTPStatus.BAD_REQUEST, "ID category can't 0.")
+            raise InvalidParametersError("ID category can't 0.")
         query = "delete from BUDGET_LINE where ID_USER = (%s) and ID_CATEGORY = (%s) and ID_CATEGORY <> 0"
         db.execute_query(query, (id_user, id_category), commit=True)
         query = "delete from CATEGORY where ID_USER = (%s) and ID_CATEGORY = (%s) and ID_CATEGORY <> 0"
         db.execute_query(query, (id_user, id_category), commit=True)
     except ValueError:
-        raise OperationError(HTTPStatus.BAD_REQUEST, "Invalid ID category.")
+        raise InvalidParametersError("Invalid ID category.")
 
 def is_valid(id_category, id_user):
     """

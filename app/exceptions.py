@@ -40,6 +40,15 @@ class ParentCategoryNotEmptyError(MyOperationError):
 	def __init__(self):
 		self.error_message = "This parent category has subcategories."
 
+# Categories
+class CategoryNotFoundError(MyOperationError):
+	def __init__(self):
+		self.error_message = "This category doesn't exist."
+
+class CategoryNotEmptyError(MyOperationError):
+	def __init__(self):
+		self.error_message = "This category has transactions."
+
 # delete this after refactoring is done
 class OperationError(Exception):
 	def __init__(self, http_status_code, error_message):
