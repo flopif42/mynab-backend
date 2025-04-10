@@ -8,9 +8,15 @@ response_status = {
     'create': HTTPStatus.CREATED,
     ('delete', 'update'): HTTPStatus.NO_CONTENT,
     'InvalidParametersError': HTTPStatus.BAD_REQUEST,
+    'UserInvalidCredentialsError': HTTPStatus.UNAUTHORIZED,
     ('AccountNotFoundError', 'PayeeNotFoundError', 'ParentCategoryNotFoundError', 'CategoryNotFoundError'): HTTPStatus.NOT_FOUND,
     ('AccountPermissionError', 'PayeePermissionError'): HTTPStatus.FORBIDDEN,
-    ('AccountNotEmptyError', 'PayeeNotEmptyError', 'ParentCategoryNotEmptyError', 'CategoryNotEmptyError'): HTTPStatus.CONFLICT
+    (
+        'AccountNotEmptyError',
+        'PayeeNotEmptyError',
+        'ParentCategoryNotEmptyError',
+        'CategoryNotEmptyError',
+        'UserMailAdressUnavailableError' ): HTTPStatus.CONFLICT
 }
 
 def get_status_code(mode):

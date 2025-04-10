@@ -1,4 +1,3 @@
-from http import HTTPStatus
 import re
 from typing import Optional
 import mysql.connector
@@ -6,7 +5,7 @@ from app.sql_manager import SqlManager as db
 from app.jwt_manager import JwtManager
 from pydantic import BaseModel, EmailStr, field_validator
 from app.utils import validate_not_empty
-from app.exceptions import OperationError
+from app.exceptions import InvalidParametersError, UserMailAdressUnavailableError, UserInvalidCredentialsError
     
 # This class is used to validate data
 class UserSignUpParams(BaseModel):
@@ -67,23 +66,19 @@ def signup(id_user_unused, request):
         db.execute_query("insert into PARENT_CATEGORY (ID_PARENT_CATEGORY, ID_USER, PARENT_CATEGORY_NAME) values (0, (%s), '(system)')", (id_user,), commit=True)
         db.execute_query("insert into CATEGORY (ID_CATEGORY, ID_USER, ID_PARENT_CATEGORY, CATEGORY_NAME) values (0, (%s), 0, 'Income')", (id_user,), commit=True)
     except ValueError:
-        raise OperationError(HTTPStatus.BAD_REQUEST, "Invalid parameters.")
+        raise InvalidParametersError
     except mysql.connector.IntegrityError:
-        raise OperationError(HTTPStatus.CONFLICT, "Could not create user : email address already used.")
+        raise UserMailAdressUnavailableError
 
-def login(request):
-    try:
-        email_address = validate_not_empty(request, 'email_address')
-        passphrase_md5 = validate_not_empty(request, 'passphrase_md5')
-        query = "select ID_USER from USER where EMAIL_ADDRESS = (%s) and PASSPHRASE_MD5 = (%s)"
-        result = db.execute_query(query, (email_address, passphrase_md5), fetch=True)
-        id_user = result[0][0] if len(result) else None
-        if id_user is None:
-            return '', HTTPStatus.UNAUTHORIZED
-        return JwtManager.generate_access_token(id_user) # HTTP response with status code 200 and cookie set (no body)
-    except Exception as error:
-        print(f"Exception in user.login() : {type(error).__name__} - {error}")
-        return '', HTTPStatus.INTERNAL_SERVER_ERROR
+def login(id_user_unused, request):
+    email_address = validate_not_empty(request, 'email_address')
+    passphrase_md5 = validate_not_empty(request, 'passphrase_md5')
+    query = "select ID_USER from USER where EMAIL_ADDRESS = (%s) and PASSPHRASE_MD5 = (%s)"
+    result = db.execute_query(query, (email_address, passphrase_md5), fetch=True)
+    id_user = result[0][0] if len(result) else None
+    if id_user is None:
+        raise UserInvalidCredentialsError
+    return JwtManager.generate_access_token(id_user) # HTTP response with status code 200 and cookie set (no body)
 
 def get_profile(id_user, request_unused):
     query = "select FIRST_NAME as first_name, LAST_NAME as last_name, EMAIL_ADDRESS as email_address from USER where ID_USER = (%s)"

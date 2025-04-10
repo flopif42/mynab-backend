@@ -31,6 +31,15 @@ class PayeeNotEmptyError(MyOperationError):
 	def __init__(self):
 		self.error_message = "This payee has transactions."
 
+# Users
+class UserInvalidCredentialsError(MyOperationError):
+	def __init__(self):
+		self.error_message = "The email address and password don't match."
+
+class UserMailAdressUnavailableError(MyOperationError):
+	def __init__(self):
+		self.error_message = "This email address is already used."
+
 # Parent categories
 class ParentCategoryNotFoundError(MyOperationError):
 	def __init__(self):
