@@ -9,8 +9,8 @@ response_status = {
     ('delete', 'update'): HTTPStatus.NO_CONTENT,
     'InvalidParametersError': HTTPStatus.BAD_REQUEST,
     ('AccountNotFoundError', 'PayeeNotFoundError'): HTTPStatus.NOT_FOUND,
-    'AccountPermissionError': HTTPStatus.FORBIDDEN,
-    'AccountNotEmptyError': HTTPStatus.CONFLICT
+    ('AccountPermissionError', 'PayeePermissionError'): HTTPStatus.FORBIDDEN,
+    ('AccountNotEmptyError', 'PayeeNotEmptyError'): HTTPStatus.CONFLICT
 }
 
 def get_status_code(mode):
