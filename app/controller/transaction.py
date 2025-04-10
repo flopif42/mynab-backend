@@ -96,7 +96,6 @@ def sql_create(id_user, id_account, id_payee, id_category, flow, amount, txn_dat
 def is_transfer(id_transaction):
     query = "select IS_TRANSFER from TRANSACTION where ID_TRANSACTION = %s"
     result = db.execute_query(query, (id_transaction,), fetch=True)
-    print(result)
     if len(result) == 0:
         raise ValueError
     if result[0][0] == 1:
