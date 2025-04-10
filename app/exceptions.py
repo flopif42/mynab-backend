@@ -31,6 +31,15 @@ class PayeeNotEmptyError(MyOperationError):
 	def __init__(self):
 		self.error_message = "This payee has transactions."
 
+# Parent categories
+class ParentCategoryNotFoundError(MyOperationError):
+	def __init__(self):
+		self.error_message = "This parent category doesn't exist."
+
+class ParentCategoryNotEmptyError(MyOperationError):
+	def __init__(self):
+		self.error_message = "This parent category has subcategories."
+
 # delete this after refactoring is done
 class OperationError(Exception):
 	def __init__(self, http_status_code, error_message):
