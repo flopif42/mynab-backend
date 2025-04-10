@@ -1,7 +1,7 @@
 from app.sql_manager import SqlManager as db
 from app.controller import transaction
 import app.controller.account as account
-from app.exceptions import InvalidParametersError, AccountPermissionError
+from app.exceptions import InvalidParametersError, AccountNotFoundError, AccountPermissionError
 from app.utils import validate_not_empty
 
 def create(id_user, request):
@@ -11,6 +11,8 @@ def create(id_user, request):
         amount = int(validate_not_empty(request, 'amount'))
         transfer_date = transaction.mysql_format_date(validate_not_empty(request, 'date'))
 
+        if not account.is_valid(id_account_outflow) or not account.is_valid(id_account_inflow):
+            raise AccountNotFoundError
         if not account.is_valid(id_account_outflow, id_user) or not account.is_valid(id_account_inflow, id_user):
             raise AccountPermissionError
         if id_account_outflow == id_account_inflow:
