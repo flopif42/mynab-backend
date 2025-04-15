@@ -30,8 +30,7 @@ def handle_route_action(action, mode='fetch', auth_required=True):
         result = action(id_user, request)
         if mode == 'login':
             return result
-        print(result)
-        response_body = jsonify(result) if result else ''
+        response_body = '' if result is None else jsonify(result)
         return response_body, get_status_code(mode)
     except ex.MyOperationError as error:
         return { "error": error.error_message }, get_status_code(type(error).__name__)
