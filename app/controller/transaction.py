@@ -15,13 +15,19 @@ def list(id_user, request):
                     case 
                         when (txn.IS_TRANSFER=1 and txn.TRANSACTION_FLOW = -1) then concat('Transfer to: ', acc_trs_out.ACCOUNT_NAME) 
                         when (txn.IS_TRANSFER=1 and txn.TRANSACTION_FLOW = 1) then concat('Transfer from: ', acc_trs_in.ACCOUNT_NAME) 
-                    else PAYEE_NAME end as payee, 
+                        else PAYEE_NAME
+                    end as payee, 
                     CATEGORY_NAME as category, 
                     if(txn.TRANSACTION_FLOW=-1, 'Outflow', 'Inflow') as flow, 
                     txn.TRANSACTION_AMOUNT as amount, 
                     date_format(txn.TRANSACTION_DATE, '%d/%m/%Y') as date, 
                     txn.TRANSACTION_MEMO as memo,
-                    txn.IS_TRANSFER as is_transfer 
+                    txn.IS_TRANSFER as is_transfer,
+                    case 
+                        when (txn.IS_TRANSFER=1 and txn.TRANSACTION_FLOW = -1) then acc_trs_out.ACCOUNT_TYPE
+                        when (txn.IS_TRANSFER=1 and txn.TRANSACTION_FLOW = 1) then acc_trs_in.ACCOUNT_TYPE
+                        else null
+                    end as linked_account_type 
                 from TRANSACTION txn 
                     inner join ACCOUNT a on a.ID_ACCOUNT = txn.ID_ACCOUNT 
                     left join PAYEE pay on pay.ID_PAYEE = txn.ID_PAYEE 
