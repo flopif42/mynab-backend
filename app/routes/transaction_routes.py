@@ -15,6 +15,11 @@ def transaction_list():
 def transaction_create():
     return handle_route_action(transaction.create, mode='create')
 
+@transaction_bp.route('/transaction/update', methods=['PUT'])
+@swag_from('../docs/transaction/transaction_update.yml')
+def transaction_update():
+    return handle_route_action(transaction.update, mode='update')
+
 @transaction_bp.route('/transaction/delete', methods=['DELETE'])
 @swag_from('../docs/transaction/transaction_delete.yml')
 def transaction_delete():

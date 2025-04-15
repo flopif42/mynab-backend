@@ -80,6 +80,20 @@ def create(id_user, request):
     except (ValueError, IntegrityError):
         raise InvalidParametersError
 
+def update(id_user, request):
+    try:
+        id_transaction = int(validate_not_empty(request, 'id_transaction'))
+        if not is_valid(id_transaction, id_user):
+            raise ValueError
+        if is_transfer(id_transaction):
+            raise InvalidParametersError("Cannot update a transfer yet. This feature is on the TODO list")
+        if request.json.get('id_category'):
+            id_category = int(validate_not_empty(request, 'id_category'))
+        query = "update TRANSACTION set id_category=(%s) where ID_USER = (%s) and ID_TRANSACTION = (%s)"
+        return db.execute_query(query, (id_category, id_user, id_transaction,), commit=True)
+    except ValueError:
+        raise InvalidParametersError
+
 def delete(id_user, request):
     try:
         id_transaction = int(validate_not_empty(request, 'id_transaction'))
