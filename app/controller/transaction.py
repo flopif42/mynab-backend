@@ -9,19 +9,22 @@ from app.utils import validate_not_empty
 def list(id_user, request):
     try:
         query = """
-                select a.ACCOUNT_NAME as account,
+                select txn.ID_TRANSACTION as id,
+                    a.ID_ACCOUNT as id_account,
+                    a.ACCOUNT_NAME as account_name,
                     a.ACCOUNT_TYPE as account_type, 
-                    txn.ID_TRANSACTION as id, 
+                    txn.ID_PAYEE as id_payee, 
                     case 
                         when (txn.IS_TRANSFER=1 and txn.TRANSACTION_FLOW = -1) then concat('Transfer to: ', acc_trs_out.ACCOUNT_NAME) 
                         when (txn.IS_TRANSFER=1 and txn.TRANSACTION_FLOW = 1) then concat('Transfer from: ', acc_trs_in.ACCOUNT_NAME) 
                         else PAYEE_NAME
-                    end as payee, 
-                    CATEGORY_NAME as category, 
-                    if(txn.TRANSACTION_FLOW=-1, 'Outflow', 'Inflow') as flow, 
+                    end as payee_name, 
                     txn.TRANSACTION_AMOUNT as amount, 
                     date_format(txn.TRANSACTION_DATE, '%d/%m/%Y') as date, 
+                    txn.TRANSACTION_FLOW as flow, 
                     txn.TRANSACTION_MEMO as memo,
+                    txn.ID_CATEGORY as id_category, 
+                    CATEGORY_NAME as category_name, 
                     txn.IS_TRANSFER as is_transfer,
                     case 
                         when (txn.IS_TRANSFER=1 and txn.TRANSACTION_FLOW = -1) then acc_trs_out.ACCOUNT_TYPE
