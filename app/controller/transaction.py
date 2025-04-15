@@ -9,7 +9,8 @@ from app.utils import validate_not_empty
 def list(id_user, request):
     try:
         query = """
-                select a.ACCOUNT_NAME as account, 
+                select a.ACCOUNT_NAME as account,
+                    a.ACCOUNT_TYPE as account_type, 
                     txn.ID_TRANSACTION as id, 
                     case 
                         when (txn.IS_TRANSFER=1 and txn.TRANSACTION_FLOW = -1) then concat('Transfer to: ', acc_trs_out.ACCOUNT_NAME) 
@@ -20,7 +21,7 @@ def list(id_user, request):
                     txn.TRANSACTION_AMOUNT as amount, 
                     date_format(txn.TRANSACTION_DATE, '%d/%m/%Y') as date, 
                     txn.TRANSACTION_MEMO as memo,
-                    txn.IS_TRANSfer as is_transfer 
+                    txn.IS_TRANSFER as is_transfer 
                 from TRANSACTION txn 
                     inner join ACCOUNT a on a.ID_ACCOUNT = txn.ID_ACCOUNT 
                     left join PAYEE pay on pay.ID_PAYEE = txn.ID_PAYEE 
