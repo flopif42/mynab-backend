@@ -19,7 +19,8 @@ def list(id_user, request):
                     if(txn.TRANSACTION_FLOW=-1, 'Outflow', 'Inflow') as flow, 
                     txn.TRANSACTION_AMOUNT as amount, 
                     date_format(txn.TRANSACTION_DATE, '%d/%m/%Y') as date, 
-                    txn.TRANSACTION_MEMO as memo 
+                    txn.TRANSACTION_MEMO as memo,
+                    txn.IS_TRANSfer as is_transfer 
                 from TRANSACTION txn 
                     inner join ACCOUNT a on a.ID_ACCOUNT = txn.ID_ACCOUNT 
                     left join PAYEE pay on pay.ID_PAYEE = txn.ID_PAYEE 
