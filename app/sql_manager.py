@@ -40,6 +40,7 @@ class SqlManager:
                 result = cursor.lastrowid
             if fetch:
                 result = cursor.fetchall()
+                print(result)
             return result
         except Exception as error:
             print(f'SqlManager.execute_query() exception : {type(error)} - {type(error).__name__} - {error}')
