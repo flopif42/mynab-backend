@@ -12,7 +12,6 @@ def list(id_user, request):
                 on chi.ID_PARENT_CATEGORY = par.ID_PARENT_CATEGORY and chi.ID_USER = par.ID_USER
             where par.ID_USER = (%s) and par.ID_PARENT_CATEGORY > 0
             group by par.ID_PARENT_CATEGORY, PARENT_CATEGORY_NAME, PARENT_CATEGORY_POSITION
-
             """
     parent_categories = db.execute_query(query, (id_user,), fetch=True, dictionary=True)
     for parent_category in parent_categories:

@@ -65,6 +65,7 @@ def signup(id_user_unused, request):
         id_user = db.execute_query(query, values, commit=True)
         db.execute_query("insert into PARENT_CATEGORY (ID_PARENT_CATEGORY, ID_USER, PARENT_CATEGORY_NAME) values (0, (%s), '(system)')", (id_user,), commit=True)
         db.execute_query("insert into CATEGORY (ID_CATEGORY, ID_USER, ID_PARENT_CATEGORY, CATEGORY_NAME) values (0, (%s), 0, 'Income')", (id_user,), commit=True)
+        db.execute_query("insert into USER_PREFERENCES (ID_USER) values (id_user)")
     except ValueError:
         raise InvalidParametersError
     except mysql.connector.IntegrityError:
@@ -81,6 +82,17 @@ def login(id_user_unused, request):
     return JwtManager.generate_access_token(id_user) # HTTP response with status code 200 and cookie set (no body)
 
 def get_profile(id_user, request_unused):
-    query = "select FIRST_NAME as first_name, LAST_NAME as last_name, EMAIL_ADDRESS as email_address from USER where ID_USER = (%s)"
+    query = '''
+            select
+                FIRST_NAME as first_name,
+                LAST_NAME as last_name,
+                EMAIL_ADDRESS as email_address,
+                UI_COLLAPSE_SECTION_CASH as ui_collapse_cash,
+                UI_COLLAPSE_SECTION_TRACKING as ui_collapse_tracking,
+                UI_COLLAPSE_SECTION_CLOSED as ui_collapse_closed
+            from USER u inner join USER_PREFERENCES p
+              on p.ID_USER = u.ID_USER
+            where u.ID_USER = (%s)
+            '''
     result = db.execute_query(query, (id_user,), fetch=True, dictionary=True)
     return result[0]
