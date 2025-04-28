@@ -95,8 +95,8 @@ def get_profile(id_user, request_unused):
             where u.ID_USER = (%s)
             '''
     result = db.execute_query(query, (id_user,), fetch=True, dictionary=True)
-    result[0][ui_collapse_cash] = bool(result[0][ui_collapse_cash])
-    result[0][ui_collapse_tracking] = bool(result[0][ui_collapse_tracking])
-    result[0][ui_collapse_closed] = bool(result[0][ui_collapse_closed])
-    return result[0]
-    
+    ret = result[0]
+    ret['ui_collapse_cash'] = bool(ret['ui_collapse_cash'])
+    ret['ui_collapse_tracking'] = bool(ret['ui_collapse_tracking'])
+    ret['ui_collapse_closed'] = bool(ret['ui_collapse_closed'])
+    return ret
