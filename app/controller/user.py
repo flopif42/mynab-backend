@@ -65,7 +65,7 @@ def signup(id_user_unused, request):
         id_user = db.execute_query(query, values, commit=True)
         db.execute_query("insert into PARENT_CATEGORY (ID_PARENT_CATEGORY, ID_USER, PARENT_CATEGORY_NAME) values (0, (%s), '(system)')", (id_user,), commit=True)
         db.execute_query("insert into CATEGORY (ID_CATEGORY, ID_USER, ID_PARENT_CATEGORY, CATEGORY_NAME) values (0, (%s), 0, 'Income')", (id_user,), commit=True)
-        db.execute_query("insert into USER_PREFERENCES (ID_USER) values (id_user)")
+        db.execute_query("insert into USER_PREFERENCES (ID_USER) values (%s)", (id_user,), commit=True)
     except ValueError:
         raise InvalidParametersError
     except mysql.connector.IntegrityError:
