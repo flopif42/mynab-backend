@@ -11,6 +11,19 @@ class JwtManager:
     def set_config(cls, config):
         cls.__config = config
 
+    # returns an HttpResponse with an expired cookie set to logout
+    @classmethod
+    def generate_logout_token(cls):
+        payload = {}
+        try:
+            private_key_fd = open(cls.__config['PrivateKeyFile'])
+            token = jwt.encode(payload, private_key_fd.read(), algorithm=cls.__config['Algorithm']).decode(cls.__config['Encoding'])
+            response = make_response()
+            response.set_cookie(cls.__config['AccessToken']['CookieName'], value=token, **cls.__config['CookieSettings'])
+            return response
+        except Exception as err:
+            print(f"Could not generate logout token. Exception : {err}")
+
     # returns an HttpResponse with a cookie set for the requested token
     @classmethod
     def generate_access_token(cls, id_user):

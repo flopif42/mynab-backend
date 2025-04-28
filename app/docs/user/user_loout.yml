@@ -1,0 +1,12 @@
+Logs the user out of the app.
+---
+tags:
+  - User
+consumes:
+  - application/json
+responses:
+  200:
+    description: User successfully logged out
+  401:
+    description: User not logged in
+

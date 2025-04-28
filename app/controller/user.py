@@ -81,6 +81,9 @@ def login(id_user_unused, request):
         raise UserInvalidCredentialsError
     return JwtManager.generate_access_token(id_user) # HTTP response with status code 200 and cookie set (no body)
 
+def logout(id_user, request):
+    return JwtManager.generate_logout_token()
+
 def get_profile(id_user, request_unused):
     query = '''
             select

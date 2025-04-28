@@ -21,6 +21,11 @@ def sign_up():
 def user_login():
     return handle_route_action(user.login, mode='login', auth_required=False)
 
+@user_bp.route('/user/logout', methods=['POST'])
+@swag_from('../docs/user/user_logout.yml')
+def user_logout():
+    return handle_route_action(user.logout, mode='logout')
+
 @user_bp.route('/user/profile', methods=['GET'])
 @swag_from('../docs/user/user_profile.yml')
 def user_profile():
